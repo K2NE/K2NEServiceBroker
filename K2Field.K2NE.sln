@@ -5,6 +5,11 @@ VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "K2Field.K2NE.ServiceBroker", "K2Field.K2NE.ServiceBroker\K2Field.K2NE.ServiceBroker.csproj", "{5D45A104-69BD-4B55-A255-9BCC629D62DF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{4017A511-A69A-4E60-AF25-4584045583A9}"
+	ProjectSection(SolutionItems) = preProject
+		Solution Files\key.snk = Solution Files\key.snk
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
