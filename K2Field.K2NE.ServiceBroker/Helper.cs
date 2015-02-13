@@ -9,24 +9,7 @@ namespace K2Field.K2NE.ServiceObjects
 {
     public class Helper
     {
-        //TODO: Move this to Maphelper?
-        private static Dictionary<SoType, string> _SoType2SystemTypeMapping = new Dictionary<SoType, string>() {
-            {SoType.AutoGuid, typeof(Guid).ToString() },
-            {SoType.Autonumber, typeof(int).ToString() },
-            {SoType.DateTime, typeof(DateTime).ToString() },
-            {SoType.Decimal, typeof(Decimal).ToString() },
-            {SoType.Default, typeof(string).ToString() },
-            {SoType.File, typeof(byte[]).ToString() },
-            {SoType.Guid, typeof(Guid).ToString() },
-            {SoType.HyperLink, typeof(string).ToString() },
-            {SoType.Image, typeof(byte[]).ToString() },
-            {SoType.Memo, typeof(string).ToString() },
-            {SoType.MultiValue, typeof(string).ToString() },
-            {SoType.Number, typeof(int).ToString() },
-            {SoType.Text, typeof(string).ToString() },
-            {SoType.Xml, typeof(string).ToString() },
-            {SoType.YesNo, typeof(bool).ToString() }
-        };
+   
         /// <summary>
         /// Creates a system name from the given name. 
         /// 
@@ -104,7 +87,7 @@ namespace K2Field.K2NE.ServiceObjects
             Property property = new Property();
             property.Name = name;
             property.SoType = type;
-            property.Type = _SoType2SystemTypeMapping[type];
+            property.Type = MapHelper.GetTypeBySoType(type);
             property.MetaData.DisplayName = displayName;
             property.MetaData.Description = description;
             return property;

@@ -16,6 +16,24 @@ namespace K2Field.K2NE.ServiceObjects
         #region Private Field And Filling method
         private static TypeMappings _map = null;
 
+       
+        private static Dictionary<SoType, string> soType2SystemTypeMapping = new Dictionary<SoType, string>() {
+            {SoType.AutoGuid, typeof(Guid).ToString() },
+            {SoType.Autonumber, typeof(int).ToString() },
+            {SoType.DateTime, typeof(DateTime).ToString() },
+            {SoType.Decimal, typeof(Decimal).ToString() },
+            {SoType.Default, typeof(string).ToString() },
+            {SoType.File, typeof(byte[]).ToString() },
+            {SoType.Guid, typeof(Guid).ToString() },
+            {SoType.HyperLink, typeof(string).ToString() },
+            {SoType.Image, typeof(byte[]).ToString() },
+            {SoType.Memo, typeof(string).ToString() },
+            {SoType.MultiValue, typeof(string).ToString() },
+            {SoType.Number, typeof(int).ToString() },
+            {SoType.Text, typeof(string).ToString() },
+            {SoType.Xml, typeof(string).ToString() },
+            {SoType.YesNo, typeof(bool).ToString() }
+        };
 
         private static TypeMappings CreateTypeMappings()
         {
@@ -77,11 +95,22 @@ namespace K2Field.K2NE.ServiceObjects
         #region Public methods
 
         /// <summary>
-        /// Retrieves the SOType for the given Type.
+        /// Retrieves the SOType for the given .NET Type.
         /// </summary>
         public static SoType GetSoTypeByType(Type type)
         {
             return Map[type.FullName.ToLower()];
+        }
+
+
+        /// <summary>
+        /// Retrieve the .NET Type (typeof(Type).toString()) for a given SOType.
+        /// </summary>
+        /// <param name="soType">the SOType</param>
+        /// <returns>A typeof(T).toString() for the given SOType.</returns>
+        public static string GetTypeBySoType(SoType soType)
+        {
+            return soType2SystemTypeMapping[soType];
         }
 
         /// <summary>
@@ -97,5 +126,7 @@ namespace K2Field.K2NE.ServiceObjects
 
         }
         #endregion Public methods
+
+    
     }
 }
