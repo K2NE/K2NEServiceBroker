@@ -100,17 +100,20 @@ namespace K2Field.K2NE.ServiceObjects
 
             foreach (ServiceObjectBase entry in ServiceObjects)
             {
-                ServiceFolder sf = InitializeServiceFolder(entry.ServiceFolder, entry.ServiceFolder);
                 foreach (ServiceObject so in entry.DescribeServiceObjects())
                 {
                     this.Service.ServiceObjects.Add(so);
-                    sf.Add(so);
+                    if (!string.IsNullOrEmpty(entry.ServiceFolder))
+                    {
+                        ServiceFolder sf = InitializeServiceFolder(entry.ServiceFolder, entry.ServiceFolder);
+                        sf.Add(so);
+                    }
                 }
             }
 
             return base.DescribeSchema();
         }
-
+     
      
         public override void Execute()
         {
