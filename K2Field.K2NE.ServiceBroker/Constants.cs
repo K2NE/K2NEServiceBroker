@@ -6,7 +6,7 @@ using SourceCode.Workflow.Client;
 
 namespace K2Field.K2NE.ServiceObjects
 {
-
+   
     public static class Constants
     {
         /// <summary>
@@ -83,6 +83,25 @@ namespace K2Field.K2NE.ServiceObjects
             }
 
 
+            public static class Identity
+            {
+                public const string CurrentPrincipalAuthType = "CurrentPrincipalAuthType =";
+                public const string CurrentPrincipalName = "CurrentPrincipalName";
+                public const string FQN = "FQN";
+                public const string UserDescription = "UserDescription";
+                public const string UserDisplayName = "UserDisplayName";
+                public const string UserEmail = "UserEmail";
+                public const string UserManager = "UserManager";
+                public const string UserName = "UserName";
+                public const string UserUserLabel = "UserUserLabel";
+                public const string CallingFQN = "CallingFQN";
+                public const string WindowsIdentityAuthType = "WindowsIdentityAuthType";
+                public const string WindowsIdentityName = "WindowsIdentityName";
+                public const string ServiceBrokerAuthType = "ServiceBrokerAuthType";
+                public const string ServiceBrokerUserName = "ServiceBrokerUserName";
+                public const string UserWindowsImpersonation = "UserWindowsImpersonation";
+            }
+
         }
 
         public static class ConfigurationProperties
@@ -113,6 +132,11 @@ namespace K2Field.K2NE.ServiceObjects
                 public const string ReleaseWorklistItem = "ReleaseWorklistItem";
             }
 
+            public static class Identity
+            {
+                public const string ReadThreadIdentity = "ReadThreadIdentity";
+                public const string ReadWorkflowClientIdentity = "ReadWorkflowClientIdentity";
+            }
         }
 
 
