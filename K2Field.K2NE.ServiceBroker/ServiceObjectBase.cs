@@ -396,7 +396,7 @@ namespace K2Field.K2NE.ServiceObjects
 
         public virtual string ServiceFolder
         {
-            get { return "Uncategorized"; }
+            get { return string.Empty; }
         }
 
         /// <summary>
