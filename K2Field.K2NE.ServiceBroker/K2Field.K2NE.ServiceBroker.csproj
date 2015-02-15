@@ -75,8 +75,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants\ConfigurationProperties.cs" />
+    <Compile Include="Constants\ErrorMessages.cs" />
+    <Compile Include="Constants\Methods.cs" />
+    <Compile Include="Constants\Properties.cs" />
     <Compile Include="K2NEServiceBroker.cs" />
-    <Compile Include="Constants.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Logger.cs" />

@@ -2,18 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SourceCode.Workflow.Client;
 
-namespace K2Field.K2NE.ServiceBroker
+namespace K2Field.K2NE.ServiceBroker.Constants
 {
-   
-    public static class Constants
+    public  static partial class Properties
     {
-        /// <summary>
-        /// The system names of the ServiceObject properties. Make them 'nice' with the Helper.AddSpaceBeforeCaptialLetter() method.
-        /// </summary>
-        public static class Properties
-        {
             public static class ErrorLog
             {
                 public const string Profile = "Profile";
@@ -26,6 +19,8 @@ namespace K2Field.K2NE.ServiceBroker
                 public const string ErrorDate = "ErrorDate";
                 public const string TryNewVersion = "TryNewVersion";
             }
+
+
 
             public static class ManagementWorklist
             {
@@ -78,7 +73,7 @@ namespace K2Field.K2NE.ServiceBroker
                 public const string Data = "Data";
                 public const string SerialNumber = "SerialNumber";
                 public const string ActivityOverdue = "ActivityOverdue";
-                public const string OriginalDestination ="OriginalDestination";
+                public const string OriginalDestination = "OriginalDestination";
 
             }
 
@@ -101,54 +96,5 @@ namespace K2Field.K2NE.ServiceBroker
                 public const string ServiceBrokerUserName = "ServiceBrokerUserName";
                 public const string UserWindowsImpersonation = "UserWindowsImpersonation";
             }
-
-        }
-
-        public static class ConfigurationProperties
-        {
-            public const string EnvironmentToUse = "Environment to use (empty for default)";
-            public const string WorkflowManagmentPort = "Workflow Management Port";
-            public const string WorkflowClientPort = "Workflow Client Port";
-            public const string DefaultCulture = "Default Culture";
-            public static string Platform;
-        }
-
-        public static class Methods
-        {
-            public static class ErrorLog
-            {
-                public const string GetErrors = "GetErrors";
-                public const string RetryProcess = "RetryProcessInstance";
-            }
-
-            public static class ManagementWorklist
-            {
-                public const string GetWorklist = "GetWorklist";
-            }
-
-            public static class ClientWorklist
-            {
-                public const string GetWorklist = "GetWorklist";
-                public const string ReleaseWorklistItem = "ReleaseWorklistItem";
-            }
-
-            public static class Identity
-            {
-                public const string ReadThreadIdentity = "ReadThreadIdentity";
-                public const string ReadWorkflowClientIdentity = "ReadWorkflowClientIdentity";
-            }
-        }
-
-
-
-
-        public static class ErrorMessages
-        {
-            public const string RequiredPropertyNotFound = "{0} is a required property, but does not exist.";
-            public const string PropertyNotFound = "The property with name '{0}', could not be found.";
-        }
-
-
-       
     }
 }
