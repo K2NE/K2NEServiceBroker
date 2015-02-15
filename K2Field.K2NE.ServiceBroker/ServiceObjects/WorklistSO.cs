@@ -6,9 +6,8 @@ using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.Workflow.Client;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using System.Data;
-using K2Field.K2NE.ServiceObjects;
 
-namespace SourceCode.ServiceObjects.WorklistAPI.ServiceObjects
+namespace K2Field.K2NE.ServiceBroker
 {
     public class WorklistSO : ServiceObjectBase
     {

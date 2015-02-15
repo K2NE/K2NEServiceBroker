@@ -9,7 +9,7 @@ using SourceCode.Hosting.Server.Interfaces;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace K2Field.K2NE.ServiceObjects
+namespace K2Field.K2NE.ServiceBroker
 {
     public class K2NEServiceBroker : ServiceAssemblyBase, IHostableType
     {
@@ -32,6 +32,8 @@ namespace K2Field.K2NE.ServiceObjects
                             serviceObjects = new List<ServiceObjectBase>();
                             serviceObjects.Add(new ManagementWorklistSO(this));
                             serviceObjects.Add(new ErrorLogSO(this));
+                            serviceObjects.Add(new IdentitySO(this));
+                            serviceObjects.Add(new WorklistSO(this));
                         }
                     }
                 }
@@ -66,6 +68,11 @@ namespace K2Field.K2NE.ServiceObjects
 
         private ServiceFolder InitializeServiceFolder(string folderName, string description)
         {
+            if (string.IsNullOrEmpty(folderName))
+            {
+                folderName = "Other";
+                description = "Other";
+            }
             foreach (ServiceFolder sf in this.Service.ServiceFolders)
             {
                 if (string.Compare(sf.Name, folderName) == 0)
@@ -98,13 +105,21 @@ namespace K2Field.K2NE.ServiceObjects
             this.Service.MetaData.DisplayName = "K2NE's General Purpose Service Broker";
             this.Service.MetaData.Description = "A Service Broker that provides various functional service objects that aid the implementation of a K2 project.";
 
+            bool requireServiceFolders = false;
+            foreach (ServiceObjectBase entry in ServiceObjects)
+            {
+                if (!string.IsNullOrEmpty(entry.ServiceFolder))
+                {
+                    requireServiceFolders = true;
+                }
+            }
+
             foreach (ServiceObjectBase entry in ServiceObjects)
             {
                 foreach (ServiceObject so in entry.DescribeServiceObjects())
                 {
                     this.Service.ServiceObjects.Add(so);
-                    if (!string.IsNullOrEmpty(entry.ServiceFolder))
-                    {
+                    if (requireServiceFolders) {
                         ServiceFolder sf = InitializeServiceFolder(entry.ServiceFolder, entry.ServiceFolder);
                         sf.Add(so);
                     }

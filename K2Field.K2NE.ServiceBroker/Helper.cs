@@ -5,7 +5,7 @@ using System.Text;
 using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 
-namespace K2Field.K2NE.ServiceObjects
+namespace K2Field.K2NE.ServiceBroker
 {
     public class Helper
     {

@@ -1,5 +1,4 @@
-﻿using K2Field.K2NE.ServiceObjects;
-using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
+﻿using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.Workflow.Client;
 using System;
 using System.Collections.Generic;

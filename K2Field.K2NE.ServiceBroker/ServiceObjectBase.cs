@@ -17,7 +17,7 @@ using System.IO;
 using System.Threading;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace K2Field.K2NE.ServiceObjects
+namespace K2Field.K2NE.ServiceBroker
 {
     public abstract class ServiceObjectBase
     {

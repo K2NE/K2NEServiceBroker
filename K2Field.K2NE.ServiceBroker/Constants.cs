@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using SourceCode.Workflow.Client;
 
-namespace K2Field.K2NE.ServiceObjects
+namespace K2Field.K2NE.ServiceBroker
 {
    
     public static class Constants

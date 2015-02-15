@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace K2Field.K2NE.ServiceObjects
+namespace K2Field.K2NE.ServiceBroker
 {
     internal static class ExtensionMethods
     {

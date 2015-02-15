@@ -11,7 +11,7 @@ using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using SourceCode.Workflow.Management;
 using SourceCode.Workflow.Management.Criteria;
 
-namespace K2Field.K2NE.ServiceObjects
+namespace K2Field.K2NE.ServiceBroker
 {
     /// <summary>
     /// Implementation of the Management Service Object
