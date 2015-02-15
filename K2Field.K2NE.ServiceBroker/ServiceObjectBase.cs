@@ -33,7 +33,6 @@ namespace K2Field.K2NE.ServiceBroker
 
         #endregion private variables
 
-
         #region Protected Methods and properties that are useful for the child class
         /// <summary>
         /// The serviceBroker object that is currently being used/executed. Property values (etc) will be taken from this object.
@@ -113,34 +112,12 @@ namespace K2Field.K2NE.ServiceBroker
             }
         }
 
-        protected string ReplaceEnvironmentFields(string value)
-        {
-            // Use of regex: http://stackoverflow.com/questions/379328/c-sharp-named-parameters-to-a-string-that-replace-to-the-parameter-values
-            Dictionary<string, string> vals = new Dictionary<string, string>();
-
-
-            foreach (KeyValuePair<string, string> entry in EnvironmentFields)
-            {
-                vals.Add(string.Concat("Environment.", entry.Key), entry.Value);
-            }
-
-            return wordMatchRegex.Replace(value, delegate(Match match)
-            {
-                string key = match.Groups[1].Value;
-                foreach (KeyValuePair<string, string> val in vals)
-                {
-                    if (string.Compare(val.Key, key, true) == 0) // the replace needs to be case insensative as well, if we use containsKey() it is not.
-                        return val.Value;
-                }
-                return match.Value;
-            });
-        }
 
 
         /// <summary>
         /// Provides a dictionary with the environment fields
         /// </summary>
-        public Dictionary<string, string> EnvironmentFields
+        protected Dictionary<string, string> EnvironmentFields
         {
             get
             {
@@ -325,6 +302,30 @@ namespace K2Field.K2NE.ServiceBroker
             return this.baseConnection.ToString();
         }
 
+
+
+        private string ReplaceEnvironmentFields(string value)
+        {
+            // Use of regex: http://stackoverflow.com/questions/379328/c-sharp-named-parameters-to-a-string-that-replace-to-the-parameter-values
+            Dictionary<string, string> vals = new Dictionary<string, string>();
+
+
+            foreach (KeyValuePair<string, string> entry in EnvironmentFields)
+            {
+                vals.Add(string.Concat("Environment.", entry.Key), entry.Value);
+            }
+
+            return wordMatchRegex.Replace(value, delegate(Match match)
+            {
+                string key = match.Groups[1].Value;
+                foreach (KeyValuePair<string, string> val in vals)
+                {
+                    if (string.Compare(val.Key, key, true) == 0) // the replace needs to be case insensative as well, if we use containsKey() it is not.
+                        return val.Value;
+                }
+                return match.Value;
+            });
+        }
 
 
         private void LoadDefaultEnvironmentFields()
