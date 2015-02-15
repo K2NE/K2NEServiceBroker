@@ -80,7 +80,6 @@
     <Compile Include="Constants\Methods.cs" />
     <Compile Include="Constants\Properties.cs" />
     <Compile Include="K2NEServiceBroker.cs" />
-    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="MapHelper.cs" />
