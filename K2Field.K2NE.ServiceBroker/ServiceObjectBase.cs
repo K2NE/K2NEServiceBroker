@@ -29,7 +29,7 @@ namespace K2Field.K2NE.ServiceBroker
         private static Object envLock = new Object();
         private static Mutex envMutex = new Mutex(false, "environmentMutext");
 
-        private Regex wordMatchRegex = null;
+        private static Regex wordMatchRegex = null;
 
         #endregion private variables
 
@@ -380,11 +380,14 @@ namespace K2Field.K2NE.ServiceBroker
         {
             ServiceBroker = broker;
 
-            // Match a word, a dot, another word with possibly a special character in it. And, maybe after that a third word with a dot in front of it. Examples:
-            // "Environment.SimpleField"
-            // "Environment.SimpleField with a space"
-            // "ProcessInstance.Originator.DisplayName"
-            wordMatchRegex = new Regex(@"\{(\w*\.[\w\s]*(\.[\w\s]*)?)\}", RegexOptions.Compiled); // Compiled regex, so we'd like to store it.
+            if (wordMatchRegex == null)
+            {             
+                // Match a word, a dot, another word with possibly a special character in it. And, maybe after that a third word with a dot in front of it. Examples:
+                // "Environment.SimpleField"
+                // "Environment.SimpleField with a space"
+                // "ProcessInstance.Originator.DisplayName"
+                wordMatchRegex = new Regex(@"\{(\w*\.[\w\s]*(\.[\w\s]*)?)\}", RegexOptions.Compiled); // Compiled regex, so we'd like to store it.
+            }
         }
 
         /// <summary>
