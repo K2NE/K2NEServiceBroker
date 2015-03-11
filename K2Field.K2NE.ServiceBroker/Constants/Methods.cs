@@ -30,5 +30,14 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string ReadThreadIdentity = "ReadThreadIdentity";
             public const string ReadWorkflowClientIdentity = "ReadWorkflowClientIdentity";
         }
+
+        public static class Role
+        {
+            public const string AddRoleItem = "AddRoleItem";
+            public const string RemoveRoleItem = "RemoveRoleItem";
+            public const string ListRoleItem = "ListRoleItem";
+
+
+        }
     }
 }
