@@ -35,6 +35,7 @@ namespace K2Field.K2NE.ServiceBroker
                             serviceObjects.Add(new IdentitySO(this));
                             serviceObjects.Add(new WorklistSO(this));
                             serviceObjects.Add(new ProcessInstanceManagementSO(this));
+                            serviceObjects.Add(new RoleSO(this));
                         }
                     }
                 }

@@ -80,6 +80,15 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             }
 
 
+            public static class Role
+            {
+                public const string RoleName = "Name";
+                public const string RoleItemType = "ItemType";
+                public const string RoleExtraData ="ExtraData";
+                public const string RoleExclude = "Excluded";
+                public const string RoleItem = "RoleItem";
+            }
+
             public static class Identity
             {
                 public const string CurrentPrincipalAuthType = "CurrentPrincipalAuthType =";

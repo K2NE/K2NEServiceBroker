@@ -40,5 +40,14 @@ namespace K2Field.K2NE.ServiceBroker.Constants
                 public const string StartProcessInstance = "StartProcessInstance";
 
         }
+
+        public static class Role
+        {
+            public const string AddRoleItem = "AddRoleItem";
+            public const string RemoveRoleItem = "RemoveRoleItem";
+            public const string ListRoleItem = "ListRoleItem";
+
+
+        }
     }
 }
