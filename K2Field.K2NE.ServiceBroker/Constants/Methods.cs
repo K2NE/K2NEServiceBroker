@@ -17,6 +17,9 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         public static class ManagementWorklist
         {
             public const string GetWorklist = "GetWorklist";
+            public const string RedirectWorklistItem = "RedirectWorklistItem";
+            public const string ReleaseWorklistItem = "ReleaseWorklistItem";
+            public const string DelegateWorklistItem = "DelegateWorklistItem";
         }
 
         public static class ClientWorklist
@@ -29,6 +32,13 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         {
             public const string ReadThreadIdentity = "ReadThreadIdentity";
             public const string ReadWorkflowClientIdentity = "ReadWorkflowClientIdentity";
+        }
+
+        public static class ProcessInstanceManagement
+        {
+                public const string GotoActivity = "GotoActivity";
+                public const string StartProcessInstance = "StartProcessInstance";
+
         }
     }
 }
