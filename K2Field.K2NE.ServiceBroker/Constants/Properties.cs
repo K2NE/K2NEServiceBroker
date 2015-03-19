@@ -82,11 +82,12 @@ namespace K2Field.K2NE.ServiceBroker.Constants
 
             public static class Role
             {
-                public const string RoleName = "Name";
+                public const string RoleName = "RoleName";
                 public const string RoleItemType = "ItemType";
-                public const string RoleExtraData ="ExtraData";
                 public const string RoleExclude = "Excluded";
                 public const string RoleItem = "RoleItem";
+                public const string RoleDescription = "Description";
+                public const string RoleDynamic = "IsDynamic";
             }
 
             public static class Identity

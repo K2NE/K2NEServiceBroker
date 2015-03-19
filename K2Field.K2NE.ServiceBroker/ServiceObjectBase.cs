@@ -253,6 +253,25 @@ namespace K2Field.K2NE.ServiceBroker
                 throw new ArgumentException(string.Format("{0} could not be parsed to a Byte.", name));
             return 0;
         }
+
+        protected Guid GetGuidProperty(string name, bool isRequired = false)
+        {
+            Property p = ServiceBroker.Service.ServiceObjects[0].Properties[name];
+            if (p == null)
+            {
+                if (isRequired)
+                    throw new ArgumentException(string.Format(Constants.ErrorMessages.RequiredPropertyNotFound, name));
+                return Guid.Empty;
+            }
+            string val = p.Value as string;
+            Guid ret;
+            if (Guid.TryParse(val, out ret))
+                return ret;
+            if (isRequired)
+                throw new ArgumentException(string.Format("{0} could not be parsed to a Guid.", name));
+            return Guid.Empty;
+        }
+
         #endregion Protected helper methods for property value retrieval
 
         #endregion Protected Methods and properties that are useful for the child class
@@ -409,5 +428,7 @@ namespace K2Field.K2NE.ServiceBroker
         public abstract void Execute();
 
         #endregion Abstract methods
+
+ 
     }
 }

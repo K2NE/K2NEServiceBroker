@@ -43,6 +43,10 @@ namespace K2Field.K2NE.ServiceBroker.Constants
 
         public static class Role
         {
+            public const string ListRoles = "ListRoles";
+            public const string AddRole = "AddRole";
+            public const string RemoveRole = "RemoveRole";
+            public const string SetRoleDynamic = "SetRoleDynamic";
             public const string AddRoleItem = "AddRoleItem";
             public const string RemoveRoleItem = "RemoveRoleItem";
             public const string ListRoleItem = "ListRoleItem";
