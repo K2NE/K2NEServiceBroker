@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>K2NEServiceBroker</id>
+        <version>0.0.1.0</version>
+        <title>K2NEServiceBroker</title>
+        <authors>Ruben d´Arco Czubayko</authors>
+        <owners>Wilfried Kopp</owners>
+        <projectUrl>https://github.com/K2NE/K2NEServiceBroker</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>K2NEServiceBroker</description>
+        <summary>K2NEServiceBroker</summary>
+        <releaseNotes>Fixed package.</releaseNotes>
+        <copyright>(C) 2015 - Wilfried Kopp</copyright>
+        <language>en-US</language>
+        <tags>K2 ServiceBroker management</tags>
+    </metadata>
+    <files>
+        <file src="tools\**\*" target="tools\" />
+    </files>
+</package>
