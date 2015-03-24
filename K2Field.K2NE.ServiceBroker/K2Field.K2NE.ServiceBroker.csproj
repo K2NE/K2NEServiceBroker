@@ -45,13 +45,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\K2 blackpearl\Bin\SourceCode.HostClientAPI.dll</HintPath>
     </Reference>
-    <Reference Include="SourceCode.HostServerInterfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files (x86)\K2 blackpearl\Host Server\Bin\SourceCode.HostServerInterfaces.dll</HintPath>
+    <Reference Include="SourceCode.HostServerInterfaces">
+      <HintPath>C:\Program Files (x86)\K2 blackpearl\K2 smartforms Setup\Licensing\x64\SourceCode.HostServerInterfaces.dll</HintPath>
     </Reference>
-    <Reference Include="SourceCode.Logging, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files (x86)\K2 blackpearl\Host Server\Bin\SourceCode.Logging.dll</HintPath>
+    <Reference Include="SourceCode.Logging">
+      <HintPath>C:\Program Files (x86)\K2 blackpearl\K2 smartforms Setup\SourceCode.Logging.dll</HintPath>
     </Reference>
     <Reference Include="SourceCode.SmartObjects.Services.ServiceSDK, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
