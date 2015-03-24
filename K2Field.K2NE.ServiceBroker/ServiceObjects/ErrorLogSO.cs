@@ -18,7 +18,6 @@ namespace K2Field.K2NE.ServiceBroker
         public override List<ServiceObject> DescribeServiceObjects()
 {
             ServiceObject so = Helper.CreateServiceObject("ErrorLog", "Service Object that exposes the ErrorLog of the K2 server.");
- 	        
             so.Properties.Add(Helper.CreateProperty(Constants.Properties.ErrorLog.Profile, SoType.Text, "The error profile to return, default 'All'"));
             so.Properties.Add(Helper.CreateProperty(Constants.Properties.ErrorLog.ProcessInstanceId, SoType.Number, "The errored process id."));
             so.Properties.Add(Helper.CreateProperty(Constants.Properties.ErrorLog.ProcessName, SoType.Text, "The errored process name."));
@@ -31,19 +30,20 @@ namespace K2Field.K2NE.ServiceBroker
 
 
             Method getErrors = Helper.CreateMethod(Constants.Methods.ErrorLog.GetErrors, "Retrieve the K2 error log", MethodType.List);
-            getErrors.InputProperties.Add(so.Properties[Constants.Properties.ErrorLog.Profile]);
-            getErrors.ReturnProperties.Add(so.Properties[Constants.Properties.ErrorLog.ProcessInstanceId]);
-            getErrors.ReturnProperties.Add(so.Properties[Constants.Properties.ErrorLog.ProcessName]);
-            getErrors.ReturnProperties.Add(so.Properties[Constants.Properties.ErrorLog.Folio]);
-            getErrors.ReturnProperties.Add(so.Properties[Constants.Properties.ErrorLog.ErrorDescription]);
-            getErrors.ReturnProperties.Add(so.Properties[Constants.Properties.ErrorLog.ErrorItem]);
-            getErrors.ReturnProperties.Add(so.Properties[Constants.Properties.ErrorLog.ErrorDate]);
-            getErrors.ReturnProperties.Add(so.Properties[Constants.Properties.ErrorLog.ErrorId]);
+            getErrors.InputProperties.Add(Constants.Properties.ErrorLog.Profile);
+            getErrors.ReturnProperties.Add(Constants.Properties.ErrorLog.ProcessInstanceId);
+            getErrors.ReturnProperties.Add(Constants.Properties.ErrorLog.ProcessName);
+            getErrors.ReturnProperties.Add(Constants.Properties.ErrorLog.Folio);
+            getErrors.ReturnProperties.Add(Constants.Properties.ErrorLog.ErrorDescription);
+            getErrors.ReturnProperties.Add(Constants.Properties.ErrorLog.ErrorItem);
+            getErrors.ReturnProperties.Add(Constants.Properties.ErrorLog.ErrorDate);
+            getErrors.ReturnProperties.Add(Constants.Properties.ErrorLog.ErrorId);
             so.Methods.Add(getErrors);
 
             Method retryProcess = Helper.CreateMethod(Constants.Methods.ErrorLog.RetryProcess, "Retry a process instance", MethodType.Execute);
-            retryProcess.InputProperties.Add(so.Properties[Constants.Properties.ErrorLog.ProcessInstanceId]);
-            retryProcess.InputProperties.Add(so.Properties[Constants.Properties.ErrorLog.TryNewVersion]);
+            retryProcess.InputProperties.Add(Constants.Properties.ErrorLog.ProcessInstanceId);
+            retryProcess.Validation.RequiredProperties.Add(Constants.Properties.ErrorLog.ProcessInstanceId);
+            retryProcess.InputProperties.Add(Constants.Properties.ErrorLog.TryNewVersion);
             so.Methods.Add(retryProcess);
 
             return new List<ServiceObject> { so };

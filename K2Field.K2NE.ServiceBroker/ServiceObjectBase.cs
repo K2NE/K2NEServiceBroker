@@ -29,7 +29,7 @@ namespace K2Field.K2NE.ServiceBroker
         private static Object envLock = new Object();
         private static Mutex envMutex = new Mutex(false, "environmentMutext");
 
-        private Regex wordMatchRegex = null;
+        private static Regex wordMatchRegex = null;
 
         #endregion private variables
 
@@ -253,6 +253,25 @@ namespace K2Field.K2NE.ServiceBroker
                 throw new ArgumentException(string.Format("{0} could not be parsed to a Byte.", name));
             return 0;
         }
+
+        protected Guid GetGuidProperty(string name, bool isRequired = false)
+        {
+            Property p = ServiceBroker.Service.ServiceObjects[0].Properties[name];
+            if (p == null)
+            {
+                if (isRequired)
+                    throw new ArgumentException(string.Format(Constants.ErrorMessages.RequiredPropertyNotFound, name));
+                return Guid.Empty;
+            }
+            string val = p.Value as string;
+            Guid ret;
+            if (Guid.TryParse(val, out ret))
+                return ret;
+            if (isRequired)
+                throw new ArgumentException(string.Format("{0} could not be parsed to a Guid.", name));
+            return Guid.Empty;
+        }
+
         #endregion Protected helper methods for property value retrieval
 
         #endregion Protected Methods and properties that are useful for the child class
@@ -380,11 +399,14 @@ namespace K2Field.K2NE.ServiceBroker
         {
             ServiceBroker = broker;
 
-            // Match a word, a dot, another word with possibly a special character in it. And, maybe after that a third word with a dot in front of it. Examples:
-            // "Environment.SimpleField"
-            // "Environment.SimpleField with a space"
-            // "ProcessInstance.Originator.DisplayName"
-            wordMatchRegex = new Regex(@"\{(\w*\.[\w\s]*(\.[\w\s]*)?)\}", RegexOptions.Compiled); // Compiled regex, so we'd like to store it.
+            if (wordMatchRegex == null)
+            {             
+                // Match a word, a dot, another word with possibly a special character in it. And, maybe after that a third word with a dot in front of it. Examples:
+                // "Environment.SimpleField"
+                // "Environment.SimpleField with a space"
+                // "ProcessInstance.Originator.DisplayName"
+                wordMatchRegex = new Regex(@"\{(\w*\.[\w\s]*(\.[\w\s]*)?)\}", RegexOptions.Compiled); // Compiled regex, so we'd like to store it.
+            }
         }
 
         /// <summary>
@@ -406,5 +428,7 @@ namespace K2Field.K2NE.ServiceBroker
         public abstract void Execute();
 
         #endregion Abstract methods
+
+ 
     }
 }

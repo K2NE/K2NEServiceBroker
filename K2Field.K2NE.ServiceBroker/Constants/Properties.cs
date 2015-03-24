@@ -39,6 +39,8 @@ namespace K2Field.K2NE.ServiceBroker.Constants
                 public const string StartDate = "StartDate";
                 public const string WorklistItemStatus = "Status";
                 public const string WorklistItemId = "Id";
+                public const string FromUser = "FromUser";
+                public const string ToUser = "ToUser";
             }
 
             public static class ClientWorklist
@@ -78,6 +80,16 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             }
 
 
+            public static class Role
+            {
+                public const string RoleName = "RoleName";
+                public const string RoleItemType = "ItemType";
+                public const string RoleExclude = "Excluded";
+                public const string RoleItem = "RoleItem";
+                public const string RoleDescription = "Description";
+                public const string RoleDynamic = "IsDynamic";
+            }
+
             public static class Identity
             {
                 public const string CurrentPrincipalAuthType = "CurrentPrincipalAuthType =";
@@ -95,6 +107,17 @@ namespace K2Field.K2NE.ServiceBroker.Constants
                 public const string ServiceBrokerAuthType = "ServiceBrokerAuthType";
                 public const string ServiceBrokerUserName = "ServiceBrokerUserName";
                 public const string UserWindowsImpersonation = "UserWindowsImpersonation";
+            }
+
+            public static class ProcessInstanceManagement
+            {
+                public const string ActivityName = "ActivityName";
+                public const string ProcessInstanceId = "ProcessInstanceId";
+                public const string ProcessName = "ProcessName";
+                public const string StartSync = "StartSynchronous";
+                public const string ProcessFolio = "Folio";
+                public const string ProcessVersion = "ProcessVersion";
+
             }
     }
 }

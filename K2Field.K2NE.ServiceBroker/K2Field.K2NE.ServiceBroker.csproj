@@ -51,6 +51,10 @@
     <Reference Include="SourceCode.Logging">
       <HintPath>C:\Program Files (x86)\K2 blackpearl\K2 smartforms Setup\SourceCode.Logging.dll</HintPath>
     </Reference>
+    <Reference Include="SourceCode.Security.UserRoleManager.Management, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\K2 blackpearl\Bin\SourceCode.Security.UserRoleManager.Management.dll</HintPath>
+    </Reference>
     <Reference Include="SourceCode.SmartObjects.Services.ServiceSDK, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\K2 blackpearl\Bin\SourceCode.SmartObjects.Services.ServiceSDK.dll</HintPath>
@@ -86,6 +90,8 @@
     <Compile Include="ServiceObjects\ErrorLogSO.cs" />
     <Compile Include="ServiceObjects\IdentitySO.cs" />
     <Compile Include="ServiceObjects\ManagementWorklistSO.cs" />
+    <Compile Include="ServiceObjects\ProcessInstanceManagementSO.cs" />
+    <Compile Include="ServiceObjects\RoleSO.cs" />
     <Compile Include="ServiceObjects\WorklistSO.cs" />
   </ItemGroup>
   <ItemGroup>

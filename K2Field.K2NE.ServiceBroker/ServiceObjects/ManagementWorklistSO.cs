@@ -37,6 +37,13 @@ namespace K2Field.K2NE.ServiceBroker
                 case Constants.Methods.ManagementWorklist.GetWorklist:
                     GetWorklist();
                     break;
+                case Constants.Methods.ManagementWorklist.RedirectWorklistItem:
+                    RedirectWorklistItem();
+                    break;
+
+                case Constants.Methods.ManagementWorklist.ReleaseWorklistItem:
+                    ReleaseWorklistItem();
+                    break;
             }
         }
 
@@ -59,6 +66,10 @@ namespace K2Field.K2NE.ServiceBroker
             so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.StartDate, SoType.DateTime, "The date when the worklist item was created."));
             so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.WorklistItemStatus, SoType.Text, "The current status of the worklist item."));
             so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.WorklistItemId, SoType.Number, "The ID of the worklistitem."));
+            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.FromUser, SoType.Text, "The FQN of the user to redirect/delegate from."));
+            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.ToUser, SoType.Text, "The FQN of the user to redirect/delegate to."));
+
+
 
             Method getWorkload = Helper.CreateMethod(Constants.Methods.ManagementWorklist.GetWorklist, "Provides a management view of the user workload.", MethodType.List);
             getWorkload.ReturnProperties.Add(Constants.Properties.ManagementWorklist.ActivityId);
@@ -77,6 +88,20 @@ namespace K2Field.K2NE.ServiceBroker
             getWorkload.ReturnProperties.Add(Constants.Properties.ManagementWorklist.WorklistItemStatus);
             getWorkload.ReturnProperties.Add(Constants.Properties.ManagementWorklist.WorklistItemId);
             so.Methods.Add(getWorkload);
+
+
+
+            Method mRedirectWorklistItem = Helper.CreateMethod(Constants.Methods.ManagementWorklist.RedirectWorklistItem, "Redirect the worklistitem to another user", SourceCode.SmartObjects.Services.ServiceSDK.Types.MethodType.Execute);
+            mRedirectWorklistItem.InputProperties.Add(Constants.Properties.ManagementWorklist.ProcessInstanceId);
+            mRedirectWorklistItem.InputProperties.Add(Constants.Properties.ManagementWorklist.WorklistItemId);
+            mRedirectWorklistItem.InputProperties.Add(Constants.Properties.ManagementWorklist.ActivityInstanceDestinationId);
+            mRedirectWorklistItem.InputProperties.Add(Constants.Properties.ManagementWorklist.FromUser);
+            mRedirectWorklistItem.InputProperties.Add(Constants.Properties.ManagementWorklist.ToUser);
+            so.Methods.Add(mRedirectWorklistItem);
+
+            Method mReleaseWorklistItem = Helper.CreateMethod(Constants.Methods.ManagementWorklist.ReleaseWorklistItem, "Release the worklistitem slot back into the wild", SourceCode.SmartObjects.Services.ServiceSDK.Types.MethodType.Execute);
+            mReleaseWorklistItem.InputProperties.Add(Constants.Properties.ManagementWorklist.WorklistItemId);
+            so.Methods.Add(mReleaseWorklistItem);
 
             return new List<ServiceObject> { so };
         }
@@ -125,6 +150,48 @@ namespace K2Field.K2NE.ServiceBroker
             r[Constants.Properties.ManagementWorklist.WorklistItemStatus] = wlItem.Status.ToString();
             r[Constants.Properties.ManagementWorklist.WorklistItemId] = wlItem.ID;
             return r;
+        }
+
+
+
+
+        private void ReleaseWorklistItem()
+        {
+            int worklistItemId = base.GetIntProperty(Constants.Properties.ManagementWorklist.WorklistItemId, true);
+
+            ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
+            serviceObject.Properties.InitResultTable();
+            DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
+
+            WorkflowManagementServer mngServer = new WorkflowManagementServer();
+
+            using (mngServer.CreateConnection())
+            {
+                mngServer.Open(BaseAPIConnectionString);
+                mngServer.ReleaseWorklistItem(worklistItemId);
+            }
+        }
+
+        private void RedirectWorklistItem()
+        {
+            string fromUser = base.GetStringProperty(Constants.Properties.ManagementWorklist.FromUser, false);
+            string toUser = base.GetStringProperty(Constants.Properties.ManagementWorklist.ToUser, true);
+            int procInstId = base.GetIntProperty(Constants.Properties.ManagementWorklist.ProcessInstanceId, true);
+            int actInstId = base.GetIntProperty(Constants.Properties.ManagementWorklist.ActivityInstanceDestinationId, true);
+            int worklistItemId = base.GetIntProperty(Constants.Properties.ManagementWorklist.WorklistItemId, true);
+
+
+            ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
+            serviceObject.Properties.InitResultTable();
+            DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
+
+            WorkflowManagementServer mngServer = new WorkflowManagementServer();
+
+            using (mngServer.CreateConnection())
+            {
+                mngServer.Open(BaseAPIConnectionString);
+                mngServer.RedirectWorklistItem(fromUser, toUser, procInstId, actInstId, worklistItemId);
+            }
         }
     }
 }
