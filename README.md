@@ -10,36 +10,13 @@ The K2NE Service Broker provides common functionality that is used by a lot of p
 The installer uses chocolatey, please see https://chocolatey.org/ on how to install that.
 
 From that, you can simply run:
-`	cinst K2NEServiceBroker`
+`cinst K2NEServiceBroker`
 
 NOTE: The package is currently not hosted online but it will build automatically when you build the solution. Copy the nupkg in your repository and enjoy it.
 
-## Broker methods
-
-### Client API
-
-#### Worklist
-
-* Get Worklist
-
-### Management API
-
-#### Worklist
-
-* Get Worklist
-
-
-#### Error Log
-
-* Get Errors
-* Get Retry Process Instance
-
-### Other
-
-#### Identity
-
-* Read Workflow Client Identity
-* Read Thread Identity
+## Documentation and Changelog
+[ChangeLog](Documentation/ChangeLog.adoc)
+[Documentation](Documentation/K2NEServiceBroker.adoc)
 
 
 ## Disclaimer

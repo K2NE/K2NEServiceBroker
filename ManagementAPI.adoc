@@ -1,0 +1,5 @@
+== Management API
+
+=== Worklist
+
+* Get Worklist - Return the Management Worklist, meaning, for every user.
