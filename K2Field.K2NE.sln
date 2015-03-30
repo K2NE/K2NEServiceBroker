@@ -22,10 +22,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{E9C2E02B-FB7A-49D5-A540-0404B7C69DA9}"
 	ProjectSection(SolutionItems) = preProject
-		ChangeLog.adoc = ChangeLog.adoc
-		ClientAPI.adoc = ClientAPI.adoc
-		K2NEServiceBroker.adoc = K2NEServiceBroker.adoc
-		ManagementAPI.adoc = ManagementAPI.adoc
+		Documentation\ChangeLog.adoc = Documentation\ChangeLog.adoc
+		Documentation\ClientAPI.adoc = Documentation\ClientAPI.adoc
+		Documentation\K2NEServiceBroker.adoc = Documentation\K2NEServiceBroker.adoc
+		Documentation\ManagementAPI.adoc = Documentation\ManagementAPI.adoc
 	EndProjectSection
 EndProject
 Global
