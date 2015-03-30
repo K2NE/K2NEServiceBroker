@@ -150,7 +150,3 @@ Desktop.ini
 
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
-
-# Mac desktop service store files
-.DS_Store
-*.nupkgs
