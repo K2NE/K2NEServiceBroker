@@ -1,5 +1,25 @@
 == Management API
 
-=== Worklist
+=== Management Worklist
 
-* Get Worklist - Return the Management Worklist, meaning, for every user.
+* Get Worklist - Return the Management Worklist. This will show the worklistitems for every user.
+* Release WorklistItem - releases a worklist item.
+* Redirect WorklistItem - redirects a worklist item to another user (FQN).
+
+
+=== Role
+Roles are used within the K2 system as a K2 managed item. In a role can be role items. A role always has to have one roleitem.
+
+* Add Role: Add a new Role to the K2 system.
+* Remove Role: Remove a role from the K2 system
+* List Roles: Show the roles in the K2 system.
+
+
+
+=== RoleItem
+RoleItems are users or groups (or SmartObjects, but those are not supported at the moment) that are inside a Role.
+
+* Add Role Item: Add a new roleitem to a Role.
+* Remove Role Item: Remove a role item from a Role.
+* List Role Items: List all the role items in a Role.
+

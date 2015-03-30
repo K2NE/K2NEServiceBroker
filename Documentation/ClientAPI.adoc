@@ -1,7 +1,7 @@
 == Client API
 
 === Worklist
-* Get Worklist: retrieves the worklist of the current user
+* Get Worklist: Retrieves the worklistitems for the current user. Any input will become a AND-filtered query.
 
 === Worklist item
 * Release Worklist Item: release a worklist item using its S/N

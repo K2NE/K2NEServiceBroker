@@ -57,7 +57,7 @@ namespace K2Field.K2NE.ServiceBroker
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.Data, SoType.Text, "Data"));
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.SerialNumber, SoType.Text, "SerialNumber"));
 
-            Method getWorkload = Helper.CreateMethod(Constants.Methods.ClientWorklist.GetWorklist, "Provides a management view of the user workload.", MethodType.List);
+            Method getWorkload = Helper.CreateMethod(Constants.Methods.ClientWorklist.GetWorklist, "Provides a client's view of the user workload.", MethodType.List);
             // Input properties, will be used for an excact match in search, combined with 'AND'. Please note that the list is NOT the same as the ReturnProperties because not every field is filterable via API.
             getWorkload.InputProperties.Add(Constants.Properties.ClientWorklist.ProcessName);
             getWorkload.InputProperties.Add(Constants.Properties.ClientWorklist.ProcessFolder);
