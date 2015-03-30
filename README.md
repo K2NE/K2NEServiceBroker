@@ -6,6 +6,13 @@
 
 The K2NE Service Broker provides common functionality that is used by a lot of projects, but is not provide by K2 out of the box.
 
+Check out the [ChangeLog](Documentation/ChangeLog.adoc).
+
+For other documentation on the functionality, see our [Documentation](Documentation/K2NEServiceBroker.adoc)
+
+
+The code will be 'work in progress' for quite a while, but the functionality in our master branch is stable.
+
 ## Installation
 The installer uses chocolatey, please see https://chocolatey.org/ on how to install that.
 
@@ -13,10 +20,6 @@ From that, you can simply run:
 `cinst K2NEServiceBroker`
 
 NOTE: The package is currently not hosted online but it will build automatically when you build the solution. Copy the nupkg in your repository and enjoy it.
-
-## Documentation and Changelog
-[ChangeLog](Documentation/ChangeLog.adoc)
-[Documentation](Documentation/K2NEServiceBroker.adoc)
 
 
 ## Disclaimer
