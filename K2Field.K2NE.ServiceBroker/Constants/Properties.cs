@@ -117,7 +117,24 @@ namespace K2Field.K2NE.ServiceBroker.Constants
                 public const string StartSync = "StartSynchronous";
                 public const string ProcessFolio = "Folio";
                 public const string ProcessVersion = "ProcessVersion";
+            }
 
+            public static class ActiveDirectory
+            {
+                public const string SamAccountName = "sAMAcountName";
+                public const string DisplayName = "DisplayName";
+                public const string CommonName = "CommonName";
+                public const string UserFQN = "UserFQN";
+                public const string GivenName = "GivenName";
+                public const string Initials = "Initials";
+                public const string Surname = "Surname";
+                public const string Email = "Email";
+
+                public const string SubStringSearchInput = "SubStringSearchInput";
+                public const string OrganisationalUnit = "OrganisationalUnit";
+
+
+                public static string MaxSearchResultSize = "MaxResultSize";
             }
     }
 }

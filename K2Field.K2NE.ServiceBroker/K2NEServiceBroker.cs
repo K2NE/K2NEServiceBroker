@@ -36,6 +36,7 @@ namespace K2Field.K2NE.ServiceBroker
                             serviceObjects.Add(new WorklistSO(this));
                             serviceObjects.Add(new ProcessInstanceManagementSO(this));
                             serviceObjects.Add(new RoleManagementSO(this));
+                            serviceObjects.Add(new ActiveDirectorySO(this));
                         }
                     }
                 }
@@ -178,6 +179,9 @@ namespace K2Field.K2NE.ServiceBroker
             this.Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.EnvironmentToUse, false, "");
             this.Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.DefaultCulture, true, "EN-us");
             this.Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.Platform, false, "ASP");
+            this.Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.AdMaxResultSize, false, "1000");
+            this.Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.LDAPPath, false, "LDAP://DC=denallix,DC=COM");
+            this.Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.NetbiosName, false, "Denallix");
             return base.GetConfigSection();
         }
         public override void Extend() { }

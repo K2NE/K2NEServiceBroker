@@ -57,6 +57,24 @@ namespace K2Field.K2NE.ServiceBroker
 
         }
 
+        public string LDAPPath
+        {
+            get
+            {
+                return this.ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.LDAPPath].ToString();
+            }
+        }
+
+        public int ADMaxResultSize
+        {
+            get
+            {
+                return int.Parse(this.ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.AdMaxResultSize].ToString());
+
+            }
+        }
+
+
         /// <summary>
         /// This is the k2 client api connectionSetup object that can be used to create a connection.
         /// </summary>
@@ -91,6 +109,16 @@ namespace K2Field.K2NE.ServiceBroker
                 return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.Platform].ToString();
             }
         }
+
+        public string NetBiosName
+        {
+            get
+            {
+
+                return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.NetbiosName].ToString();
+            }
+        }
+
 
         /// <summary>
         /// Returns the FQN for the user calling the SMO.
@@ -400,7 +428,7 @@ namespace K2Field.K2NE.ServiceBroker
             ServiceBroker = broker;
 
             if (wordMatchRegex == null)
-            {             
+            {
                 // Match a word, a dot, another word with possibly a special character in it. And, maybe after that a third word with a dot in front of it. Examples:
                 // "Environment.SimpleField"
                 // "Environment.SimpleField with a space"
@@ -429,6 +457,8 @@ namespace K2Field.K2NE.ServiceBroker
 
         #endregion Abstract methods
 
- 
+
+
+
     }
 }

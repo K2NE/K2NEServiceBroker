@@ -69,6 +69,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -87,6 +88,7 @@
     <Compile Include="MapHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceObjectBase.cs" />
+    <Compile Include="ServiceObjects\ActiveDirectorySO.cs" />
     <Compile Include="ServiceObjects\ErrorLogSO.cs" />
     <Compile Include="ServiceObjects\IdentitySO.cs" />
     <Compile Include="ServiceObjects\ManagementWorklistSO.cs" />
@@ -101,10 +103,15 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>REM xcopy /R /Y "$(TargetPath)" "c:\Program Files (x86)\K2 blackpearl\ServiceBroker\"
+    <PostBuildEvent>if "Debug"=="$(ConfigurationName)" (
+  xcopy /R /Y "$(TargetPath)" "c:\Program Files (x86)\K2 blackpearl\ServiceBroker\"
+)
+
+if "Release"=="$(ConfigurationName)" (
 xcopy /R /Y "$(TargetPath)" "$(SolutionDir)\chocoPackage\tools\"
 cd "$(SolutionDir)\chocoPackage\"
-cpack</PostBuildEvent>
+cpack
+)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -50,8 +50,13 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string AddRoleItem = "AddRoleItem";
             public const string RemoveRoleItem = "RemoveRoleItem";
             public const string ListRoleItem = "ListRoleItem";
+        }
 
-
+        public static class ActiveDirectory
+        {
+            public const string GetUsers = "GetUsers";
+            public const string GetUserDetails = "GetUserDetails";
+            public const string SearchUsers = "SearchUsers";
         }
     }
 }
