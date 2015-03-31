@@ -281,7 +281,36 @@ namespace K2Field.K2NE.ServiceBroker
             DirectorySearcher searcher = new DirectorySearcher(GetDirectoryEntry());
 
 
-            searcher.Filter = "(&(objectcategory=person)(objectclass=user))";
+            StringBuilder searchFilter = new StringBuilder();
+            searchFilter.Append("(&");
+            searchFilter.Append("(objectcategory=person)(objectclass=user)");
+
+
+            string displayName = base.GetStringProperty(Constants.Properties.ActiveDirectory.DisplayName, false);
+            if (!string.IsNullOrEmpty(displayName))
+            {
+                searchFilter.AppendFormat("({0}={1})", AdProperties.DisplayName, displayName);
+            }
+
+            string email = base.GetStringProperty(Constants.Properties.ActiveDirectory.Email, false);
+            if (!string.IsNullOrEmpty(email))
+            {
+                searchFilter.AppendFormat("({0}={1})", AdProperties.Email, email);
+            }
+
+            string userfqn = base.GetStringProperty(Constants.Properties.ActiveDirectory.UserFQN, false);
+            if (!string.IsNullOrEmpty(userfqn))
+            {
+                string samlaccountname = userfqn.Substring(userfqn.IndexOf('\\') + 1);
+                searchFilter.AppendFormat("({0}={1})", AdProperties.SamlAccountName, samlaccountname);
+            }
+
+            searchFilter.Append(")");
+
+
+
+
+            searcher.Filter = searchFilter.ToString();
             if (maxResultSet == 0)
             {
                 searcher.SizeLimit = base.ADMaxResultSize;
