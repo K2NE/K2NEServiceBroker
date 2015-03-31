@@ -84,8 +84,7 @@ DocProject/buildhelp/
 DocProject/Help/*.HxT
 DocProject/Help/*.HxC
 DocProject/Help/*.hhc
-DocProject/Help/*.hhk
-DocProject/Help/*.hhp
+githDocProject/Help/*.hhp
 DocProject/Help/Html2
 DocProject/Help/html
 
@@ -151,6 +150,11 @@ Desktop.ini
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
+# Mac desktop service store files
+.DS_Store
+
+
+*.nupkg
 
 # Chocopackage
 chocoPackage/tools/*.dll
