@@ -50,6 +50,35 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string AddRoleItem = "AddRoleItem";
             public const string RemoveRoleItem = "RemoveRoleItem";
             public const string ListRoleItem = "ListRoleItem";
+        }
+
+        public static class ActiveDirectory
+        {
+            public const string GetUsers = "GetUsers";
+            public const string GetUserDetails = "GetUserDetails";
+            public const string SearchUsers = "SearchUsers";
+        }
+
+        public static class WorkingHoursConfiguration
+        {
+            public const string CreateZone = "CreateZone";
+            public const string SaveZone = "SaveZone";
+            public const string LoadZone = "LoadZone";
+            public const string DeleteZone = "DeleteZone";
+            public const string ListZones = "ListZones";
+            public const string ListZoneUsers = "ListZoneUsers";
+            public const string GetDefaultZone = "GetDefaultZone";
+            public const string SetDefaultZone = "SetDefaultZone";
+            public const string ZoneExists = "ZoneExists";
+            public const string ZoneCalculateEvent = "ZoneCalculateEvent";
+            public const string UserSetZone = "UserSetZone";
+            public const string UserGetZone = "UserGetZone";
+            public const string UserDeleteZone = "UserDeleteZone";
+            public const string UserCalculateEvent = "UserCalculateEvent";
+            
+            //TODO: Later if needed
+            public const string ListZoneWorkingHours = "ListZoneWorkingHours";
+            public const string ListZoneAvailabilityDates = "ListZoneAvailabilityDates";
 
 
         }

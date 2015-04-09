@@ -69,19 +69,18 @@ namespace K2Field.K2NE.ServiceBroker
 
         public override void Execute()
         {
-            using (System.Security.Principal.WindowsIdentity.Impersonate(IntPtr.Zero))
-            {
-                switch (ServiceBroker.Service.ServiceObjects[0].Methods[0].Name)
-                {
-                    case Constants.Methods.Identity.ReadWorkflowClientIdentity:
-                        WhoAmI();
-                        break;
 
-                    case Constants.Methods.Identity.ReadThreadIdentity:
-                        ReadThreadIdentity();
-                        break;
-                }
+            switch (ServiceBroker.Service.ServiceObjects[0].Methods[0].Name)
+            {
+                case Constants.Methods.Identity.ReadWorkflowClientIdentity:
+                    WhoAmI();
+                    break;
+
+                case Constants.Methods.Identity.ReadThreadIdentity:
+                    ReadThreadIdentity();
+                    break;
             }
+
         }
 
 
@@ -131,7 +130,7 @@ namespace K2Field.K2NE.ServiceBroker
                 dr[Constants.Properties.Identity.UserManager] = k2Con.User.Manager;
                 dr[Constants.Properties.Identity.UserName] = k2Con.User.Name;
                 dr[Constants.Properties.Identity.UserUserLabel] = k2Con.User.UserLabel;
-                           
+
                 dr[Constants.Properties.Identity.CallingFQN] = base.CallingFQN;
 
                 results.Rows.Add(dr);

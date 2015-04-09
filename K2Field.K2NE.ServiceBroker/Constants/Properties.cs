@@ -117,7 +117,58 @@ namespace K2Field.K2NE.ServiceBroker.Constants
                 public const string StartSync = "StartSynchronous";
                 public const string ProcessFolio = "Folio";
                 public const string ProcessVersion = "ProcessVersion";
+            }
 
+            public static class ActiveDirectory
+            {
+                public const string SamAccountName = "sAMAcountName";
+                public const string DisplayName = "DisplayName";
+                public const string CommonName = "CommonName";
+                public const string UserFQN = "UserFQN";
+                public const string GivenName = "GivenName";
+                public const string Initials = "Initials";
+                public const string Surname = "Surname";
+                public const string Email = "Email";
+
+                public const string SubStringSearchInput = "SubStringSearchInput";
+                public const string OrganisationalUnit = "OrganisationalUnit";
+
+
+                public static string MaxSearchResultSize = "MaxResultSize";
+            }
+
+            public static class WorkingHoursConfiguration
+            {
+                public const string ZoneName = "ZoneName";
+                public const string NewZoneName = "NewZoneName";
+                public const string ZoneGUID = "ZoneGUID";
+                public const string Description = "Description";
+                public const string GMTOffset = "GMTOffset";
+                public const string DefaultZone = "DefaultZone";
+                
+                public const string DurationHours = "DurationHours";
+                public const string DurationMinutes = "DurationMinutes";
+                public const string DurationSeconds = "DurationSeconds";
+                public const string TimeOfDayHours = "TimeOfDayHours";
+                public const string TimeOfDayMinutes = "TimeOfDayMinutes";
+                public const string TimeOfDaySeconds = "TimeOfDaySeconds";
+                public const string WorkDay = "WorkDay";
+                
+                //public const string Description = "Description";
+                //public const string AvailabilityDateDurationDays = "AvailabilityHoursTimeOfDayDays";
+                //public const string AvailabilityDateDurationHours = "AvailabilityDateDurationHours";
+                //public const string AvailabilityDateDurationMinutes = "AvailabilityDateDurationMinutes";
+                //public const string AvailabilityDateDurationSeconds = "AvailabilityDateDurationSeconds";
+                public const string IsNonWorkDate = "IsNonWorkDate";
+                //public const string AvailabilityDateTimeOfDayHours = "AvailabilityDateTimeOfDayHours";
+                //public const string AvailabilityDateTimeOfDayMinutes = "AvailabilityDateTimeOfDayMinutes";
+                //public const string AvailabilityDateTimeOfDaySeconds = "AvailabilityDateTimeOfDaySeconds";
+                public const string WorkDate = "WorkDate";
+                public const string FQN = "FQN";
+                public const string UserName = "UserName";
+                public const string ZoneExists = "ZoneExists";
+                public const string StartDateTime = "StartDateTime";
+                public const string FinishDateTime = "FinishDateTime";
             }
     }
 }
