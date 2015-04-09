@@ -71,7 +71,7 @@ namespace K2Field.K2NE.ServiceBroker
             soUser.Methods.Add(mGetUserDetails);
 
 
-            Method mSearchUser = Helper.CreateMethod(Constants.Methods.ActiveDirectory.SearchUsers, "Search for a user based on samlaccuntname and displayname.", MethodType.List);
+            Method mSearchUser = Helper.CreateMethod(Constants.Methods.ActiveDirectory.SearchUsers, "Performs a StartWith query on DisplayName, SamlAccountName and E-mail.", MethodType.List);
             mSearchUser.InputProperties.Add(Constants.Properties.ActiveDirectory.SubStringSearchInput);
             mSearchUser.Validation.RequiredProperties.Add(Constants.Properties.ActiveDirectory.SubStringSearchInput);
             mSearchUser.InputProperties.Add(Constants.Properties.ActiveDirectory.MaxSearchResultSize);
@@ -237,7 +237,7 @@ namespace K2Field.K2NE.ServiceBroker
             string searchval = base.GetStringProperty(Constants.Properties.ActiveDirectory.SubStringSearchInput, true);
 
 
-            searcher.Filter = string.Format("(&(objectcategory=person)(objectclass=user)(|(sAMAccountName=*{0}*)(displayName=*{0}*)(mail=*{0}*)))", searchval);
+            searcher.Filter = string.Format("(&(objectcategory=person)(objectclass=user)(|(sAMAccountName={0}*)(displayName={0}*)(mail={0}*)))", searchval);
             if (maxResultSet == 0)
             {
                 searcher.SizeLimit = base.ADMaxResultSize;
