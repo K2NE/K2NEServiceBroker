@@ -35,7 +35,7 @@ namespace K2Field.K2NE.ServiceBroker
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessStartdate, SoType.DateTime, "The start date of the process instance."));
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessExpectedDuration, SoType.Number, "The expected duration for this process instance in seconds."));
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessGuid, SoType.Guid, "The unique guid of the process instance."));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessId, SoType.Text, "The unique id of the process instance."));
+            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessId, SoType.Number, "The unique id of the process instance."));
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityId, SoType.Number, "The unique id of the activity."));
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityName, SoType.Text, "The name of the activity."));
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityPriority, SoType.Text, "The current priority of the activity."));
