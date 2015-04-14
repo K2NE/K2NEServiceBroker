@@ -136,5 +136,13 @@ namespace K2Field.K2NE.ServiceBroker.Constants
 
                 public static string MaxSearchResultSize = "MaxResultSize";
             }
+
+            public static class OutOfOffice
+            {
+                public const string UserFQN = "UserFQN";
+                public const string UserStatus = "UserStatus";
+                public const string CallSuccess = "CallSuccess";
+
+            }
     }
 }

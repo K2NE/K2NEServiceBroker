@@ -58,5 +58,13 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string GetUserDetails = "GetUserDetails";
             public const string SearchUsers = "SearchUsers";
         }
+
+        public static class OutOfOffice
+        {
+            public const string SetOutOfOffice = "SetOutOfOffice";
+            public const string SetInOffice = "SetInOffice";
+            public const string ListSharedUsers = "ListSharedUsers";
+            public const string GetUserStatus = "GetUserStatus";
+        }
     }
 }
