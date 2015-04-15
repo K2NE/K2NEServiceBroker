@@ -43,7 +43,6 @@ namespace K2Field.K2NE.ServiceBroker
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityMetadata, SoType.Text, "The metadata defined on the activity."));
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityStartdate, SoType.DateTime, "The start date of the activity instance."));
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityExpectedDuration, SoType.Number, "The expected duration of the activity."));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityOverdue, SoType.Text, "ActivityOverdue"));
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventId, SoType.Text, "EventId"));
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventName, SoType.Text, "EventName"));
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventMetadata, SoType.Text, "EventMetadata"));
@@ -105,7 +104,6 @@ namespace K2Field.K2NE.ServiceBroker
             getWorkload.ReturnProperties.Add(Constants.Properties.ClientWorklist.ActivityMetadata);
             getWorkload.ReturnProperties.Add(Constants.Properties.ClientWorklist.ActivityStartdate);
             getWorkload.ReturnProperties.Add(Constants.Properties.ClientWorklist.ActivityExpectedDuration);
-            getWorkload.ReturnProperties.Add(Constants.Properties.ClientWorklist.ActivityOverdue);
             getWorkload.ReturnProperties.Add(Constants.Properties.ClientWorklist.EventId);
             getWorkload.ReturnProperties.Add(Constants.Properties.ClientWorklist.EventName);
             getWorkload.ReturnProperties.Add(Constants.Properties.ClientWorklist.EventMetadata);
@@ -247,8 +245,6 @@ namespace K2Field.K2NE.ServiceBroker
             dr[Constants.Properties.ClientWorklist.Data] = wli.Data;
             dr[Constants.Properties.ClientWorklist.SerialNumber] = wli.SerialNumber;
             dr[Constants.Properties.ClientWorklist.OriginalDestination] = wli.AllocatedUser;
-  
-
             table.Rows.Add(dr);
         }
 
