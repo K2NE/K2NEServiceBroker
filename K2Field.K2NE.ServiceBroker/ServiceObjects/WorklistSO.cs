@@ -236,9 +236,8 @@ namespace K2Field.K2NE.ServiceBroker
             dr[Constants.Properties.ClientWorklist.Folio] = wli.ProcessInstance.Folio;
             dr[Constants.Properties.ClientWorklist.Data] = wli.Data;
             dr[Constants.Properties.ClientWorklist.SerialNumber] = wli.SerialNumber;
-
-            //TODO: Add ActivityOverdue
-            //TODO: Add OriginalDestination
+            dr[Constants.Properties.ClientWorklist.OriginalDestination] = wli.AllocatedUser;
+  
 
             table.Rows.Add(dr);
         }
