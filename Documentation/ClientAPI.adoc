@@ -1,7 +1,7 @@
 == Client API
 
 === Worklist
-* Get Worklist: Retrieves the worklistitems for the current user. Any input will become a AND-filtered query.
+* Get Worklist: Retrieves the worklistitems for the current user. Any input will become a AND-filtered query, except for the 'IncludeShared' option, which indicates if shared worklist items should be retrieved as well.
 
 === Worklist item
 * Release Worklist Item: release a worklist item using its S/N

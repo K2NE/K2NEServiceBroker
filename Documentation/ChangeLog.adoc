@@ -1,5 +1,10 @@
 == ChangeLog
 
+=== v1.1.3
+- Worklist SO - Remove ActivityOverdue column in the WorklistSO as it was not filled and this calculation can be done on the UI side.
+- Worklist SO - Fill the Originaldestination column with the Allocated User field.
+- Worklist SO - Include option to retrieve shared Worklist items, these are the out of office worklist items for other users. Must be provided as input property.
+
 === v1.1.2
 - Changed 'ProcesInstanceId' to an Number, it was a Text property. This made linking with application data difficult.
 
