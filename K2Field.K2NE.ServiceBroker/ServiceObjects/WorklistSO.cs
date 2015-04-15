@@ -56,9 +56,11 @@ namespace K2Field.K2NE.ServiceBroker
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.Folio, SoType.Text, "Folio"));
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.Data, SoType.Text, "Data"));
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.SerialNumber, SoType.Text, "SerialNumber"));
+            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.IncludeShared, SoType.YesNo, "Include Shared Tasks"));
 
             Method getWorkload = Helper.CreateMethod(Constants.Methods.ClientWorklist.GetWorklist, "Provides a client's view of the user workload.", MethodType.List);
             // Input properties, will be used for an excact match in search, combined with 'AND'. Please note that the list is NOT the same as the ReturnProperties because not every field is filterable via API.
+            getWorkload.InputProperties.Add(Constants.Properties.ClientWorklist.IncludeShared);
             getWorkload.InputProperties.Add(Constants.Properties.ClientWorklist.ProcessName);
             getWorkload.InputProperties.Add(Constants.Properties.ClientWorklist.ProcessFolder);
             getWorkload.InputProperties.Add(Constants.Properties.ClientWorklist.ProcessFullname);
@@ -117,6 +119,9 @@ namespace K2Field.K2NE.ServiceBroker
             getWorkload.ReturnProperties.Add(Constants.Properties.ClientWorklist.Data);
             getWorkload.ReturnProperties.Add(Constants.Properties.ClientWorklist.SerialNumber);
             worklistSO.Methods.Add(getWorkload);
+
+
+
 
             ServiceObject worklistItemSO = Helper.CreateServiceObject("WorklistItem", "Exposes functionality for a single worklistitem");
 
@@ -181,6 +186,11 @@ namespace K2Field.K2NE.ServiceBroker
                 WorklistCriteria wc = new WorklistCriteria();
                 wc.Platform = base.Platform;
                 AddFieldFilters(wc);
+                if (base.GetBoolProperty(Constants.Properties.ClientWorklist.IncludeShared) == true)
+                {
+                    wc.AddFilterField(WCLogical.Or, WCField.WorklistItemOwner, "Me", WCCompare.Equal, WCWorklistItemOwner.Me); 
+                    wc.AddFilterField(WCLogical.Or, WCField.WorklistItemOwner, "Other", WCCompare.Equal, WCWorklistItemOwner.Other);
+                }
                 Worklist wl = k2Con.OpenWorklist(wc);
 
                 foreach (WorklistItem wli in wl)
