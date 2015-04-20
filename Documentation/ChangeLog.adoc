@@ -1,5 +1,8 @@
 == ChangeLog
 
+=== v1.1.4
+- Worklist SO - Added 'ExcludeAllocated' flag which will all you to remove the allocated tasks. This is useful if a task is assigned to a group of people and has multiple slots, as at that point the task will show up multiple times (the allocated and opened item).
+
 === v1.1.3
 - Worklist SO - Remove ActivityOverdue column in the WorklistSO as it was not filled and this calculation can be done on the UI side.
 - Worklist SO - Fill the Originaldestination column with the Allocated User field.

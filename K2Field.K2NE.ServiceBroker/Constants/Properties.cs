@@ -77,6 +77,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
                 public const string ActivityOverdue = "ActivityOverdue";
                 public const string OriginalDestination = "OriginalDestination";
                 public const string IncludeShared = "IncludeShared";
+                public const string ExcludeAllocated = "ExcludeAllocated";
             }
 
 
