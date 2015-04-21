@@ -11,6 +11,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         public const string PropertyNotFound = "The property with name '{0}', could not be found.";
         public const string RoleNotExists = "The given role does not exist.";
         public const string RoleTypeNotSupported = "Role Type is not supported. Only User and group allowed.";
+        public const string OutOfOfficeNotConfiguredForUser = "User does not have out of office configured.  Please configure the users out of office settings.";
     }
 
 

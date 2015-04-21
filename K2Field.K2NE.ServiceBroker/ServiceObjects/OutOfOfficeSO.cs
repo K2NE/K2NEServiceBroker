@@ -111,10 +111,9 @@ namespace K2Field.K2NE.ServiceBroker
             using (mngServer.CreateConnection())
             {
                 mngServer.Open(BaseAPIConnectionString);
+                // None for userstatus means the users is not configured, throw an exception
                 if (UserStatuses.None == mngServer.GetUserStatus(userFQN))
-                {
-                    SourceCode.Workflow.Management.OOF.User user = new SourceCode.Workflow.Management.OOF.User(userFQN, UserStatuses.Available);
-                }
+                    throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
                 
                 bool result = mngServer.SetUserStatus(userFQN, UserStatuses.Available);
 
@@ -126,7 +125,7 @@ namespace K2Field.K2NE.ServiceBroker
             }
         }
 
-        //TODO:  Should not be successful if user does not have destination users configured.
+      
         private void SetOutOfOffice()
         {
             string userFQN = base.GetStringProperty(Constants.Properties.OutOfOffice.UserFQN);
@@ -140,7 +139,11 @@ namespace K2Field.K2NE.ServiceBroker
             using (mngServer.CreateConnection())
             {
                 mngServer.Open(BaseAPIConnectionString);
-                
+
+                // None for userstatus means the users is not configured, throw an exception
+                if (UserStatuses.None == mngServer.GetUserStatus(userFQN))
+                    throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
+
                 bool result = mngServer.SetUserStatus(userFQN, UserStatuses.OOF);
                 DataRow dr = results.NewRow();
                 dr[Constants.Properties.OutOfOffice.UserFQN] = userFQN;
