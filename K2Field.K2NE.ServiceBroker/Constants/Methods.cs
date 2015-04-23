@@ -64,6 +64,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string SetOutOfOffice = "SetOutOfOffice";
             public const string SetInOffice = "SetInOffice";
             public const string ListSharedUsers = "ListSharedUsers";
+            public const string AddOutOfOffice = "AddOutOfOffice";
             public const string GetUserStatus = "GetUserStatus";
         }
     }
