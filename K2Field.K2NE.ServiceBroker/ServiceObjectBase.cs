@@ -16,6 +16,8 @@ using System.Reflection;
 using System.IO;
 using System.Threading;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.AccessControl;
+using System.Security.Principal;
 
 namespace K2Field.K2NE.ServiceBroker
 {
@@ -27,7 +29,7 @@ namespace K2Field.K2NE.ServiceBroker
 
         private static Dictionary<string, string> environmentFields = new Dictionary<string, string>();
         private static Object envLock = new Object();
-        private static Mutex envMutex = new Mutex(false, "environmentMutext");
+        private Mutex envMutex;
 
         private static Regex wordMatchRegex = null;
 
@@ -377,6 +379,12 @@ namespace K2Field.K2NE.ServiceBroker
 
         private void LoadDefaultEnvironmentFields()
         {
+
+            bool mutexCreated;
+
+            MutexSecurity mutexsecurity = new MutexSecurity();
+            mutexsecurity.AddAccessRule(new MutexAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), MutexRights.Synchronize | MutexRights.Modify, AccessControlType.Allow));
+            envMutex = new Mutex(false, "Global\\environmentMutext", out mutexCreated, mutexsecurity);
             envMutex.WaitOne();
             Dictionary<string, string> tempEnv = new Dictionary<string, string>();
             EnvironmentSettingsManager environmentManager = new EnvironmentSettingsManager(false, true);
@@ -426,6 +434,21 @@ namespace K2Field.K2NE.ServiceBroker
         public ServiceObjectBase(K2NEServiceBroker broker)
         {
             ServiceBroker = broker;
+
+            //bool mutexCreated;
+
+            //MutexSecurity mutexsecurity = new MutexSecurity();
+            //mutexsecurity.AddAccessRule(new MutexAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), MutexRights.Synchronize | MutexRights.Modify, AccessControlType.Allow));
+
+
+            //try
+            //{
+            //    envMutex = Mutex.OpenExisting("Global\\environmentMutext", MutexRights.Synchronize | MutexRights.Modify);
+            //}
+            //catch (Exception ex)
+            //{
+            //    envMutex = new Mutex(false, "Global\\environmentMutext", out mutexCreated, mutexsecurity);
+            //}
 
             if (wordMatchRegex == null)
             {

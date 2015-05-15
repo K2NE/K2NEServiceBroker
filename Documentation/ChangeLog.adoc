@@ -1,4 +1,6 @@
 == ChangeLog
+=== v1.1.5
+- Fixed issue with mutex, not completely resolved but should not run into the issue anymore.s
 
 === v1.1.4
 - Worklist SO - Added 'ExcludeAllocated' flag which will all you to remove the allocated tasks. This is useful if a task is assigned to a group of people and has multiple slots, as at that point the task will show up multiple times (the allocated and opened item).
