@@ -36,11 +36,8 @@ namespace K2Field.K2NE.ServiceBroker
                             serviceObjects.Add(new WorklistSO(this));
                             serviceObjects.Add(new ProcessInstanceManagementSO(this));
                             serviceObjects.Add(new RoleManagementSO(this));
-<<<<<<< HEAD
                             serviceObjects.Add(new ActiveDirectorySO(this));
-=======
                             serviceObjects.Add(new WorkingHoursConfigurationSO(this));
->>>>>>> c66a6ddb216ceaf2d8eae1c9d267421bc5f24cca
                         }
                     }
                 }
