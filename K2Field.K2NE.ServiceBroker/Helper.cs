@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
+using System.Text.RegularExpressions;
 
 namespace K2Field.K2NE.ServiceBroker
 {
@@ -126,6 +127,25 @@ namespace K2Field.K2NE.ServiceBroker
             so.Active = true;
             return so;
         }
-
+        /// <summary>
+        /// Check if special characters exist in ZoneName
+        /// </summary>
+        /// <param name="zoneName">Name of a zone</param>
+        /// <returns></returns>
+        public static bool SpecialCharactersExist (string zoneName)
+        {
+            Regex pattern = new Regex(@"^[a-zA-Z0-9]*$");
+            return pattern.IsMatch(zoneName);
+        }
+        /// <summary>
+        /// Deletes the Label from FQN
+        /// </summary>
+        /// <param name="FQN">Fully Qualified Name</param>
+        /// <returns></returns>
+        public static string DeleteLabel (string FQN)
+        {
+            char[] delimiterChars = {':'};
+            return FQN.Split(delimiterChars)[1];
+        }
     }
 }
