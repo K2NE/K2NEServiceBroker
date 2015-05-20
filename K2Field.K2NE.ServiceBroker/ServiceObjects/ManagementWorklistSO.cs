@@ -51,23 +51,23 @@ namespace K2Field.K2NE.ServiceBroker
         {
             ServiceObject so = Helper.CreateServiceObject("ManagementWorklist", "Exposes the management worklist.");
 
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.ActivityId, SoType.Number, "Activity Id"));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.ActivityInstanceDestinationId, SoType.Number, "Activity Instance Destination Id"));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.ActivityInstanceId, SoType.Number, "Activity Instance Id"));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.ActivityName, SoType.Text, "The name of the activity."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.Destination, SoType.Text, "The destination of the worklist item."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.DestinationType, SoType.Text, "The type of the destination (user, group, role)"));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.EventId, SoType.Number, "Event Id"));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.EventName, SoType.Text, "The name of the event."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.Folio, SoType.Text, "The process folio."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.ProcessInstanceId, SoType.Number, "The process instance ID."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.ProcessName, SoType.Text, "The name of the process."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.ProcessStatus, SoType.Text, "The status of the process."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.StartDate, SoType.DateTime, "The date when the worklist item was created."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.WorklistItemStatus, SoType.Text, "The current status of the worklist item."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.WorklistItemId, SoType.Number, "The ID of the worklistitem."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.FromUser, SoType.Text, "The FQN of the user to redirect/delegate from."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ManagementWorklist.ToUser, SoType.Text, "The FQN of the user to redirect/delegate to."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ManagementWorklist.ActivityId, SoType.Number, "Activity Id"));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ManagementWorklist.ActivityInstanceDestinationId, SoType.Number, "Activity Instance Destination Id"));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ManagementWorklist.ActivityInstanceId, SoType.Number, "Activity Instance Id"));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ManagementWorklist.ActivityName, SoType.Text, "The name of the activity."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ManagementWorklist.Destination, SoType.Text, "The destination of the worklist item."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ManagementWorklist.DestinationType, SoType.Text, "The type of the destination (user, group, role)"));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ManagementWorklist.EventId, SoType.Number, "Event Id"));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ManagementWorklist.EventName, SoType.Text, "The name of the event."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ManagementWorklist.Folio, SoType.Text, "The process folio."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ManagementWorklist.ProcessInstanceId, SoType.Number, "The process instance ID."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ManagementWorklist.ProcessName, SoType.Text, "The name of the process."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ManagementWorklist.ProcessStatus, SoType.Text, "The status of the process."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ManagementWorklist.StartDate, SoType.DateTime, "The date when the worklist item was created."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ManagementWorklist.WorklistItemStatus, SoType.Text, "The current status of the worklist item."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ManagementWorklist.WorklistItemId, SoType.Number, "The ID of the worklistitem."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ManagementWorklist.FromUser, SoType.Text, "The FQN of the user to redirect/delegate from."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ManagementWorklist.ToUser, SoType.Text, "The FQN of the user to redirect/delegate to."));
 
 
 
@@ -87,7 +87,7 @@ namespace K2Field.K2NE.ServiceBroker
             getWorkload.ReturnProperties.Add(Constants.Properties.ManagementWorklist.StartDate);
             getWorkload.ReturnProperties.Add(Constants.Properties.ManagementWorklist.WorklistItemStatus);
             getWorkload.ReturnProperties.Add(Constants.Properties.ManagementWorklist.WorklistItemId);
-            so.Methods.Add(getWorkload);
+            so.Methods.Create(getWorkload);
 
 
 
@@ -97,11 +97,11 @@ namespace K2Field.K2NE.ServiceBroker
             mRedirectWorklistItem.InputProperties.Add(Constants.Properties.ManagementWorklist.ActivityInstanceDestinationId);
             mRedirectWorklistItem.InputProperties.Add(Constants.Properties.ManagementWorklist.FromUser);
             mRedirectWorklistItem.InputProperties.Add(Constants.Properties.ManagementWorklist.ToUser);
-            so.Methods.Add(mRedirectWorklistItem);
+            so.Methods.Create(mRedirectWorklistItem);
 
             Method mReleaseWorklistItem = Helper.CreateMethod(Constants.Methods.ManagementWorklist.ReleaseWorklistItem, "Release the worklistitem slot back into the wild", SourceCode.SmartObjects.Services.ServiceSDK.Types.MethodType.Execute);
             mReleaseWorklistItem.InputProperties.Add(Constants.Properties.ManagementWorklist.WorklistItemId);
-            so.Methods.Add(mReleaseWorklistItem);
+            so.Methods.Create(mReleaseWorklistItem);
 
             return new List<ServiceObject> { so };
         }

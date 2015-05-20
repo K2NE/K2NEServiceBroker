@@ -21,21 +21,21 @@ namespace K2Field.K2NE.ServiceBroker
             ServiceObject so = Helper.CreateServiceObject("Identity", "Useful methods to determine the identities being used.");
 
 
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.CurrentPrincipalAuthType, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "The current principal's authentication type"));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.CurrentPrincipalName, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "The current principal's authentication identity name."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.FQN, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "The K2 FQN of the user."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.UserDescription, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "The users description."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.UserDisplayName, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "The users displayname."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.UserEmail, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "The users email address."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.UserManager, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "The users manager."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.UserName, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "The users name."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.UserUserLabel, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "The users label."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.CallingFQN, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "The FQN determined by the service instance."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.WindowsIdentityAuthType, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "Windows Identity Authentication Type"));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.WindowsIdentityName, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "WIndows Identity Name"));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.ServiceBrokerAuthType, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "Service Broker Authentication Type"));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.ServiceBrokerUserName, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "Service Broker UserName"));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.UserWindowsImpersonation, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.YesNo, "Tells the service broker to use (windows) impersonation or not."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.Identity.CurrentPrincipalAuthType, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "The current principal's authentication type"));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.Identity.CurrentPrincipalName, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "The current principal's authentication identity name."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.Identity.FQN, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "The K2 FQN of the user."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.Identity.UserDescription, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "The users description."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.Identity.UserDisplayName, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "The users displayname."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.Identity.UserEmail, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "The users email address."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.Identity.UserManager, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "The users manager."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.Identity.UserName, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "The users name."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.Identity.UserUserLabel, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "The users label."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.Identity.CallingFQN, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "The FQN determined by the service instance."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.Identity.WindowsIdentityAuthType, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "Windows Identity Authentication Type"));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.Identity.WindowsIdentityName, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "WIndows Identity Name"));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.Identity.ServiceBrokerAuthType, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "Service Broker Authentication Type"));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.Identity.ServiceBrokerUserName, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "Service Broker UserName"));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.Identity.UserWindowsImpersonation, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.YesNo, "Tells the service broker to use (windows) impersonation or not."));
 
 
             Method mGetWorkflowClientIdentity = Helper.CreateMethod(Constants.Methods.Identity.ReadWorkflowClientIdentity, "Retrieve who you are for the K2 Client API", SourceCode.SmartObjects.Services.ServiceSDK.Types.MethodType.Read);
@@ -49,7 +49,7 @@ namespace K2Field.K2NE.ServiceBroker
             mGetWorkflowClientIdentity.ReturnProperties.Add(Constants.Properties.Identity.CallingFQN);
 
             mGetWorkflowClientIdentity.InputProperties.Add(Constants.Properties.Identity.UserWindowsImpersonation);
-            so.Methods.Add(mGetWorkflowClientIdentity);
+            so.Methods.Create(mGetWorkflowClientIdentity);
 
             Method mGetThreadIdentity = Helper.CreateMethod(Constants.Methods.Identity.ReadThreadIdentity, "Retrieve who you are for the API Identity", SourceCode.SmartObjects.Services.ServiceSDK.Types.MethodType.Read);
             mGetThreadIdentity.ReturnProperties.Add(Constants.Properties.Identity.CallingFQN);
@@ -61,7 +61,7 @@ namespace K2Field.K2NE.ServiceBroker
             mGetThreadIdentity.ReturnProperties.Add(Constants.Properties.Identity.ServiceBrokerUserName);
 
             mGetThreadIdentity.InputProperties.Add(Constants.Properties.Identity.UserWindowsImpersonation);
-            so.Methods.Add(mGetThreadIdentity);
+            so.Methods.Create(mGetThreadIdentity);
 
 
             return new List<ServiceObject> { so };

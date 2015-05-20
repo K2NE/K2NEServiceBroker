@@ -25,38 +25,38 @@ namespace K2Field.K2NE.ServiceBroker
         {
             ServiceObject worklistSO = Helper.CreateServiceObject("Worklist", "ServiceObject that exposes the users worklist.");
 
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessName, SoType.Text, "The name of the process."));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessFolder, SoType.Text, "The folder in which the process resides."));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessFullname, SoType.Text, "The full name of the process (folder + \\ + name)."));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessDescription, SoType.Text, "A description of the process."));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessMetadata, SoType.Text, "Metadata defined in the process."));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessStatus, SoType.Text, "The current status of the process instance."));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessPriority, SoType.Number, "The current priority of the process instance."));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessStartdate, SoType.DateTime, "The start date of the process instance."));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessExpectedDuration, SoType.Number, "The expected duration for this process instance in seconds."));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessGuid, SoType.Guid, "The unique guid of the process instance."));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessId, SoType.Number, "The unique id of the process instance."));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityId, SoType.Number, "The unique id of the activity."));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityName, SoType.Text, "The name of the activity."));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityPriority, SoType.Text, "The current priority of the activity."));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityDescription, SoType.Text, "The description of the activity."));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityMetadata, SoType.Text, "The metadata defined on the activity."));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityStartdate, SoType.DateTime, "The start date of the activity instance."));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityExpectedDuration, SoType.Number, "The expected duration of the activity."));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventId, SoType.Text, "EventId"));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventName, SoType.Text, "EventName"));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventMetadata, SoType.Text, "EventMetadata"));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventDescription, SoType.Text, "EventDescription"));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventPriority, SoType.Text, "EventPriority"));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventStartDate, SoType.Text, "EventStartDate"));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventExpectedDuration, SoType.Text, "EventExpectedDuration"));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.WorklistItemStatus, SoType.Text, "WorklistItemStatus"));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.OriginalDestination, SoType.Text, "OriginalDestination"));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.Folio, SoType.Text, "Folio"));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.Data, SoType.Text, "Data"));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.SerialNumber, SoType.Text, "SerialNumber"));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.IncludeShared, SoType.YesNo, "Include Shared Tasks"));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.ExcludeAllocated, SoType.YesNo, "Exclude Allocated Tasks"));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessName, SoType.Text, "The name of the process."));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessFolder, SoType.Text, "The folder in which the process resides."));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessFullname, SoType.Text, "The full name of the process (folder + \\ + name)."));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessDescription, SoType.Text, "A description of the process."));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessMetadata, SoType.Text, "Metadata defined in the process."));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessStatus, SoType.Text, "The current status of the process instance."));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessPriority, SoType.Number, "The current priority of the process instance."));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessStartdate, SoType.DateTime, "The start date of the process instance."));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessExpectedDuration, SoType.Number, "The expected duration for this process instance in seconds."));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessGuid, SoType.Guid, "The unique guid of the process instance."));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.ProcessId, SoType.Number, "The unique id of the process instance."));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityId, SoType.Number, "The unique id of the activity."));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityName, SoType.Text, "The name of the activity."));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityPriority, SoType.Text, "The current priority of the activity."));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityDescription, SoType.Text, "The description of the activity."));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityMetadata, SoType.Text, "The metadata defined on the activity."));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityStartdate, SoType.DateTime, "The start date of the activity instance."));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.ActivityExpectedDuration, SoType.Number, "The expected duration of the activity."));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventId, SoType.Text, "EventId"));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventName, SoType.Text, "EventName"));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventMetadata, SoType.Text, "EventMetadata"));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventDescription, SoType.Text, "EventDescription"));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventPriority, SoType.Text, "EventPriority"));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventStartDate, SoType.Text, "EventStartDate"));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventExpectedDuration, SoType.Text, "EventExpectedDuration"));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.WorklistItemStatus, SoType.Text, "WorklistItemStatus"));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.OriginalDestination, SoType.Text, "OriginalDestination"));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.Folio, SoType.Text, "Folio"));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.Data, SoType.Text, "Data"));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.SerialNumber, SoType.Text, "SerialNumber"));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.IncludeShared, SoType.YesNo, "Include Shared Tasks"));
+            worklistSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.ExcludeAllocated, SoType.YesNo, "Exclude Allocated Tasks"));
 
             Method getWorkload = Helper.CreateMethod(Constants.Methods.ClientWorklist.GetWorklist, "Provides a client's view of the user workload.", MethodType.List);
             // Input properties, will be used for an excact match in search, combined with 'AND'. Please note that the list is NOT the same as the ReturnProperties because not every field is filterable via API.
@@ -118,7 +118,7 @@ namespace K2Field.K2NE.ServiceBroker
             getWorkload.ReturnProperties.Add(Constants.Properties.ClientWorklist.Folio);
             getWorkload.ReturnProperties.Add(Constants.Properties.ClientWorklist.Data);
             getWorkload.ReturnProperties.Add(Constants.Properties.ClientWorklist.SerialNumber);
-            worklistSO.Methods.Add(getWorkload);
+            worklistSO.Methods.Create(getWorkload);
 
 
 
@@ -126,12 +126,12 @@ namespace K2Field.K2NE.ServiceBroker
             ServiceObject worklistItemSO = Helper.CreateServiceObject("WorklistItem", "Exposes functionality for a single worklistitem");
 
 
-            worklistItemSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.SerialNumber, SoType.Text, "SerialNumber"));
+            worklistItemSO.Properties.Create(Helper.CreateProperty(Constants.Properties.ClientWorklist.SerialNumber, SoType.Text, "SerialNumber"));
 
             Method releaseWorklistItem = Helper.CreateMethod(Constants.Methods.ClientWorklist.ReleaseWorklistItem, "Release a worklistitem.", MethodType.Execute);
             releaseWorklistItem.InputProperties.Add(Constants.Properties.ClientWorklist.SerialNumber);
             releaseWorklistItem.Validation.RequiredProperties.Add(Constants.Properties.ClientWorklist.SerialNumber);
-            worklistItemSO.Methods.Add(releaseWorklistItem);
+            worklistItemSO.Methods.Create(releaseWorklistItem);
 
 
 
