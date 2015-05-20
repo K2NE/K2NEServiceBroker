@@ -25,26 +25,26 @@ namespace K2Field.K2NE.ServiceBroker
         public override List<ServiceObject> DescribeServiceObjects()
         {
             ServiceObject so = Helper.CreateServiceObject("WorkingHoursConfiguration", "Service Object that exposes the Working Hours Configuration of the K2 server.");
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.DefaultZone, SoType.YesNo, "Shows if the zone is default"));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.Description, SoType.Memo, "Used for description of various objects."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.DurationHours, SoType.Number, "Hours for a timespan."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.DurationMinutes, SoType.Number, "Minutes for a timespan."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.DurationSeconds, SoType.Number, "Seconds for a timespan."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.GMTOffset, SoType.Number, "Time zone - from -13 to +13."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.IsNonWorkDate, SoType.YesNo, "Sets or shows if the day is working or not."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.TimeOfDayHours, SoType.Number, "Hours for a timespan for time of a day."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.TimeOfDayMinutes, SoType.Number, "Minutes for a timespan for time of a day."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.TimeOfDaySeconds, SoType.Number, "Seconds for a timespan for time of a day."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.WorkDate, SoType.DateTime, "Date of the exception date - workdate."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.WorkDay, SoType.Text, "Day of the week: Monday, Tuesday, Wednesday etc."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.ZoneGUID, SoType.Guid, "GUID of the zone."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.ZoneName, SoType.Text, "Name of the zone."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.NewZoneName, SoType.Text, "New name of the existing zone."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.FQN, SoType.Text, "FQN of users from a zone."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.UserName, SoType.Text, "UserName of users from a zone."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.ZoneExists, SoType.YesNo, "Does a zone exist."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.StartDateTime, SoType.DateTime, "Starting datetime."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.FinishDateTime, SoType.DateTime, "Finishing datetime."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.DefaultZone, SoType.YesNo, "Shows if the zone is default"));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.Description, SoType.Memo, "Used for description of various objects."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.DurationHours, SoType.Number, "Hours for a timespan."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.DurationMinutes, SoType.Number, "Minutes for a timespan."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.DurationSeconds, SoType.Number, "Seconds for a timespan."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.GMTOffset, SoType.Number, "Time zone - from -13 to +13."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.IsNonWorkDate, SoType.YesNo, "Sets or shows if the day is working or not."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.TimeOfDayHours, SoType.Number, "Hours for a timespan for time of a day."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.TimeOfDayMinutes, SoType.Number, "Minutes for a timespan for time of a day."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.TimeOfDaySeconds, SoType.Number, "Seconds for a timespan for time of a day."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.WorkDate, SoType.DateTime, "Date of the exception date - workdate."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.WorkDay, SoType.Text, "Day of the week: Monday, Tuesday, Wednesday etc."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.ZoneGUID, SoType.Guid, "GUID of the zone."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.ZoneName, SoType.Text, "Name of the zone."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.NewZoneName, SoType.Text, "New name of the existing zone."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.FQN, SoType.Text, "FQN of users from a zone."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.UserName, SoType.Text, "UserName of users from a zone."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.ZoneExists, SoType.YesNo, "Does a zone exist."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.StartDateTime, SoType.DateTime, "Starting datetime."));
+            so.Properties.Create(Helper.CreateProperty(Constants.Properties.WorkingHoursConfiguration.FinishDateTime, SoType.DateTime, "Finishing datetime."));
 
             Method createZone = Helper.CreateMethod(Constants.Methods.WorkingHoursConfiguration.CreateZone, "Creates a new Zone", MethodType.Create);
             createZone.InputProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneName);
@@ -53,7 +53,7 @@ namespace K2Field.K2NE.ServiceBroker
             createZone.InputProperties.Add(Constants.Properties.WorkingHoursConfiguration.DefaultZone);
             createZone.Validation.RequiredProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneName);
             createZone.Validation.RequiredProperties.Add(Constants.Properties.WorkingHoursConfiguration.GMTOffset);
-            so.Methods.Add(createZone);
+            so.Methods.Create(createZone);
 
             Method saveZone = Helper.CreateMethod(Constants.Methods.WorkingHoursConfiguration.SaveZone, "Updates an existing zone", MethodType.Update);
             saveZone.InputProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneName);
@@ -62,12 +62,12 @@ namespace K2Field.K2NE.ServiceBroker
             saveZone.InputProperties.Add(Constants.Properties.WorkingHoursConfiguration.GMTOffset);
             saveZone.InputProperties.Add(Constants.Properties.WorkingHoursConfiguration.DefaultZone);
             saveZone.Validation.RequiredProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneName);
-            so.Methods.Add(saveZone);
+            so.Methods.Create(saveZone);
 
             Method deleteZone = Helper.CreateMethod(Constants.Methods.WorkingHoursConfiguration.DeleteZone, "Deletes an existing zone", MethodType.Delete);
             deleteZone.InputProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneName);
             deleteZone.Validation.RequiredProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneName);
-            so.Methods.Add(deleteZone);
+            so.Methods.Create(deleteZone);
 
             Method loadZone = Helper.CreateMethod(Constants.Methods.WorkingHoursConfiguration.LoadZone, "Loads an existing zone", MethodType.Read);
             loadZone.InputProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneName);
@@ -76,33 +76,33 @@ namespace K2Field.K2NE.ServiceBroker
             loadZone.ReturnProperties.Add(Constants.Properties.WorkingHoursConfiguration.Description);
             loadZone.ReturnProperties.Add(Constants.Properties.WorkingHoursConfiguration.GMTOffset);
             loadZone.ReturnProperties.Add(Constants.Properties.WorkingHoursConfiguration.DefaultZone);
-            so.Methods.Add(loadZone);
+            so.Methods.Create(loadZone);
 
             Method listZones = Helper.CreateMethod(Constants.Methods.WorkingHoursConfiguration.ListZones, "Lists all existing zones", MethodType.List);
             listZones.ReturnProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneName);
-            so.Methods.Add(listZones);
+            so.Methods.Create(listZones);
 
             Method listZoneUsers = Helper.CreateMethod(Constants.Methods.WorkingHoursConfiguration.ListZoneUsers, "Lists all users for a certain zone", MethodType.List);
             listZoneUsers.InputProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneName);
             listZoneUsers.Validation.RequiredProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneName);
             listZoneUsers.ReturnProperties.Add(Constants.Properties.WorkingHoursConfiguration.FQN);
             listZoneUsers.ReturnProperties.Add(Constants.Properties.WorkingHoursConfiguration.UserName);
-            so.Methods.Add(listZoneUsers);
+            so.Methods.Create(listZoneUsers);
 
             Method getDefaultZone = Helper.CreateMethod(Constants.Methods.WorkingHoursConfiguration.GetDefaultZone, "Gets the name of the default zone", MethodType.Read);
             getDefaultZone.ReturnProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneName);
-            so.Methods.Add(getDefaultZone);
+            so.Methods.Create(getDefaultZone);
 
             Method setDefaultZone = Helper.CreateMethod(Constants.Methods.WorkingHoursConfiguration.SetDefaultZone, "Sets the zone as a default one", MethodType.Execute);
             setDefaultZone.InputProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneName);
             setDefaultZone.Validation.RequiredProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneName);
-            so.Methods.Add(setDefaultZone);
+            so.Methods.Create(setDefaultZone);
 
             Method zoneExists = Helper.CreateMethod(Constants.Methods.WorkingHoursConfiguration.ZoneExists, "Returns true or false if a zone exists", MethodType.Execute);
             zoneExists.InputProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneName);
             zoneExists.Validation.RequiredProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneName);
             zoneExists.ReturnProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneExists);
-            so.Methods.Add(zoneExists);
+            so.Methods.Create(zoneExists);
 
             Method zoneCalculateEvent = Helper.CreateMethod(Constants.Methods.WorkingHoursConfiguration.ZoneCalculateEvent, "Adding working hours of a zone to datetime", MethodType.Execute);
             zoneCalculateEvent.InputProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneName);
@@ -113,23 +113,23 @@ namespace K2Field.K2NE.ServiceBroker
             zoneCalculateEvent.Validation.RequiredProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneName);
             zoneCalculateEvent.Validation.RequiredProperties.Add(Constants.Properties.WorkingHoursConfiguration.StartDateTime);
             zoneCalculateEvent.ReturnProperties.Add(Constants.Properties.WorkingHoursConfiguration.FinishDateTime);
-            so.Methods.Add(zoneCalculateEvent);
+            so.Methods.Create(zoneCalculateEvent);
 
             Method userSetZone = Helper.CreateMethod(Constants.Methods.WorkingHoursConfiguration.UserSetZone, "Associate user with a certain zone", MethodType.Execute);
             userSetZone.InputProperties.Add(Constants.Properties.WorkingHoursConfiguration.FQN);
             userSetZone.InputProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneName);
             userSetZone.Validation.RequiredProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneName);
             userSetZone.Validation.RequiredProperties.Add(Constants.Properties.WorkingHoursConfiguration.FQN);
-            so.Methods.Add(userSetZone);
+            so.Methods.Create(userSetZone);
 
             Method userGetZone = Helper.CreateMethod(Constants.Methods.WorkingHoursConfiguration.UserGetZone, "Gets the associated zone of a user", MethodType.Read);
             userGetZone.InputProperties.Add(Constants.Properties.WorkingHoursConfiguration.FQN);
             userGetZone.ReturnProperties.Add(Constants.Properties.WorkingHoursConfiguration.ZoneName);
-            so.Methods.Add(userGetZone);
+            so.Methods.Create(userGetZone);
 
             Method userDeleteZone = Helper.CreateMethod(Constants.Methods.WorkingHoursConfiguration.UserDeleteZone, "Deletes the associated zone of a user", MethodType.Execute);
             userDeleteZone.InputProperties.Add(Constants.Properties.WorkingHoursConfiguration.FQN);
-            so.Methods.Add(userDeleteZone);
+            so.Methods.Create(userDeleteZone);
 
             Method userCalculateEvent = Helper.CreateMethod(Constants.Methods.WorkingHoursConfiguration.UserCalculateEvent, "Adding working hours of a user zone to datetime", MethodType.Execute);
             userCalculateEvent.InputProperties.Add(Constants.Properties.WorkingHoursConfiguration.FQN);
@@ -140,7 +140,7 @@ namespace K2Field.K2NE.ServiceBroker
             userCalculateEvent.Validation.RequiredProperties.Add(Constants.Properties.WorkingHoursConfiguration.FQN);
             userCalculateEvent.Validation.RequiredProperties.Add(Constants.Properties.WorkingHoursConfiguration.StartDateTime);
             userCalculateEvent.ReturnProperties.Add(Constants.Properties.WorkingHoursConfiguration.FinishDateTime);
-            so.Methods.Add(userCalculateEvent);
+            so.Methods.Create(userCalculateEvent);
             
             return new List<ServiceObject> { so };
         }
@@ -442,8 +442,21 @@ namespace K2Field.K2NE.ServiceBroker
                 else
                 {
                     TimeSpan Duration = new TimeSpan(DurationHours, DurationMinutes, DurationSeconds);
+
+                    DateTime dt;
+                    if (!DateTime.TryParse(Start, out dt))
+                    {
+                        throw new ApplicationException(Constants.ErrorMessages.DateNotValid);
+                    }
+
+                    AvailabilityZone zone = mngServer.ZoneLoad(ZoneName);
+                    if (zone.AvailabilityHoursList == null || zone.AvailabilityHoursList.Count == 0)
+                    {
+                        throw new ApplicationException(Constants.ErrorMessages.WorkingHoursNotSet);
+                    }
+
                     DataRow dRow = results.NewRow();
-                    dRow[Constants.Properties.WorkingHoursConfiguration.FinishDateTime] = mngServer.ZoneCalculateEvent(ZoneName, Convert.ToDateTime(Start), Duration);
+                    dRow[Constants.Properties.WorkingHoursConfiguration.FinishDateTime] = mngServer.ZoneCalculateEvent(ZoneName, dt, Duration);
                     results.Rows.Add(dRow);
                 }
             }
@@ -510,9 +523,23 @@ namespace K2Field.K2NE.ServiceBroker
             using (mngServer.CreateConnection())
             {
                 mngServer.Open(BaseAPIConnectionString);
+
                 TimeSpan Duration = new TimeSpan(DurationHours, DurationMinutes, DurationSeconds);
+
+                DateTime dt;
+                if (!DateTime.TryParse(Start, out dt))
+                {
+                    throw new ApplicationException(Constants.ErrorMessages.DateNotValid);
+                }
+
+                AvailabilityZone zone = mngServer.ZoneLoad(mngServer.UserGetZone(FQN));
+                if (zone.AvailabilityHoursList == null || zone.AvailabilityHoursList.Count == 0)
+                {
+                    throw new ApplicationException(Constants.ErrorMessages.WorkingHoursNotSet);
+                }
+
                 DataRow dRow = results.NewRow();
-                dRow[Constants.Properties.WorkingHoursConfiguration.FinishDateTime] = mngServer.UserCalculateEvent(FQN, Convert.ToDateTime(Start), Duration);
+                dRow[Constants.Properties.WorkingHoursConfiguration.FinishDateTime] = mngServer.UserCalculateEvent(FQN, dt, Duration);
                 results.Rows.Add(dRow);                
             }
         }

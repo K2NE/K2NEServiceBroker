@@ -51,8 +51,6 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string RemoveRoleItem = "RemoveRoleItem";
             public const string ListRoleItem = "ListRoleItem";
         }
-<<<<<<< HEAD
-=======
 
         public static class ActiveDirectory
         {
@@ -81,13 +79,6 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             //TODO: Later if needed
             public const string ListZoneWorkingHours = "ListZoneWorkingHours";
             public const string ListZoneAvailabilityDates = "ListZoneAvailabilityDates";
->>>>>>> c66a6ddb216ceaf2d8eae1c9d267421bc5f24cca
-
-        public static class ActiveDirectory
-        {
-            public const string GetUsers = "GetUsers";
-            public const string GetUserDetails = "GetUserDetails";
-            public const string SearchUsers = "SearchUsers";
         }
     }
 }

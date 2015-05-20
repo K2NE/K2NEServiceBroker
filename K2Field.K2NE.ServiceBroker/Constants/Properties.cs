@@ -136,8 +136,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
 
 
                 public static string MaxSearchResultSize = "MaxResultSize";
-<<<<<<< HEAD
-=======
+
             }
 
             public static class WorkingHoursConfiguration
@@ -172,7 +171,6 @@ namespace K2Field.K2NE.ServiceBroker.Constants
                 public const string ZoneExists = "ZoneExists";
                 public const string StartDateTime = "StartDateTime";
                 public const string FinishDateTime = "FinishDateTime";
->>>>>>> c66a6ddb216ceaf2d8eae1c9d267421bc5f24cca
             }
     }
 }

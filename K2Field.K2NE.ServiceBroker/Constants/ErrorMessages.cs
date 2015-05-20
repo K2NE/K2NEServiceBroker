@@ -18,6 +18,8 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         public const string ZoneExists = "Time Zone already exists. Name: ";
         public const string SpecialCharactersAreNotAllowed = "Special characters are not allowed.";
         public const string ZoneDoesNotExist = "Time Zone does not exist. Name: ";
+        public const string DateNotValid = "Time Zone does not exist. Name: The string could not be parsed into a valid date and time.";
+        public const string WorkingHoursNotSet = "No working hours have been set. Please set the working hours using the K2 Workspace.";
     }
 
 
