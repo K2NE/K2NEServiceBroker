@@ -37,6 +37,7 @@ namespace K2Field.K2NE.ServiceBroker
                             serviceObjects.Add(new ProcessInstanceManagementSO(this));
                             serviceObjects.Add(new RoleManagementSO(this));
                             serviceObjects.Add(new ActiveDirectorySO(this));
+                            serviceObjects.Add(new WorkingHoursConfigurationSO(this));
                         }
                     }
                 }
@@ -82,7 +83,7 @@ namespace K2Field.K2NE.ServiceBroker
                     return sf;
             }
             ServiceFolder newSf = new ServiceFolder(folderName, new MetaData(folderName, description));
-            this.Service.ServiceFolders.Add(newSf);
+            this.Service.ServiceFolders.Create(newSf);
             return newSf;
         }
 
@@ -121,7 +122,7 @@ namespace K2Field.K2NE.ServiceBroker
             {
                 foreach (ServiceObject so in entry.DescribeServiceObjects())
                 {
-                    this.Service.ServiceObjects.Add(so);
+                    this.Service.ServiceObjects.Create(so);
                     if (requireServiceFolders) {
                         ServiceFolder sf = InitializeServiceFolder(entry.ServiceFolder, entry.ServiceFolder);
                         sf.Add(so);
