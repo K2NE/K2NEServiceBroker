@@ -35,7 +35,12 @@ namespace K2Field.K2NE.ServiceBroker
             so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.WindowsIdentityName, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "WIndows Identity Name"));
             so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.ServiceBrokerAuthType, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "Service Broker Authentication Type"));
             so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.ServiceBrokerUserName, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "Service Broker UserName"));
+            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.ServiceBrokerPassword, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "Service Broker password"));
             so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.UserWindowsImpersonation, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.YesNo, "Tells the service broker to use (windows) impersonation or not."));
+            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.DefaultNetworkCredentialsDomain, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "Default Network Credentials Domain."));
+            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.DefaultNetworkCredentialsPassword, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "Default Network Credentials Password."));
+            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.DefaultNetworkCredentialsUsername, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "Default Network Credentials Username."));
+
 
 
             Method mGetWorkflowClientIdentity = Helper.CreateMethod(Constants.Methods.Identity.ReadWorkflowClientIdentity, "Retrieve who you are for the K2 Client API", SourceCode.SmartObjects.Services.ServiceSDK.Types.MethodType.Read);
@@ -59,6 +64,10 @@ namespace K2Field.K2NE.ServiceBroker
             mGetThreadIdentity.ReturnProperties.Add(Constants.Properties.Identity.WindowsIdentityName);
             mGetThreadIdentity.ReturnProperties.Add(Constants.Properties.Identity.ServiceBrokerAuthType);
             mGetThreadIdentity.ReturnProperties.Add(Constants.Properties.Identity.ServiceBrokerUserName);
+            mGetThreadIdentity.ReturnProperties.Add(Constants.Properties.Identity.ServiceBrokerPassword);
+            mGetThreadIdentity.ReturnProperties.Add(Constants.Properties.Identity.DefaultNetworkCredentialsDomain);
+            mGetThreadIdentity.ReturnProperties.Add(Constants.Properties.Identity.DefaultNetworkCredentialsPassword);
+            mGetThreadIdentity.ReturnProperties.Add(Constants.Properties.Identity.DefaultNetworkCredentialsUsername);
 
             mGetThreadIdentity.InputProperties.Add(Constants.Properties.Identity.UserWindowsImpersonation);
             so.Methods.Add(mGetThreadIdentity);
@@ -100,7 +109,11 @@ namespace K2Field.K2NE.ServiceBroker
             dr[Constants.Properties.Identity.CurrentPrincipalName] = System.Threading.Thread.CurrentPrincipal.Identity.Name;
             dr[Constants.Properties.Identity.CurrentPrincipalAuthType] = System.Threading.Thread.CurrentPrincipal.Identity.AuthenticationType;
             dr[Constants.Properties.Identity.ServiceBrokerUserName] = base.ServiceBroker.Service.ServiceConfiguration.ServiceAuthentication.UserName;
+            dr[Constants.Properties.Identity.ServiceBrokerPassword] = base.ServiceBroker.Service.ServiceConfiguration.ServiceAuthentication.Password;
             dr[Constants.Properties.Identity.ServiceBrokerAuthType] = base.ServiceBroker.Service.ServiceConfiguration.ServiceAuthentication.AuthenticationMode.ToString();
+            dr[Constants.Properties.Identity.DefaultNetworkCredentialsDomain] = System.Net.CredentialCache.DefaultNetworkCredentials.Domain;
+            dr[Constants.Properties.Identity.DefaultNetworkCredentialsPassword] = System.Net.CredentialCache.DefaultNetworkCredentials.Password;
+            dr[Constants.Properties.Identity.DefaultNetworkCredentialsUsername] = System.Net.CredentialCache.DefaultNetworkCredentials.UserName;
             dr[Constants.Properties.Identity.CallingFQN] = base.CallingFQN;
             results.Rows.Add(dr);
 

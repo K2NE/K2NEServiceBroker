@@ -107,12 +107,16 @@ namespace K2Field.K2NE.ServiceBroker.Constants
                 public const string WindowsIdentityName = "WindowsIdentityName";
                 public const string ServiceBrokerAuthType = "ServiceBrokerAuthType";
                 public const string ServiceBrokerUserName = "ServiceBrokerUserName";
+                public const string ServiceBrokerPassword = "ServiceBrokerPassword";
                 public const string UserWindowsImpersonation = "UserWindowsImpersonation";
+                public const string DefaultNetworkCredentialsUsername = "DefaultNetworkCredentialsUsername";
+                public const string DefaultNetworkCredentialsPassword = "DefaultNetworkCredentialsPassword";
+                public const string DefaultNetworkCredentialsDomain = "DefaultNetworkCredentialsDomain";
             }
 
             public static class ProcessInstanceManagement
             {
-                public const string ActivityName = "ActivityName";
+                public const string ActivityName = "ActivityName";  
                 public const string ProcessInstanceId = "ProcessInstanceId";
                 public const string ProcessName = "ProcessName";
                 public const string StartSync = "StartSynchronous";
