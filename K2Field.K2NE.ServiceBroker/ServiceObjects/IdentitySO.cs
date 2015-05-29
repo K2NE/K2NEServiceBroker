@@ -40,6 +40,11 @@ namespace K2Field.K2NE.ServiceBroker
             so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.DefaultNetworkCredentialsDomain, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "Default Network Credentials Domain."));
             so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.DefaultNetworkCredentialsPassword, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "Default Network Credentials Password."));
             so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.DefaultNetworkCredentialsUsername, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "Default Network Credentials Username."));
+            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.UserCultureDateTimeFormat, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "User Culture Date/Time format."));
+            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.UserCultureDisplayName, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "User Culture Display Name."));
+            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.UserCultureLCID, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "User Culture LCID."));
+            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.UserCultureName, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "User Culture Name."));
+            so.Properties.Add(Helper.CreateProperty(Constants.Properties.Identity.UserCultureNumberFormat, SourceCode.SmartObjects.Services.ServiceSDK.Types.SoType.Text, "User Culture Number format."));
 
 
 
@@ -54,7 +59,7 @@ namespace K2Field.K2NE.ServiceBroker
             mGetWorkflowClientIdentity.ReturnProperties.Add(Constants.Properties.Identity.CallingFQN);
 
             mGetWorkflowClientIdentity.InputProperties.Add(Constants.Properties.Identity.UserWindowsImpersonation);
-            so.Methods.Add(mGetWorkflowClientIdentity);
+            so.Methods.Create(mGetWorkflowClientIdentity);
 
             Method mGetThreadIdentity = Helper.CreateMethod(Constants.Methods.Identity.ReadThreadIdentity, "Retrieve who you are for the API Identity", SourceCode.SmartObjects.Services.ServiceSDK.Types.MethodType.Read);
             mGetThreadIdentity.ReturnProperties.Add(Constants.Properties.Identity.CallingFQN);
@@ -68,9 +73,14 @@ namespace K2Field.K2NE.ServiceBroker
             mGetThreadIdentity.ReturnProperties.Add(Constants.Properties.Identity.DefaultNetworkCredentialsDomain);
             mGetThreadIdentity.ReturnProperties.Add(Constants.Properties.Identity.DefaultNetworkCredentialsPassword);
             mGetThreadIdentity.ReturnProperties.Add(Constants.Properties.Identity.DefaultNetworkCredentialsUsername);
+            mGetThreadIdentity.ReturnProperties.Add(Constants.Properties.Identity.UserCultureDateTimeFormat);
+            mGetThreadIdentity.ReturnProperties.Add(Constants.Properties.Identity.UserCultureDisplayName);
+            mGetThreadIdentity.ReturnProperties.Add(Constants.Properties.Identity.UserCultureLCID);
+            mGetThreadIdentity.ReturnProperties.Add(Constants.Properties.Identity.UserCultureName);
+            mGetThreadIdentity.ReturnProperties.Add(Constants.Properties.Identity.UserCultureNumberFormat);
 
             mGetThreadIdentity.InputProperties.Add(Constants.Properties.Identity.UserWindowsImpersonation);
-            so.Methods.Add(mGetThreadIdentity);
+            so.Methods.Create(mGetThreadIdentity);
 
 
             return new List<ServiceObject> { so };
@@ -115,9 +125,12 @@ namespace K2Field.K2NE.ServiceBroker
             dr[Constants.Properties.Identity.DefaultNetworkCredentialsPassword] = System.Net.CredentialCache.DefaultNetworkCredentials.Password;
             dr[Constants.Properties.Identity.DefaultNetworkCredentialsUsername] = System.Net.CredentialCache.DefaultNetworkCredentials.UserName;
             dr[Constants.Properties.Identity.CallingFQN] = base.CallingFQN;
+            dr[Constants.Properties.Identity.UserCultureName] = System.Globalization.CultureInfo.CurrentCulture.Name;
+            dr[Constants.Properties.Identity.UserCultureDisplayName] = System.Globalization.CultureInfo.CurrentCulture.DisplayName;
+            dr[Constants.Properties.Identity.UserCultureDateTimeFormat] = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat;
+            dr[Constants.Properties.Identity.UserCultureLCID] = System.Globalization.CultureInfo.CurrentCulture.LCID;
+            dr[Constants.Properties.Identity.UserCultureNumberFormat] = System.Globalization.CultureInfo.CurrentCulture.NumberFormat;
             results.Rows.Add(dr);
-
-
         }
 
         public void WhoAmI()

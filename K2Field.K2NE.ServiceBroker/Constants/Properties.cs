@@ -112,11 +112,16 @@ namespace K2Field.K2NE.ServiceBroker.Constants
                 public const string DefaultNetworkCredentialsUsername = "DefaultNetworkCredentialsUsername";
                 public const string DefaultNetworkCredentialsPassword = "DefaultNetworkCredentialsPassword";
                 public const string DefaultNetworkCredentialsDomain = "DefaultNetworkCredentialsDomain";
+                public const string UserCultureName = "UserCultureName";
+                public const string UserCultureDisplayName = "UserCultureDisplayName";
+                public const string UserCultureDateTimeFormat = "UserCultureDateTimeFormat";
+                public const string UserCultureLCID = "UserCultureLCID";
+                public const string UserCultureNumberFormat = "UserCultureNumberFormat";
             }
 
             public static class ProcessInstanceManagement
             {
-                public const string ActivityName = "ActivityName";  
+                public const string ActivityName = "ActivityName";
                 public const string ProcessInstanceId = "ProcessInstanceId";
                 public const string ProcessName = "ProcessName";
                 public const string StartSync = "StartSynchronous";
@@ -140,6 +145,50 @@ namespace K2Field.K2NE.ServiceBroker.Constants
 
 
                 public static string MaxSearchResultSize = "MaxResultSize";
+
+            }
+
+            public static class WorkingHoursConfiguration
+            {
+                public const string ZoneName = "ZoneName";
+                public const string NewZoneName = "NewZoneName";
+                public const string ZoneGUID = "ZoneGUID";
+                public const string Description = "Description";
+                public const string GMTOffset = "GMTOffset";
+                public const string DefaultZone = "DefaultZone";
+                
+                public const string DurationHours = "DurationHours";
+                public const string DurationMinutes = "DurationMinutes";
+                public const string DurationSeconds = "DurationSeconds";
+                public const string TimeOfDayHours = "TimeOfDayHours";
+                public const string TimeOfDayMinutes = "TimeOfDayMinutes";
+                public const string TimeOfDaySeconds = "TimeOfDaySeconds";
+                public const string WorkDay = "WorkDay";
+                
+                //public const string Description = "Description";
+                //public const string AvailabilityDateDurationDays = "AvailabilityHoursTimeOfDayDays";
+                //public const string AvailabilityDateDurationHours = "AvailabilityDateDurationHours";
+                //public const string AvailabilityDateDurationMinutes = "AvailabilityDateDurationMinutes";
+                //public const string AvailabilityDateDurationSeconds = "AvailabilityDateDurationSeconds";
+                public const string IsNonWorkDate = "IsNonWorkDate";
+                //public const string AvailabilityDateTimeOfDayHours = "AvailabilityDateTimeOfDayHours";
+                //public const string AvailabilityDateTimeOfDayMinutes = "AvailabilityDateTimeOfDayMinutes";
+                //public const string AvailabilityDateTimeOfDaySeconds = "AvailabilityDateTimeOfDaySeconds";
+                public const string WorkDate = "WorkDate";
+                public const string FQN = "FQN";
+                public const string UserName = "UserName";
+                public const string ZoneExists = "ZoneExists";
+                public const string StartDateTime = "StartDateTime";
+                public const string FinishDateTime = "FinishDateTime";
+            }
+
+            public static class OutOfOffice
+            {
+                public const string UserFQN = "UserFQN";
+                public const string UserStatus = "UserStatus";
+                public const string CallSuccess = "CallSuccess";
+                public const string DestinationUser = "DestinationUser";
+
             }
     }
 }
