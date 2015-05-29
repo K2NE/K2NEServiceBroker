@@ -48,7 +48,7 @@ namespace K2Field.K2NE.ServiceBroker
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventMetadata, SoType.Text, "EventMetadata"));
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventDescription, SoType.Text, "EventDescription"));
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventPriority, SoType.Text, "EventPriority"));
-            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventStartDate, SoType.Text, "EventStartDate"));
+            worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventStartDate, SoType.DateTime, "EventStartDate"));
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.EventExpectedDuration, SoType.Text, "EventExpectedDuration"));
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.WorklistItemStatus, SoType.Text, "WorklistItemStatus"));
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.Properties.ClientWorklist.OriginalDestination, SoType.Text, "OriginalDestination"));
