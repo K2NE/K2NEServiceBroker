@@ -51,7 +51,6 @@ namespace K2Field.K2NE.ServiceBroker
             deleteRoleItem.InputProperties.Add(Constants.Properties.Role.RoleItem);
             deleteRoleItem.Validation.RequiredProperties.Add(Constants.Properties.Role.RoleName);
             deleteRoleItem.Validation.RequiredProperties.Add(Constants.Properties.Role.RoleItem);
-
             soRoleItem.Methods.Add(deleteRoleItem);
 
             Method listRoleItems = Helper.CreateMethod(Constants.Methods.Role.ListRoleItem, "List the RoleItems in a role", MethodType.List);

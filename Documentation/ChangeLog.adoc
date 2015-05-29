@@ -1,4 +1,11 @@
 == ChangeLog
+
+=== v1.2
+- Added Out of office service object
+- Added Culture information to identity object.
+- Added DefaultClientCredentials to identity object.
+- Added WorkingHour configuration Service Object.
+
 === v1.1.5
 - Fixed issue with mutex, not completely resolved but should not run into the issue anymore.s
 
