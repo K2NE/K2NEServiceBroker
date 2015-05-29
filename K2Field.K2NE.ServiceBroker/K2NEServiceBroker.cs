@@ -84,7 +84,7 @@ namespace K2Field.K2NE.ServiceBroker
                     return sf;
             }
             ServiceFolder newSf = new ServiceFolder(folderName, new MetaData(folderName, description));
-            this.Service.ServiceFolders.Create(newSf);
+            this.Service.ServiceFolders.Add(newSf);
             return newSf;
         }
 
@@ -123,7 +123,7 @@ namespace K2Field.K2NE.ServiceBroker
             {
                 foreach (ServiceObject so in entry.DescribeServiceObjects())
                 {
-                    this.Service.ServiceObjects.Create(so);
+                    this.Service.ServiceObjects.Add(so);
                     if (requireServiceFolders) {
                         ServiceFolder sf = InitializeServiceFolder(entry.ServiceFolder, entry.ServiceFolder);
                         sf.Add(so);

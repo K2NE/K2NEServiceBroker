@@ -59,7 +59,7 @@ namespace K2Field.K2NE.ServiceBroker
             mGetWorkflowClientIdentity.ReturnProperties.Add(Constants.Properties.Identity.CallingFQN);
 
             mGetWorkflowClientIdentity.InputProperties.Add(Constants.Properties.Identity.UserWindowsImpersonation);
-            so.Methods.Create(mGetWorkflowClientIdentity);
+            so.Methods.Add(mGetWorkflowClientIdentity);
 
             Method mGetThreadIdentity = Helper.CreateMethod(Constants.Methods.Identity.ReadThreadIdentity, "Retrieve who you are for the API Identity", SourceCode.SmartObjects.Services.ServiceSDK.Types.MethodType.Read);
             mGetThreadIdentity.ReturnProperties.Add(Constants.Properties.Identity.CallingFQN);
@@ -80,7 +80,7 @@ namespace K2Field.K2NE.ServiceBroker
             mGetThreadIdentity.ReturnProperties.Add(Constants.Properties.Identity.UserCultureNumberFormat);
 
             mGetThreadIdentity.InputProperties.Add(Constants.Properties.Identity.UserWindowsImpersonation);
-            so.Methods.Create(mGetThreadIdentity);
+            so.Methods.Add(mGetThreadIdentity);
 
 
             return new List<ServiceObject> { so };

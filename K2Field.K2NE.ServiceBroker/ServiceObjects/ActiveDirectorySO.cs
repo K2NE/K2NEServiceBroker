@@ -30,17 +30,17 @@ namespace K2Field.K2NE.ServiceBroker
         {
             ServiceObject soUser = Helper.CreateServiceObject("AD User", "Active Directory User.");
 
-            soUser.Properties.Create(Helper.CreateProperty(Constants.Properties.ActiveDirectory.SubStringSearchInput, SoType.Text, "The string used to search for a specific value."));
-            soUser.Properties.Create(Helper.CreateProperty(Constants.Properties.ActiveDirectory.UserFQN, SoType.Text, "The FQN username. Domain\\samlaccountname"));
-            soUser.Properties.Create(Helper.CreateProperty(Constants.Properties.ActiveDirectory.SamAccountName, SoType.Text, "The SAM Account name"));
-            soUser.Properties.Create(Helper.CreateProperty(Constants.Properties.ActiveDirectory.DisplayName, SoType.Text, "Display Name"));
-            soUser.Properties.Create(Helper.CreateProperty(Constants.Properties.ActiveDirectory.CommonName, SoType.Text, "The common name of the object."));
-            soUser.Properties.Create(Helper.CreateProperty(Constants.Properties.ActiveDirectory.GivenName, SoType.Text, "Given Name"));
-            soUser.Properties.Create(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Initials, SoType.Text, "Initials"));
-            soUser.Properties.Create(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Surname, SoType.Text, "Surname"));
-            soUser.Properties.Create(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Email, SoType.Text, "Email Address"));
-            soUser.Properties.Create(Helper.CreateProperty(Constants.Properties.ActiveDirectory.MaxSearchResultSize, SoType.Number, "Override the default max result size."));
-            soUser.Properties.Create(Helper.CreateProperty(Constants.Properties.ActiveDirectory.OrganisationalUnit, SoType.Text, "OrganisationalUnit"));
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.SubStringSearchInput, SoType.Text, "The string used to search for a specific value."));
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.UserFQN, SoType.Text, "The FQN username. Domain\\samlaccountname"));
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.SamAccountName, SoType.Text, "The SAM Account name"));
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.DisplayName, SoType.Text, "Display Name"));
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.CommonName, SoType.Text, "The common name of the object."));
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.GivenName, SoType.Text, "Given Name"));
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Initials, SoType.Text, "Initials"));
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Surname, SoType.Text, "Surname"));
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Email, SoType.Text, "Email Address"));
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.MaxSearchResultSize, SoType.Number, "Override the default max result size."));
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.OrganisationalUnit, SoType.Text, "OrganisationalUnit"));
 
 
 
@@ -54,7 +54,7 @@ namespace K2Field.K2NE.ServiceBroker
             mGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.SamAccountName);
             mGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.DisplayName);
             mGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Email);
-            soUser.Methods.Create(mGetUsers);
+            soUser.Methods.Add(mGetUsers);
 
 
             Method mGetUserDetails = Helper.CreateMethod(Constants.Methods.ActiveDirectory.GetUserDetails, "Get all details for the users.", MethodType.Read);
@@ -68,7 +68,7 @@ namespace K2Field.K2NE.ServiceBroker
             mGetUserDetails.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Surname);
             mGetUserDetails.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Email);
             mGetUserDetails.ReturnProperties.Add(Constants.Properties.ActiveDirectory.OrganisationalUnit);
-            soUser.Methods.Create(mGetUserDetails);
+            soUser.Methods.Add(mGetUserDetails);
 
 
             Method mSearchUser = Helper.CreateMethod(Constants.Methods.ActiveDirectory.SearchUsers, "Performs a StartWith query on DisplayName, SamlAccountName and E-mail.", MethodType.List);
@@ -80,7 +80,7 @@ namespace K2Field.K2NE.ServiceBroker
             mSearchUser.ReturnProperties.Add(Constants.Properties.ActiveDirectory.SamAccountName);
             mSearchUser.ReturnProperties.Add(Constants.Properties.ActiveDirectory.DisplayName);
             mSearchUser.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Email);
-            soUser.Methods.Create(mSearchUser);
+            soUser.Methods.Add(mSearchUser);
 
 
             return new List<ServiceObject>() { soUser };

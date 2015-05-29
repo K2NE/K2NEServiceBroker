@@ -44,19 +44,19 @@ namespace K2Field.K2NE.ServiceBroker
          
             ServiceObject so = Helper.CreateServiceObject("ProcessInstanceManagement", "Exposes functionality to manage a process instances.");
 
-            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ProcessInstanceManagement.ActivityName, SoType.Text, "The name of the activity."));
-            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ProcessInstanceManagement.ProcessInstanceId, SoType.Number, "The process instance ID."));
-            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ProcessInstanceManagement.ProcessFolio, SoType.Text, "The folio to use for the process."));
-            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ProcessInstanceManagement.ProcessName, SoType.Text, "The full name of the process.")); 
-            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ProcessInstanceManagement.ProcessVersion, SoType.Number, "The full name of the process."));
-            so.Properties.Create(Helper.CreateProperty(Constants.Properties.ProcessInstanceManagement.StartSync, SoType.YesNo, "Start the process synchronously or not."));
+            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ProcessInstanceManagement.ActivityName, SoType.Text, "The name of the activity."));
+            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ProcessInstanceManagement.ProcessInstanceId, SoType.Number, "The process instance ID."));
+            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ProcessInstanceManagement.ProcessFolio, SoType.Text, "The folio to use for the process."));
+            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ProcessInstanceManagement.ProcessName, SoType.Text, "The full name of the process.")); 
+            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ProcessInstanceManagement.ProcessVersion, SoType.Number, "The full name of the process."));
+            so.Properties.Add(Helper.CreateProperty(Constants.Properties.ProcessInstanceManagement.StartSync, SoType.YesNo, "Start the process synchronously or not."));
 
             Method gotoActivity = Helper.CreateMethod(Constants.Methods.ProcessInstanceManagement.GotoActivity, "Move a process instance to a given activity.", MethodType.Execute);
             gotoActivity.InputProperties.Add(Constants.Properties.ProcessInstanceManagement.ActivityName);
             gotoActivity.InputProperties.Add(Constants.Properties.ProcessInstanceManagement.ProcessInstanceId);
             gotoActivity.Validation.RequiredProperties.Add(Constants.Properties.ProcessInstanceManagement.ProcessInstanceId);
             gotoActivity.Validation.RequiredProperties.Add(Constants.Properties.ProcessInstanceManagement.ActivityName);
-            so.Methods.Create(gotoActivity);
+            so.Methods.Add(gotoActivity);
 
             Method startProcessInstance = Helper.CreateMethod(Constants.Methods.ProcessInstanceManagement.StartProcessInstance, "Start a new process instance", MethodType.Create);
             startProcessInstance.InputProperties.Add(Constants.Properties.ProcessInstanceManagement.ProcessName);
@@ -66,7 +66,7 @@ namespace K2Field.K2NE.ServiceBroker
             startProcessInstance.Validation.RequiredProperties.Add(Constants.Properties.ProcessInstanceManagement.ProcessName);
             startProcessInstance.ReturnProperties.Add(Constants.Properties.ProcessInstanceManagement.ProcessInstanceId);
             startProcessInstance.ReturnProperties.Add(Constants.Properties.ProcessInstanceManagement.ProcessFolio);
-            so.Methods.Create(startProcessInstance);
+            so.Methods.Add(startProcessInstance);
 
             return new List<ServiceObject>() { so };
         }

@@ -27,13 +27,13 @@ namespace K2Field.K2NE.ServiceBroker
             ServiceObject soRoleItem = Helper.CreateServiceObject("RoleManagement", "K2 Role management (add/remove/list K2 roles)");
 
 
-            soRoleItem.Properties.Create(Helper.CreateProperty(Constants.Properties.Role.RoleName, SoType.Text, "The name of the role to manage."));
-            soRoleItem.Properties.Create(Helper.CreateProperty(Constants.Properties.Role.RoleItemType, SoType.Text, "The type of role item (Group, User, SmartObject)."));
-            soRoleItem.Properties.Create(Helper.CreateProperty(Constants.Properties.Role.RoleExclude, SoType.YesNo, "Excluded role item."));
-            soRoleItem.Properties.Create(Helper.CreateProperty(Constants.Properties.Role.RoleItem, SoType.Text, "The FQN name of the role item."));
-            soRoleItem.Properties.Create(Helper.CreateProperty(Constants.Properties.Role.RoleDescription, SoType.Text, "A short description of the role."));
-            soRoleItem.Properties.Create(Helper.CreateProperty(Constants.Properties.Role.RoleItem, SoType.Text, "The FQN name of the role item."));
-            soRoleItem.Properties.Create(Helper.CreateProperty(Constants.Properties.Role.RoleDynamic, SoType.YesNo, "Is a role dynamic?"));
+            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.Properties.Role.RoleName, SoType.Text, "The name of the role to manage."));
+            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.Properties.Role.RoleItemType, SoType.Text, "The type of role item (Group, User, SmartObject)."));
+            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.Properties.Role.RoleExclude, SoType.YesNo, "Excluded role item."));
+            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.Properties.Role.RoleItem, SoType.Text, "The FQN name of the role item."));
+            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.Properties.Role.RoleDescription, SoType.Text, "A short description of the role."));
+            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.Properties.Role.RoleItem, SoType.Text, "The FQN name of the role item."));
+            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.Properties.Role.RoleDynamic, SoType.YesNo, "Is a role dynamic?"));
 
             Method addRoleItem = Helper.CreateMethod(Constants.Methods.Role.AddRoleItem, "Add a RoleItem to a role" ,MethodType.Create);
             addRoleItem.InputProperties.Add(Constants.Properties.Role.RoleName);
@@ -43,7 +43,7 @@ namespace K2Field.K2NE.ServiceBroker
             addRoleItem.Validation.RequiredProperties.Add(Constants.Properties.Role.RoleName);
             addRoleItem.Validation.RequiredProperties.Add(Constants.Properties.Role.RoleItem);
             addRoleItem.Validation.RequiredProperties.Add(Constants.Properties.Role.RoleItemType);
-            soRoleItem.Methods.Create(addRoleItem);
+            soRoleItem.Methods.Add(addRoleItem);
 
 
             Method deleteRoleItem = Helper.CreateMethod(Constants.Methods.Role.RemoveRoleItem, "Remove a RoleItem from a role", MethodType.Delete);
@@ -51,15 +51,14 @@ namespace K2Field.K2NE.ServiceBroker
             deleteRoleItem.InputProperties.Add(Constants.Properties.Role.RoleItem);
             deleteRoleItem.Validation.RequiredProperties.Add(Constants.Properties.Role.RoleName);
             deleteRoleItem.Validation.RequiredProperties.Add(Constants.Properties.Role.RoleItem);
-
-            soRoleItem.Methods.Create(deleteRoleItem);
+            soRoleItem.Methods.Add(deleteRoleItem);
 
             Method listRoleItems = Helper.CreateMethod(Constants.Methods.Role.ListRoleItem, "List the RoleItems in a role", MethodType.List);
             listRoleItems.InputProperties.Add(Constants.Properties.Role.RoleName);
             listRoleItems.ReturnProperties.Add(Constants.Properties.Role.RoleItem);
             listRoleItems.ReturnProperties.Add(Constants.Properties.Role.RoleExclude);
             listRoleItems.ReturnProperties.Add(Constants.Properties.Role.RoleItemType);
-            soRoleItem.Methods.Create(listRoleItems);
+            soRoleItem.Methods.Add(listRoleItems);
 
 
             Method addRole = Helper.CreateMethod(Constants.Methods.Role.AddRole, "Add K2 Role to K2 system", MethodType.Create);
@@ -71,18 +70,18 @@ namespace K2Field.K2NE.ServiceBroker
             addRole.Validation.RequiredProperties.Add(Constants.Properties.Role.RoleName);
             addRole.Validation.RequiredProperties.Add(Constants.Properties.Role.RoleItem);
             addRole.Validation.RequiredProperties.Add(Constants.Properties.Role.RoleItemType);
-            soRoleItem.Methods.Create(addRole);
+            soRoleItem.Methods.Add(addRole);
 
             Method removeRole = Helper.CreateMethod(Constants.Methods.Role.RemoveRole, "Remove K2 Role to K2 system", MethodType.Delete);
             removeRole.InputProperties.Add(Constants.Properties.Role.RoleName);
             removeRole.Validation.RequiredProperties.Add(Constants.Properties.Role.RoleName);
-            soRoleItem.Methods.Create(removeRole);
+            soRoleItem.Methods.Add(removeRole);
 
             Method listRoles = Helper.CreateMethod(Constants.Methods.Role.ListRoles, "list all K2 Roles", MethodType.List);
             listRoles.ReturnProperties.Add(Constants.Properties.Role.RoleName);
             listRoles.ReturnProperties.Add(Constants.Properties.Role.RoleDescription);
             listRoles.ReturnProperties.Add(Constants.Properties.Role.RoleDynamic);
-            soRoleItem.Methods.Create(listRoles);
+            soRoleItem.Methods.Add(listRoles);
 
             return new List<ServiceObject>() {soRoleItem};
 
