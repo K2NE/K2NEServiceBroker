@@ -20,7 +20,8 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         public const string ZoneDoesNotExist = "Time Zone does not exist. Name: ";
         public const string DateNotValid = "Time Zone does not exist. Name: The string could not be parsed into a valid date and time.";
         public const string WorkingHoursNotSet = "No working hours have been set. Please set the working hours using the K2 Workspace.";
+        //Out Of Office
+        public const string OutOfOfficeNotConfiguredForUser = "User does not have out of office configured.  Please configure the users out of office settings.";
+        public const string MultipleOOFConfigurations = "Multiple OOF scenarios detected for this user which is supported by this method.";
     }
-
-
 }

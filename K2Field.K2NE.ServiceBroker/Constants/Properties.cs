@@ -172,5 +172,14 @@ namespace K2Field.K2NE.ServiceBroker.Constants
                 public const string StartDateTime = "StartDateTime";
                 public const string FinishDateTime = "FinishDateTime";
             }
+
+            public static class OutOfOffice
+            {
+                public const string UserFQN = "UserFQN";
+                public const string UserStatus = "UserStatus";
+                public const string CallSuccess = "CallSuccess";
+                public const string DestinationUser = "DestinationUser";
+
+            }
     }
 }

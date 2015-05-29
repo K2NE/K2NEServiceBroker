@@ -80,5 +80,13 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string ListZoneWorkingHours = "ListZoneWorkingHours";
             public const string ListZoneAvailabilityDates = "ListZoneAvailabilityDates";
         }
+        public static class OutOfOffice
+        {
+            public const string SetOutOfOffice = "SetOutOfOffice";
+            public const string SetInOffice = "SetInOffice";
+            public const string ListSharedUsers = "ListSharedUsers";
+            public const string AddOutOfOffice = "AddOutOfOffice";
+            public const string GetUserStatus = "GetUserStatus";
+        }
     }
 }
