@@ -108,6 +108,11 @@ namespace K2Field.K2NE.ServiceBroker.Constants
                 public const string ServiceBrokerAuthType = "ServiceBrokerAuthType";
                 public const string ServiceBrokerUserName = "ServiceBrokerUserName";
                 public const string UserWindowsImpersonation = "UserWindowsImpersonation";
+                public const string UserCultureName = "UserCultureName";
+                public const string UserCultureDisplayName = "UserCultureDisplayName";
+                public const string UserCultureDateTimeFormat = "UserCultureDateTimeFormat";
+                public const string UserCultureLCID = "UserCultureLCID";
+                public const string UserCultureNumberFormat = "UserCultureNumberFormat";
             }
 
             public static class ProcessInstanceManagement

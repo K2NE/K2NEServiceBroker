@@ -102,9 +102,12 @@ namespace K2Field.K2NE.ServiceBroker
             dr[Constants.Properties.Identity.ServiceBrokerUserName] = base.ServiceBroker.Service.ServiceConfiguration.ServiceAuthentication.UserName;
             dr[Constants.Properties.Identity.ServiceBrokerAuthType] = base.ServiceBroker.Service.ServiceConfiguration.ServiceAuthentication.AuthenticationMode.ToString();
             dr[Constants.Properties.Identity.CallingFQN] = base.CallingFQN;
+            dr[Constants.Properties.Identity.UserCultureName] = System.Globalization.CultureInfo.CurrentCulture.Name;
+            dr[Constants.Properties.Identity.UserCultureDisplayName] = System.Globalization.CultureInfo.CurrentCulture.DisplayName;
+            dr[Constants.Properties.Identity.UserCultureDateTimeFormat] = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat;
+            dr[Constants.Properties.Identity.UserCultureLCID] = System.Globalization.CultureInfo.CurrentCulture.LCID;
+            dr[Constants.Properties.Identity.UserCultureNumberFormat] = System.Globalization.CultureInfo.CurrentCulture.NumberFormat;
             results.Rows.Add(dr);
-
-
         }
 
         public void WhoAmI()
