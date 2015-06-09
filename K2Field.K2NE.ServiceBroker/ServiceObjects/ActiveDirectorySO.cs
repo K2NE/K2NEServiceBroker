@@ -12,7 +12,6 @@ namespace K2Field.K2NE.ServiceBroker
 {
     public class ActiveDirectorySO : ServiceObjectBase
     {
-
         public ActiveDirectorySO(K2NEServiceBroker api) : base(api) { }
 
         private class AdProperties
@@ -50,7 +49,6 @@ namespace K2Field.K2NE.ServiceBroker
             mGetUsers.InputProperties.Add(Constants.Properties.ActiveDirectory.DisplayName);
             mGetUsers.InputProperties.Add(Constants.Properties.ActiveDirectory.Email);
             mGetUsers.InputProperties.Add(Constants.Properties.ActiveDirectory.MaxSearchResultSize);
-
             mGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.UserFQN);
             mGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.SamAccountName);
             mGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.DisplayName);
@@ -74,9 +72,8 @@ namespace K2Field.K2NE.ServiceBroker
 
             Method mSearchUser = Helper.CreateMethod(Constants.Methods.ActiveDirectory.SearchUsers, "Performs a StartWith query on DisplayName, SamlAccountName and E-mail.", MethodType.List);
             mSearchUser.InputProperties.Add(Constants.Properties.ActiveDirectory.SubStringSearchInput);
-            mSearchUser.Validation.RequiredProperties.Add(Constants.Properties.ActiveDirectory.SubStringSearchInput);
             mSearchUser.InputProperties.Add(Constants.Properties.ActiveDirectory.MaxSearchResultSize);
-
+            mSearchUser.Validation.RequiredProperties.Add(Constants.Properties.ActiveDirectory.SubStringSearchInput);
             mSearchUser.ReturnProperties.Add(Constants.Properties.ActiveDirectory.UserFQN);
             mSearchUser.ReturnProperties.Add(Constants.Properties.ActiveDirectory.SamAccountName);
             mSearchUser.ReturnProperties.Add(Constants.Properties.ActiveDirectory.DisplayName);
@@ -232,6 +229,35 @@ namespace K2Field.K2NE.ServiceBroker
         }
 
 
+        #region SearchUsers
+
+        private void SearchUsers()
+        {
+            string[] ldaps = base.LDAPPath.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+            int maxResultSet = base.GetIntProperty(Constants.Properties.ActiveDirectory.MaxSearchResultSize, false);
+
+
+            string searchval = base.GetStringProperty(Constants.Properties.ActiveDirectory.SubStringSearchInput, true);
+            ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
+            serviceObject.Properties.InitResultTable();
+
+            List<Thread> threads = new List<Thread>();
+
+            foreach (string ldap in ldaps)
+            {
+                Thread t = new Thread(() => RunSearchUser(ldap, maxResultSet, searchval));
+                t.Start();
+                threads.Add(t);
+            }
+
+            foreach (Thread t in threads)
+            {
+                t.Join();
+            }
+        }
+
+
         private void RunSearchUser(string ldap, int maxResultSet, string searchval)
         {
 
@@ -273,34 +299,9 @@ namespace K2Field.K2NE.ServiceBroker
                 }
             }
         }
+        #endregion SearchUsers
 
-
-        private void SearchUsers()
-        {
-            string[] ldaps = base.LDAPPath.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-
-            int maxResultSet = base.GetIntProperty(Constants.Properties.ActiveDirectory.MaxSearchResultSize, false);
-
-
-            string searchval = base.GetStringProperty(Constants.Properties.ActiveDirectory.SubStringSearchInput, true);
-            ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
-            serviceObject.Properties.InitResultTable();
-
-            List<Thread> threads = new List<Thread>();
-
-            foreach (string ldap in ldaps)
-            {
-                Thread t = new Thread(() => RunSearchUser(ldap, maxResultSet, searchval));
-                t.Start();
-                threads.Add(t);
-            }
-
-            foreach (Thread t in threads)
-            {
-                t.Join();
-            }
-        }
-
+        #region GetUsers
 
         private void GetUsers()
         {
@@ -392,6 +393,10 @@ namespace K2Field.K2NE.ServiceBroker
             }
         }
 
+        #endregion GetUsers
+
+        #region GetUserDetails
+
         private void GetUserDetails()
         {
             string userfqn = base.GetStringProperty(Constants.Properties.ActiveDirectory.UserFQN, true);
@@ -432,7 +437,7 @@ namespace K2Field.K2NE.ServiceBroker
             }
 
 
-
+            #endregion GetUserDetails
 
         }
     }
