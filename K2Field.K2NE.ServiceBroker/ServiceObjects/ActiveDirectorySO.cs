@@ -259,16 +259,16 @@ namespace K2Field.K2NE.ServiceBroker
             foreach (SearchResult res in col)
             {
 
+
+                DataRow dr = results.NewRow();
+
+                string saml = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.SamlAccountName);
+                dr[Constants.Properties.ActiveDirectory.UserFQN] = base.NetBiosName + "\\" + saml;
+                dr[Constants.Properties.ActiveDirectory.SamAccountName] = saml;
+                dr[Constants.Properties.ActiveDirectory.DisplayName] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.DisplayName);
+                dr[Constants.Properties.ActiveDirectory.Email] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Email);
                 lock (base.ServiceBroker.ServicePackage.ResultTable)
                 {
-                    DataRow dr = results.NewRow();
-
-                    string saml = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.SamlAccountName);
-                    dr[Constants.Properties.ActiveDirectory.UserFQN] = base.NetBiosName + "\\" + saml;
-                    dr[Constants.Properties.ActiveDirectory.SamAccountName] = saml;
-                    dr[Constants.Properties.ActiveDirectory.DisplayName] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.DisplayName);
-                    dr[Constants.Properties.ActiveDirectory.Email] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Email);
-
                     results.Rows.Add(dr);
                 }
             }
@@ -377,15 +377,16 @@ namespace K2Field.K2NE.ServiceBroker
 
             foreach (SearchResult res in col)
             {
+
+                DataRow dr = results.NewRow();
+
+                string saml = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.SamlAccountName);
+                dr[Constants.Properties.ActiveDirectory.UserFQN] = base.NetBiosName + "\\" + saml;
+                dr[Constants.Properties.ActiveDirectory.SamAccountName] = saml;
+                dr[Constants.Properties.ActiveDirectory.DisplayName] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.DisplayName);
+                dr[Constants.Properties.ActiveDirectory.Email] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Email);
                 lock (base.ServiceBroker.ServicePackage.ResultTable)
                 {
-                    DataRow dr = results.NewRow();
-
-                    string saml = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.SamlAccountName);
-                    dr[Constants.Properties.ActiveDirectory.UserFQN] = base.NetBiosName + "\\" + saml;
-                    dr[Constants.Properties.ActiveDirectory.SamAccountName] = saml;
-                    dr[Constants.Properties.ActiveDirectory.DisplayName] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.DisplayName);
-                    dr[Constants.Properties.ActiveDirectory.Email] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Email);
                     results.Rows.Add(dr);
                 }
             }
