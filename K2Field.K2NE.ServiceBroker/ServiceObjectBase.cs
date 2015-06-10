@@ -59,11 +59,11 @@ namespace K2Field.K2NE.ServiceBroker
 
         }
 
-        public string LDAPPath
+        public string LDAPPaths
         {
             get
             {
-                return this.ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.LDAPPath].ToString();
+                return this.ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.LDAPPaths].ToString();
             }
         }
 
@@ -112,12 +112,12 @@ namespace K2Field.K2NE.ServiceBroker
             }
         }
 
-        public string NetBiosName
+        public string NetBiosNames
         {
             get
             {
 
-                return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.NetbiosName].ToString();
+                return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.NetbiosNames].ToString();
             }
         }
 
