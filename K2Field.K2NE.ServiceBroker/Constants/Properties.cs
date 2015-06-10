@@ -165,15 +165,8 @@ namespace K2Field.K2NE.ServiceBroker.Constants
                 public const string TimeOfDaySeconds = "TimeOfDaySeconds";
                 public const string WorkDay = "WorkDay";
                 
-                //public const string Description = "Description";
-                //public const string AvailabilityDateDurationDays = "AvailabilityHoursTimeOfDayDays";
-                //public const string AvailabilityDateDurationHours = "AvailabilityDateDurationHours";
-                //public const string AvailabilityDateDurationMinutes = "AvailabilityDateDurationMinutes";
-                //public const string AvailabilityDateDurationSeconds = "AvailabilityDateDurationSeconds";
+
                 public const string IsNonWorkDate = "IsNonWorkDate";
-                //public const string AvailabilityDateTimeOfDayHours = "AvailabilityDateTimeOfDayHours";
-                //public const string AvailabilityDateTimeOfDayMinutes = "AvailabilityDateTimeOfDayMinutes";
-                //public const string AvailabilityDateTimeOfDaySeconds = "AvailabilityDateTimeOfDaySeconds";
                 public const string WorkDate = "WorkDate";
                 public const string FQN = "FQN";
                 public const string UserName = "UserName";
