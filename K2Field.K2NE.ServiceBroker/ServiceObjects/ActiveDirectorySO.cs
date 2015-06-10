@@ -344,20 +344,21 @@ namespace K2Field.K2NE.ServiceBroker
 
             List<Thread> threads = new List<Thread>();
 
-
+            Thread t;
+            string net, ldap;
             for (int i = 0; i < ldaps.Length; i++)
             {
-                string net = netbioses[i];
-                string ldap = ldaps[i];
-                Thread t = new Thread(() => RunUMGetUsers(ldap, net, maxResultSet));
+                net = netbioses[i];
+                ldap = ldaps[i];
+                t = new Thread(() => RunUMGetUsers(ldap, net, maxResultSet));
                 t.Start();
                 threads.Add(t);
                 i++;
             }
 
-            foreach (Thread t in threads)
+            foreach (Thread thread in threads)
             {
-                t.Join();
+                thread.Join();
             }
         }
 
