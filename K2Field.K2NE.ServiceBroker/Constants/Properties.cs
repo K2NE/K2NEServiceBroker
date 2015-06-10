@@ -139,12 +139,15 @@ namespace K2Field.K2NE.ServiceBroker.Constants
                 public const string Initials = "Initials";
                 public const string Surname = "Surname";
                 public const string Email = "Email";
+                public const string Name = "Name";
+                public const string Label = "Label";
+                public const string ObjectSID = "ObjectSID";
+                public const string Manager = "Manager";
+                public const string Description = "Description";
 
                 public const string SubStringSearchInput = "SubStringSearchInput";
                 public const string OrganisationalUnit = "OrganisationalUnit";
-
-
-                public static string MaxSearchResultSize = "MaxResultSize";
+                public const string MaxSearchResultSize = "MaxResultSize";
 
             }
 

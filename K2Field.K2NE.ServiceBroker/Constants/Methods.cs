@@ -57,6 +57,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string GetUsers = "GetUsers";
             public const string GetUserDetails = "GetUserDetails";
             public const string SearchUsers = "SearchUsers";
+            public const string UMGetUsers = "UMGetUsers";
         }
 
         public static class WorkingHoursConfiguration

@@ -23,14 +23,26 @@ namespace K2Field.K2NE.ServiceBroker
             public const string Initials = "initials";
             public const string Surname = "sn";
             public const string Email = "mail";
-            public static string DistinguishedName = "DistinguishedName";
+            public const string DistinguishedName = "distinguishedName";
+            public const string Description = "description";
+            public const string ObjectSID = "objectSid";
+            public const string Manager = "manager";
         }
 
         public override List<SourceCode.SmartObjects.Services.ServiceSDK.Objects.ServiceObject> DescribeServiceObjects()
         {
+            string[] ldaps = base.LDAPPaths.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] netbios = base.NetBiosNames.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            if (ldaps.Count() != netbios.Count())
+            {
+                throw new ArgumentException("The LDAP paths and NetBioses count do not match.");
+            }
+
+
             ServiceObject soUser = Helper.CreateServiceObject("AD User", "Active Directory User.");
 
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.SubStringSearchInput, SoType.Text, "The string used to search for a specific value."));
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Name, SoType.Text, "The name of the user"));
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.UserFQN, SoType.Text, "The FQN username. Domain\\samlaccountname"));
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.SamAccountName, SoType.Text, "The SAM Account name"));
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.DisplayName, SoType.Text, "Display Name"));
@@ -39,8 +51,12 @@ namespace K2Field.K2NE.ServiceBroker
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Initials, SoType.Text, "Initials"));
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Surname, SoType.Text, "Surname"));
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Email, SoType.Text, "Email Address"));
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Description, SoType.Text, "Description"));
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Manager, SoType.Text, "The Manager"));
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.ObjectSID, SoType.Text, "An objectSID"));
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.MaxSearchResultSize, SoType.Number, "Override the default max result size per LDAP directory."));
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.OrganisationalUnit, SoType.Text, "OrganisationalUnit"));
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Label, SoType.Text, "The Label to use"));
 
 
 
@@ -81,6 +97,22 @@ namespace K2Field.K2NE.ServiceBroker
             soUser.Methods.Add(mSearchUser);
 
 
+            Method mUMGetUsers = Helper.CreateMethod(Constants.Methods.ActiveDirectory.UMGetUsers, "Performs a search using FILTERs provided to the SMO.", MethodType.List);
+            mUMGetUsers.InputProperties.Add(Constants.Properties.ActiveDirectory.Name);
+            mUMGetUsers.InputProperties.Add(Constants.Properties.ActiveDirectory.Label);
+            mUMGetUsers.InputProperties.Add(Constants.Properties.ActiveDirectory.Email);
+            mUMGetUsers.InputProperties.Add(Constants.Properties.ActiveDirectory.DisplayName);
+            mUMGetUsers.InputProperties.Add(Constants.Properties.ActiveDirectory.MaxSearchResultSize);
+            mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.UserFQN);
+            mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Name);
+            mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Description);
+            mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.DisplayName);
+            mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Email);
+            mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Manager);
+            mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.ObjectSID);
+            soUser.Methods.Add(mUMGetUsers);
+
+
             return new List<ServiceObject>() { soUser };
 
         }
@@ -93,16 +125,18 @@ namespace K2Field.K2NE.ServiceBroker
                 case Constants.Methods.ActiveDirectory.GetUserDetails:
                     GetUserDetails();
                     break;
-
                 case Constants.Methods.ActiveDirectory.GetUsers:
                     GetUsers();
                     break;
-
                 case Constants.Methods.ActiveDirectory.SearchUsers:
                     SearchUsers();
                     break;
+                case Constants.Methods.ActiveDirectory.UMGetUsers:
+                    UMGetUsers();
+                    break;
             }
         }
+
 
 
 
@@ -229,11 +263,162 @@ namespace K2Field.K2NE.ServiceBroker
         }
 
 
+        #region PickUser
+
+
+        //.. Example SqlFilter strings
+        //.. ((sAMAccountName like '%bob%' or displayName like '%bob%') or mail like '%bob%')
+        //.. ((sAMAccountName like '%(bob)%' or displayName like '%(bob)%') or mail like '%(bob)%')
+        public Dictionary<string, string> GetFilters()
+        {
+            Dictionary<string, string> ret = new Dictionary<string, string>();
+            if (base.ServiceBroker.Service.ServiceObjects[0].Methods[0].SqlFilter == null)
+            {
+                return ret;
+            }
+
+            string[] sepAndOr = new string[2] { " and ", " or " };
+            string[] sepLikeEqual = new string[2] { " like ", "=" };
+
+            string sqlFilter = base.ServiceBroker.Service.ServiceObjects[0].Methods[0].SqlFilter.ToString();
+
+            foreach (string str in sqlFilter.Split(sepAndOr, StringSplitOptions.RemoveEmptyEntries))
+            {
+                string[] strArray = str.Split(sepLikeEqual, StringSplitOptions.RemoveEmptyEntries);
+
+                string TmpValue = strArray[1].Replace("%", "*");
+                int firstQuoteIndex = TmpValue.IndexOf("'");
+                int LastQuoteIndex = TmpValue.LastIndexOf("'");
+                TmpValue = TmpValue.Substring(firstQuoteIndex + 1, LastQuoteIndex - firstQuoteIndex - 1).Trim();
+
+                //This is for performance reason, yes - we simply ignore the leading item for performance as the OOF picker always does a contains which is just damn slow on AD.
+                TmpValue = TmpValue.TrimStart('*');
+
+
+                string propName = strArray[0].Replace("(", "").Replace(")", "").Trim();
+                ret.Add(propName, TmpValue);
+            }
+            return ret;
+
+        }
+
+        public string getADUserLookUpStringWithPickerFilters()
+        {
+            //TODO: Check out the followinf to see the filter http://stackoverflow.com/questions/508014/active-directory-ldap-query-by-samaccountname-and-domain
+            string ADLookUpS = "(objectcategory=person)(objectclass=user)";
+            StringBuilder ADFiltersLogicalOr = new StringBuilder();
+
+
+            Dictionary<string, string> filters = GetFilters();
+            if (filters.Count() > 0)
+            {
+                foreach (KeyValuePair<string, string> Filter in filters)
+                {
+                    ADFiltersLogicalOr.AppendFormat("({0}={1})", Filter.Key, Filter.Value);
+                }
+
+                if (filters.Count() > 1)
+                {
+                    ADFiltersLogicalOr.Insert(0, "(|");
+                    ADFiltersLogicalOr.Append(")");
+                }
+
+            }
+
+            ADLookUpS = string.Concat("(&", ADLookUpS, ADFiltersLogicalOr.ToString(), ")");
+
+            return ADLookUpS;
+        }
+
+
+
+        private void UMGetUsers()
+        {
+            string[] ldaps = base.LDAPPaths.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] netbioses = base.NetBiosNames.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+            int maxResultSet = base.GetIntProperty(Constants.Properties.ActiveDirectory.MaxSearchResultSize, false);
+
+            ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
+            serviceObject.Properties.InitResultTable();
+
+            List<Thread> threads = new List<Thread>();
+
+
+            for (int i = 0; i < ldaps.Length; i++)
+            {
+                string net = netbioses[i];
+                string ldap = ldaps[i];
+                Thread t = new Thread(() => RunUMGetUsers(ldap, net, maxResultSet));
+                t.Start();
+                threads.Add(t);
+                i++;
+            }
+
+            foreach (Thread t in threads)
+            {
+                t.Join();
+            }
+        }
+
+
+        private void RunUMGetUsers(string ldap, string netbios, int maxResultSet)
+        {
+
+            DirectorySearcher searcher = new DirectorySearcher(GetDirectoryEntry(ldap));
+
+            searcher.Filter = getADUserLookUpStringWithPickerFilters();
+            if (maxResultSet == 0)
+            {
+                searcher.PageSize = base.ADMaxResultSize;
+            }
+            else
+            {
+                searcher.PageSize = maxResultSet;
+            }
+            searcher.PropertiesToLoad.Add(AdProperties.SamlAccountName);
+            searcher.PropertiesToLoad.Add(AdProperties.DisplayName);
+            searcher.PropertiesToLoad.Add(AdProperties.Email);
+            searcher.PropertiesToLoad.Add(AdProperties.Description);
+            searcher.PropertiesToLoad.Add(AdProperties.Manager);
+
+            SearchResultCollection col = searcher.FindAll();
+
+
+            DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
+            string label = base.GetStringProperty(Constants.Properties.ActiveDirectory.Label, false);
+            if (string.IsNullOrEmpty(label))
+            {
+                label = "K2";
+            }
+
+            foreach (SearchResult res in col)
+            {
+                DataRow dr = results.NewRow();
+                string saml = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.SamlAccountName);
+   
+
+                dr[Constants.Properties.ActiveDirectory.UserFQN] = string.Concat(label, ":", netbios, "\\", saml);
+                dr[Constants.Properties.ActiveDirectory.Name] = string.Concat(netbios, "\\", saml);
+                dr[Constants.Properties.ActiveDirectory.Description] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Description);
+                dr[Constants.Properties.ActiveDirectory.DisplayName] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.DisplayName);
+                dr[Constants.Properties.ActiveDirectory.Email] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Email);
+                dr[Constants.Properties.ActiveDirectory.Manager] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Manager);
+                dr[Constants.Properties.ActiveDirectory.ObjectSID] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.ObjectSID);
+                lock (base.ServiceBroker.ServicePackage.ResultTable)
+                {
+                    results.Rows.Add(dr);
+                }
+            }
+        }
+
+        #endregion PickUser
+
         #region SearchUsers
 
         private void SearchUsers()
         {
-            string[] ldaps = base.LDAPPath.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] ldaps = base.LDAPPaths.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
             int maxResultSet = base.GetIntProperty(Constants.Properties.ActiveDirectory.MaxSearchResultSize, false);
 
@@ -289,7 +474,7 @@ namespace K2Field.K2NE.ServiceBroker
                 DataRow dr = results.NewRow();
 
                 string saml = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.SamlAccountName);
-                dr[Constants.Properties.ActiveDirectory.UserFQN] = base.NetBiosName + "\\" + saml;
+                dr[Constants.Properties.ActiveDirectory.UserFQN] = base.NetBiosNames + "\\" + saml;
                 dr[Constants.Properties.ActiveDirectory.SamAccountName] = saml;
                 dr[Constants.Properties.ActiveDirectory.DisplayName] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.DisplayName);
                 dr[Constants.Properties.ActiveDirectory.Email] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Email);
@@ -305,7 +490,7 @@ namespace K2Field.K2NE.ServiceBroker
 
         private void GetUsers()
         {
-            string[] ldaps = base.LDAPPath.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] ldaps = base.LDAPPaths.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             int maxResultSet = base.GetIntProperty(Constants.Properties.ActiveDirectory.MaxSearchResultSize, false);
 
             ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
@@ -382,7 +567,7 @@ namespace K2Field.K2NE.ServiceBroker
                 DataRow dr = results.NewRow();
 
                 string saml = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.SamlAccountName);
-                dr[Constants.Properties.ActiveDirectory.UserFQN] = base.NetBiosName + "\\" + saml;
+                dr[Constants.Properties.ActiveDirectory.UserFQN] = base.NetBiosNames + "\\" + saml;
                 dr[Constants.Properties.ActiveDirectory.SamAccountName] = saml;
                 dr[Constants.Properties.ActiveDirectory.DisplayName] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.DisplayName);
                 dr[Constants.Properties.ActiveDirectory.Email] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Email);
@@ -402,7 +587,7 @@ namespace K2Field.K2NE.ServiceBroker
             string userfqn = base.GetStringProperty(Constants.Properties.ActiveDirectory.UserFQN, true);
             string samlaccountname = userfqn.Substring(userfqn.IndexOf('\\') + 1);
 
-            string[] ldaps = base.LDAPPath.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] ldaps = base.LDAPPaths.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (string ldap in ldaps)
             {
@@ -437,7 +622,7 @@ namespace K2Field.K2NE.ServiceBroker
             }
 
 
-            #endregion GetUserDetails
+        #endregion GetUserDetails
 
         }
     }
