@@ -419,6 +419,7 @@ namespace K2Field.K2NE.ServiceBroker
         private void SearchUsers()
         {
             string[] ldaps = base.LDAPPaths.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] netbioses = base.NetBiosNames.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
             int maxResultSet = base.GetIntProperty(Constants.Properties.ActiveDirectory.MaxSearchResultSize, false);
 
@@ -429,9 +430,11 @@ namespace K2Field.K2NE.ServiceBroker
 
             List<Thread> threads = new List<Thread>();
 
-            foreach (string ldap in ldaps)
+             for (int i = 0; i < ldaps.Length; i++)
             {
-                Thread t = new Thread(() => RunSearchUser(ldap, maxResultSet, searchval));
+                string ldap = ldaps[i];
+                string net = netbioses[i];
+                Thread t = new Thread(() => RunSearchUser(ldap, net, maxResultSet, searchval));
                 t.Start();
                 threads.Add(t);
             }
@@ -443,7 +446,7 @@ namespace K2Field.K2NE.ServiceBroker
         }
 
 
-        private void RunSearchUser(string ldap, int maxResultSet, string searchval)
+        private void RunSearchUser(string ldap, string netbios, int maxResultSet, string searchval)
         {
 
             DirectorySearcher searcher = new DirectorySearcher(GetDirectoryEntry(ldap));
@@ -469,12 +472,10 @@ namespace K2Field.K2NE.ServiceBroker
 
             foreach (SearchResult res in col)
             {
-
-
                 DataRow dr = results.NewRow();
 
                 string saml = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.SamlAccountName);
-                dr[Constants.Properties.ActiveDirectory.UserFQN] = base.NetBiosNames + "\\" + saml;
+                dr[Constants.Properties.ActiveDirectory.UserFQN] = string.Concat(netbios, "\\", saml);
                 dr[Constants.Properties.ActiveDirectory.SamAccountName] = saml;
                 dr[Constants.Properties.ActiveDirectory.DisplayName] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.DisplayName);
                 dr[Constants.Properties.ActiveDirectory.Email] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Email);
@@ -491,6 +492,8 @@ namespace K2Field.K2NE.ServiceBroker
         private void GetUsers()
         {
             string[] ldaps = base.LDAPPaths.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] netbioses = base.NetBiosNames.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
             int maxResultSet = base.GetIntProperty(Constants.Properties.ActiveDirectory.MaxSearchResultSize, false);
 
             ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
@@ -498,9 +501,11 @@ namespace K2Field.K2NE.ServiceBroker
 
             List<Thread> threads = new List<Thread>();
 
-            foreach (string ldap in ldaps)
+            for (int i = 0; i < ldaps.Length; i++)
             {
-                Thread t = new Thread(() => RunGetUsers(ldap, maxResultSet));
+                string ldap = ldaps[i];
+                string net = netbioses[i];
+                Thread t = new Thread(() => RunGetUsers(ldap, net, maxResultSet));
                 t.Start();
                 threads.Add(t);
             }
@@ -513,7 +518,7 @@ namespace K2Field.K2NE.ServiceBroker
 
 
 
-        private void RunGetUsers(string ldap, int maxResultSet)
+        private void RunGetUsers(string ldap, string netbios, int maxResultSet)
         {
             DirectorySearcher searcher = new DirectorySearcher(GetDirectoryEntry(ldap));
 
@@ -567,7 +572,7 @@ namespace K2Field.K2NE.ServiceBroker
                 DataRow dr = results.NewRow();
 
                 string saml = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.SamlAccountName);
-                dr[Constants.Properties.ActiveDirectory.UserFQN] = base.NetBiosNames + "\\" + saml;
+                dr[Constants.Properties.ActiveDirectory.UserFQN] = string.Concat(netbios, "\\", saml);
                 dr[Constants.Properties.ActiveDirectory.SamAccountName] = saml;
                 dr[Constants.Properties.ActiveDirectory.DisplayName] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.DisplayName);
                 dr[Constants.Properties.ActiveDirectory.Email] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Email);
