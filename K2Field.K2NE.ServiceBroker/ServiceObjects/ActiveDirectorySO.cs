@@ -39,9 +39,7 @@ namespace K2Field.K2NE.ServiceBroker
                 throw new ArgumentException("The LDAP paths and NetBioses count do not match.");
             }
 
-
             ServiceObject soUser = Helper.CreateServiceObject("AD User", "Active Directory User.");
-
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.SubStringSearchInput, SoType.Text, "The string used to search for a specific value."));
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Name, SoType.Text, "The name of the user"));
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.UserFQN, SoType.Text, "The FQN username. Domain\\samlaccountname"));
@@ -59,8 +57,6 @@ namespace K2Field.K2NE.ServiceBroker
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.OrganisationalUnit, SoType.Text, "OrganisationalUnit"));
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Label, SoType.Text, "The Label to use"));
 
-
-
             Method mGetUsers = Helper.CreateMethod(Constants.Methods.ActiveDirectory.GetUsers, "Get all users, filtered by exact matching of the input properties.", MethodType.List);
             mGetUsers.InputProperties.Add(Constants.Properties.ActiveDirectory.UserFQN);
             mGetUsers.InputProperties.Add(Constants.Properties.ActiveDirectory.DisplayName);
@@ -71,7 +67,6 @@ namespace K2Field.K2NE.ServiceBroker
             mGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.DisplayName);
             mGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Email);
             soUser.Methods.Add(mGetUsers);
-
 
             Method mGetUserDetails = Helper.CreateMethod(Constants.Methods.ActiveDirectory.GetUserDetails, "Get all details for the users.", MethodType.Read);
             mGetUserDetails.InputProperties.Add(Constants.Properties.ActiveDirectory.UserFQN);
@@ -86,7 +81,6 @@ namespace K2Field.K2NE.ServiceBroker
             mGetUserDetails.ReturnProperties.Add(Constants.Properties.ActiveDirectory.OrganisationalUnit);
             soUser.Methods.Add(mGetUserDetails);
 
-
             Method mSearchUser = Helper.CreateMethod(Constants.Methods.ActiveDirectory.SearchUsers, "Performs a StartWith query on DisplayName, SamlAccountName and E-mail.", MethodType.List);
             mSearchUser.InputProperties.Add(Constants.Properties.ActiveDirectory.SubStringSearchInput);
             mSearchUser.InputProperties.Add(Constants.Properties.ActiveDirectory.MaxSearchResultSize);
@@ -96,7 +90,6 @@ namespace K2Field.K2NE.ServiceBroker
             mSearchUser.ReturnProperties.Add(Constants.Properties.ActiveDirectory.DisplayName);
             mSearchUser.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Email);
             soUser.Methods.Add(mSearchUser);
-
 
             Method mUMGetUsers = Helper.CreateMethod(Constants.Methods.ActiveDirectory.UMGetUsers, "Performs a search using FILTERs provided to the SMO.", MethodType.List);
             mUMGetUsers.InputProperties.Add(Constants.Properties.ActiveDirectory.Name);
@@ -109,13 +102,11 @@ namespace K2Field.K2NE.ServiceBroker
             mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Description);
             mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.DisplayName);
             mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Email);
-            mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Manager);
+            //mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Manager);
             mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.ObjectSID);
             soUser.Methods.Add(mUMGetUsers);
 
-
             return new List<ServiceObject>() { soUser };
-
         }
 
         public override void Execute()
@@ -138,9 +129,6 @@ namespace K2Field.K2NE.ServiceBroker
             }
         }
 
-
-
-
         private string EscapeSearchFilter(string filter)
         {
             string text = filter;
@@ -162,7 +150,6 @@ namespace K2Field.K2NE.ServiceBroker
             return text;
         }
 
-
         public string EscapeFilterChars(string text)
         {
             text = text.Replace("\\", "\\5C");
@@ -179,7 +166,6 @@ namespace K2Field.K2NE.ServiceBroker
             return OU;
 
         }
-
 
         /// <summary>
         /// Returns all values in a given AD string matching a given lookup e.g OU separted by a specified delimiter
@@ -257,15 +243,12 @@ namespace K2Field.K2NE.ServiceBroker
             return pvc[0] as string;
         }
 
-
         private DirectoryEntry GetDirectoryEntry(string ldap)
         {
             return new DirectoryEntry(ldap);
         }
 
-
         #region PickUser
-
 
         //.. Example SqlFilter strings
         //.. ((sAMAccountName like '%bob%' or displayName like '%bob%') or mail like '%bob%')
@@ -331,8 +314,6 @@ namespace K2Field.K2NE.ServiceBroker
             return ADLookUpS;
         }
 
-
-
         private void UMGetUsers()
         {
             string[] ldaps = base.LDAPPaths.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
@@ -387,8 +368,6 @@ namespace K2Field.K2NE.ServiceBroker
             searcher.Filter = searchFilter.ToString();
             //searcher.Filter = getADUserLookUpStringWithPickerFilters();
 
-            //==========
-
             if (maxResultSet == 0)
             {
                 searcher.PageSize = base.ADMaxResultSize;
@@ -403,7 +382,7 @@ namespace K2Field.K2NE.ServiceBroker
             searcher.PropertiesToLoad.Add(AdProperties.DisplayName);
             searcher.PropertiesToLoad.Add(AdProperties.Email);
             searcher.PropertiesToLoad.Add(AdProperties.Description);
-            searcher.PropertiesToLoad.Add(AdProperties.Manager);
+            //searcher.PropertiesToLoad.Add(AdProperties.Manager);
 
             DataRow dr;
             string saml;
@@ -418,7 +397,7 @@ namespace K2Field.K2NE.ServiceBroker
                 dr[Constants.Properties.ActiveDirectory.Description] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Description);
                 dr[Constants.Properties.ActiveDirectory.DisplayName] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.DisplayName);
                 dr[Constants.Properties.ActiveDirectory.Email] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Email);
-                dr[Constants.Properties.ActiveDirectory.Manager] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Manager);
+                //dr[Constants.Properties.ActiveDirectory.Manager] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Manager);
                 dr[Constants.Properties.ActiveDirectory.ObjectSID] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.ObjectSID);
                 lock (base.ServiceBroker.ServicePackage.ResultTable)
                 {
