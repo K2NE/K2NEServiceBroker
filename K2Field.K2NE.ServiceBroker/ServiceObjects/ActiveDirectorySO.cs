@@ -27,6 +27,7 @@ namespace K2Field.K2NE.ServiceBroker
             public const string Description = "description";
             public const string ObjectSID = "objectSid";
             public const string Manager = "manager";
+            public const string Name = "name";
         }
 
         public override List<SourceCode.SmartObjects.Services.ServiceSDK.Objects.ServiceObject> DescribeServiceObjects()
@@ -348,12 +349,12 @@ namespace K2Field.K2NE.ServiceBroker
             string net, ldap;
             for (int i = 0; i < ldaps.Length; i++)
             {
-                net = netbioses[i];
                 ldap = ldaps[i];
+                net = netbioses[i];
                 t = new Thread(() => RunUMGetUsers(ldap, net, maxResultSet));
+                //t = new Thread(() => RunGetUsers(ldap, net, maxResultSet));
                 t.Start();
                 threads.Add(t);
-                i++;
             }
 
             foreach (Thread thread in threads)
@@ -365,10 +366,29 @@ namespace K2Field.K2NE.ServiceBroker
 
         private void RunUMGetUsers(string ldap, string netbios, int maxResultSet)
         {
-
             DirectorySearcher searcher = new DirectorySearcher(GetDirectoryEntry(ldap));
 
-            searcher.Filter = getADUserLookUpStringWithPickerFilters();
+            StringBuilder searchFilter = new StringBuilder();
+            searchFilter.Append("(&");
+            searchFilter.Append("(objectcategory=person)(objectclass=user)");
+
+            string displayName = base.GetStringProperty(Constants.Properties.ActiveDirectory.DisplayName, false);
+            string email = base.GetStringProperty(Constants.Properties.ActiveDirectory.Email, false);
+            string userfqn = base.GetStringProperty(Constants.Properties.ActiveDirectory.UserFQN, false);
+            string name = base.GetStringProperty(Constants.Properties.ActiveDirectory.Name, false);
+            string label = base.GetStringProperty(Constants.Properties.ActiveDirectory.Label, false);
+            label = string.IsNullOrWhiteSpace(label) ? "K2" : label;
+            if (!string.IsNullOrWhiteSpace(displayName)) { searchFilter.AppendFormat("({0}={1})", AdProperties.DisplayName, displayName); }
+            if (!string.IsNullOrWhiteSpace(email)) { searchFilter.AppendFormat("({0}={1})", AdProperties.Email, email); }
+            if (!string.IsNullOrWhiteSpace(userfqn)) { searchFilter.AppendFormat("({0}={1})", AdProperties.SamlAccountName, userfqn.Substring(userfqn.IndexOf('\\') + 1)); }
+            if (!string.IsNullOrWhiteSpace(name)) { searchFilter.AppendFormat("({0}={1})", AdProperties.SamlAccountName, name.Substring(name.IndexOf('\\') + 1)); }
+
+            searchFilter.Append(")");
+            searcher.Filter = searchFilter.ToString();
+            //searcher.Filter = getADUserLookUpStringWithPickerFilters();
+
+            //==========
+
             if (maxResultSet == 0)
             {
                 searcher.PageSize = base.ADMaxResultSize;
@@ -377,28 +397,22 @@ namespace K2Field.K2NE.ServiceBroker
             {
                 searcher.PageSize = maxResultSet;
             }
+
             searcher.PropertiesToLoad.Add(AdProperties.SamlAccountName);
+            searcher.PropertiesToLoad.Add(AdProperties.Name);
             searcher.PropertiesToLoad.Add(AdProperties.DisplayName);
             searcher.PropertiesToLoad.Add(AdProperties.Email);
             searcher.PropertiesToLoad.Add(AdProperties.Description);
             searcher.PropertiesToLoad.Add(AdProperties.Manager);
 
+            DataRow dr;
+            string saml;
             SearchResultCollection col = searcher.FindAll();
-
-
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
-            string label = base.GetStringProperty(Constants.Properties.ActiveDirectory.Label, false);
-            if (string.IsNullOrEmpty(label))
-            {
-                label = "K2";
-            }
-
             foreach (SearchResult res in col)
             {
-                DataRow dr = results.NewRow();
-                string saml = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.SamlAccountName);
-   
-
+                dr = results.NewRow();
+                saml = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.SamlAccountName);
                 dr[Constants.Properties.ActiveDirectory.UserFQN] = string.Concat(label, ":", netbios, "\\", saml);
                 dr[Constants.Properties.ActiveDirectory.Name] = string.Concat(netbios, "\\", saml);
                 dr[Constants.Properties.ActiveDirectory.Description] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Description);
@@ -517,8 +531,6 @@ namespace K2Field.K2NE.ServiceBroker
             }
         }
 
-
-
         private void RunGetUsers(string ldap, string netbios, int maxResultSet)
         {
             DirectorySearcher searcher = new DirectorySearcher(GetDirectoryEntry(ldap));
@@ -527,29 +539,16 @@ namespace K2Field.K2NE.ServiceBroker
             searchFilter.Append("(&");
             searchFilter.Append("(objectcategory=person)(objectclass=user)");
 
-
             string displayName = base.GetStringProperty(Constants.Properties.ActiveDirectory.DisplayName, false);
-            if (!string.IsNullOrEmpty(displayName))
-            {
-                searchFilter.AppendFormat("({0}={1})", AdProperties.DisplayName, displayName);
-            }
-
             string email = base.GetStringProperty(Constants.Properties.ActiveDirectory.Email, false);
-            if (!string.IsNullOrEmpty(email))
-            {
-                searchFilter.AppendFormat("({0}={1})", AdProperties.Email, email);
-            }
-
             string userfqn = base.GetStringProperty(Constants.Properties.ActiveDirectory.UserFQN, false);
-            if (!string.IsNullOrEmpty(userfqn))
-            {
-                string samlaccountname = userfqn.Substring(userfqn.IndexOf('\\') + 1);
-                searchFilter.AppendFormat("({0}={1})", AdProperties.SamlAccountName, samlaccountname);
-            }
+            if (!string.IsNullOrEmpty(displayName)) { searchFilter.AppendFormat("({0}={1})", AdProperties.DisplayName, displayName); }
+            if (!string.IsNullOrEmpty(email)) { searchFilter.AppendFormat("({0}={1})", AdProperties.Email, email); }
+            if (!string.IsNullOrEmpty(userfqn)) { searchFilter.AppendFormat("({0}={1})", AdProperties.SamlAccountName, userfqn.Substring(userfqn.IndexOf('\\') + 1)); }
 
             searchFilter.Append(")");
-
             searcher.Filter = searchFilter.ToString();
+
             if (maxResultSet == 0)
             {
                 searcher.SizeLimit = base.ADMaxResultSize;
@@ -558,21 +557,19 @@ namespace K2Field.K2NE.ServiceBroker
             {
                 searcher.SizeLimit = maxResultSet;
             }
+
             searcher.PropertiesToLoad.Add(AdProperties.SamlAccountName);
             searcher.PropertiesToLoad.Add(AdProperties.DisplayName);
             searcher.PropertiesToLoad.Add(AdProperties.Email);
 
+            DataRow dr;
+            string saml;
             SearchResultCollection col = searcher.FindAll();
-
-
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
-
             foreach (SearchResult res in col)
             {
-
-                DataRow dr = results.NewRow();
-
-                string saml = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.SamlAccountName);
+                dr = results.NewRow();
+                saml = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.SamlAccountName);
                 dr[Constants.Properties.ActiveDirectory.UserFQN] = string.Concat(netbios, "\\", saml);
                 dr[Constants.Properties.ActiveDirectory.SamAccountName] = saml;
                 dr[Constants.Properties.ActiveDirectory.DisplayName] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.DisplayName);
