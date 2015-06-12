@@ -544,27 +544,25 @@ namespace K2Field.K2NE.ServiceBroker
         {
             string[] ldaps = base.LDAPPaths.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             string[] netbioses = base.NetBiosNames.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            
+            //Add some wrong data into the string arrays to test the 'parallel for'.
+            //Array.Resize(ref ldaps, ldaps.Length + 1);
+            //ldaps[ldaps.Length - 1] = "LDAP://wrong,tech";
+            //Array.Resize(ref netbioses, netbioses.Length + 1);
+            //netbioses[netbioses.Length - 1] = "wrong";
 
             int maxResultSet = base.GetIntProperty(Constants.Properties.ActiveDirectory.MaxSearchResultSize, false);
 
             ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
 
-            List<Thread> threads = new List<Thread>();
-
-            for (int i = 0; i < ldaps.Length; i++)
+            string ldap, net;
+            Parallel.For(0, ldaps.Length, i =>
             {
-                string ldap = ldaps[i];
-                string net = netbioses[i];
-                Thread t = new Thread(() => RunGetUsers(ldap, net, maxResultSet));
-                t.Start();
-                threads.Add(t);
-            }
-
-            foreach (Thread t in threads)
-            {
-                t.Join();
-            }
+                ldap = ldaps[i];
+                net = netbioses[i];
+                RunGetUsers(ldap, net, maxResultSet);
+            });
         }
 
         private void RunGetUsers(string ldap, string netbios, int maxResultSet)
