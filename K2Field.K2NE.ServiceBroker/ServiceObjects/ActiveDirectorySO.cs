@@ -215,7 +215,6 @@ namespace K2Field.K2NE.ServiceBroker
             return result;
         }
 
-
         private static string GetObjectSid(System.DirectoryServices.ResultPropertyCollection props, string name)
         {
             if (!props.Contains(name))
@@ -287,22 +286,26 @@ namespace K2Field.K2NE.ServiceBroker
 
             string sqlFilter = base.ServiceBroker.Service.ServiceObjects[0].Methods[0].SqlFilter.ToString();
 
+            string[] strArray;
+            string TmpValue, propName;
+            int firstQuoteIndex, LastQuoteIndex;
+
             foreach (string str in sqlFilter.Split(sepAndOr, StringSplitOptions.RemoveEmptyEntries))
             {
-                string[] strArray = str.Split(sepLikeEqual, StringSplitOptions.RemoveEmptyEntries);
+                strArray = str.Split(sepLikeEqual, StringSplitOptions.RemoveEmptyEntries);
 
-                string TmpValue = strArray[1].Replace("%", "*");
-                int firstQuoteIndex = TmpValue.IndexOf("'");
-                int LastQuoteIndex = TmpValue.LastIndexOf("'");
+                TmpValue = strArray[1].Replace("%", "*");
+                firstQuoteIndex = TmpValue.IndexOf("'");
+                LastQuoteIndex = TmpValue.LastIndexOf("'");
                 TmpValue = TmpValue.Substring(firstQuoteIndex + 1, LastQuoteIndex - firstQuoteIndex - 1).Trim();
 
                 //This is for performance reason, yes - we simply ignore the leading item for performance as the OOF picker always does a contains which is just damn slow on AD.
                 TmpValue = TmpValue.TrimStart('*');
 
-
-                string propName = strArray[0].Replace("(", "").Replace(")", "").Trim();
+                propName = strArray[0].Replace("(", "").Replace(")", "").Trim();
                 ret.Add(propName, TmpValue);
             }
+
             return ret;
 
         }
@@ -373,42 +376,19 @@ namespace K2Field.K2NE.ServiceBroker
 
             int maxResultSet = base.GetIntProperty(Constants.Properties.ActiveDirectory.MaxSearchResultSize, false);
 
-
-
             ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
 
             List<Thread> threads = new List<Thread>();
 
-            string net, ldap;
-            for (int i = 0; i < ldaps.Length; i++)
+            string ldap, net;
+            Parallel.For(0, ldaps.Length, i =>
             {
                 ldap = ldaps[i];
                 net = netbioses[i];
-                Thread t = new Thread(() => RunUMGetUsers(ldap, net, maxResultSet));
-                t.Start();
-                threads.Add(t);
-            }
-
-
-            foreach (Thread t in threads)
-            {
-                t.Join();
-            }
-            //ParallelLoopResult loop = Parallel.For(0, ldaps.Length, ctr =>
-            //{
-            //    ldap = ldaps[ctr];
-            //    net = netbioses[ctr];
-            //    RunUMGetUsers(ldap, net, maxResultSet);   
-            //});
-            //if (!loop.IsCompleted)
-            //{
-            //    throw new ApplicationException(string.Format("One of the AD Queries did not return properly."));
-            //}
-
-
+                RunUMGetUsers(ldap, net, maxResultSet);
+            });
         }
-
 
         private void RunUMGetUsers(string ldap, string netbios, int maxResultSet)
         {
@@ -420,7 +400,6 @@ namespace K2Field.K2NE.ServiceBroker
             {
                 label = "K2";
             }
-
 
             searcher.Filter = getADUserLookUpStringWithPickerFilters();
 
@@ -441,14 +420,14 @@ namespace K2Field.K2NE.ServiceBroker
             searcher.PropertiesToLoad.Add(AdProperties.Manager);
             searcher.PropertiesToLoad.Add(AdProperties.ObjectSID);
 
-
-
+            DataRow dr;
+            string saml;
             SearchResultCollection col = searcher.FindAll();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
             foreach (SearchResult res in col)
             {
-                DataRow dr = results.NewRow();
-                string saml = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.SamlAccountName);
+                dr = results.NewRow();
+                saml = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.SamlAccountName);
                 dr[Constants.Properties.ActiveDirectory.UserFQN] = string.Concat(label, ":", netbios, "\\", saml);
                 dr[Constants.Properties.ActiveDirectory.Name] = string.Concat(netbios, "\\", saml);
                 dr[Constants.Properties.ActiveDirectory.Description] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Description);
@@ -474,34 +453,22 @@ namespace K2Field.K2NE.ServiceBroker
 
             int maxResultSet = base.GetIntProperty(Constants.Properties.ActiveDirectory.MaxSearchResultSize, false);
 
-
             string searchval = base.GetStringProperty(Constants.Properties.ActiveDirectory.SubStringSearchInput, true);
             ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
 
-            List<Thread> threads = new List<Thread>();
-
-            for (int i = 0; i < ldaps.Length; i++)
+            string ldap, net;
+            Parallel.For(0, ldaps.Length, i =>
             {
-                string ldap = ldaps[i];
-                string net = netbioses[i];
-                Thread t = new Thread(() => RunSearchUser(ldap, net, maxResultSet, searchval));
-                t.Start();
-                threads.Add(t);
-            }
-
-            foreach (Thread t in threads)
-            {
-                t.Join();
-            }
+                ldap = ldaps[i];
+                net = netbioses[i];
+                RunGetUsers(ldap, net, maxResultSet);
+            });
         }
-
 
         private void RunSearchUser(string ldap, string netbios, int maxResultSet, string searchval)
         {
-
             DirectorySearcher searcher = new DirectorySearcher(GetDirectoryEntry(ldap));
-
 
             searcher.Filter = string.Format("(&(objectcategory=person)(objectclass=user)(|(sAMAccountName={0}*)(displayName={0}*)(mail={0}*)))", searchval);
             if (maxResultSet == 0)
@@ -518,14 +485,15 @@ namespace K2Field.K2NE.ServiceBroker
 
             SearchResultCollection col = searcher.FindAll();
 
-
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
+            DataRow dr;
+            string saml;
             foreach (SearchResult res in col)
             {
-                DataRow dr = results.NewRow();
+                dr = results.NewRow();
 
-                string saml = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.SamlAccountName);
+                saml = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.SamlAccountName);
                 dr[Constants.Properties.ActiveDirectory.UserFQN] = string.Concat(netbios, "\\", saml);
                 dr[Constants.Properties.ActiveDirectory.SamAccountName] = saml;
                 dr[Constants.Properties.ActiveDirectory.DisplayName] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.DisplayName);
@@ -635,11 +603,9 @@ namespace K2Field.K2NE.ServiceBroker
                 SearchResult res = searcher.FindOne();
                 if (res != null)
                 {
-
                     ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
                     serviceObject.Properties.InitResultTable();
                     DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
-
 
                     DataRow dr = results.NewRow();
 
@@ -655,7 +621,6 @@ namespace K2Field.K2NE.ServiceBroker
                     results.Rows.Add(dr);
                     break; // there can be only one as this is a read method.
                 }
-
             }
 
 
