@@ -42,22 +42,24 @@ namespace K2Field.K2NE.ServiceBroker
             }
 
             ServiceObject soUser = Helper.CreateServiceObject("AD User", "Active Directory User.");
-            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.SubStringSearchInput, SoType.Text, "The string used to search for a specific value."));
-            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Name, SoType.Text, "The name of the user"));
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.UserFQN, SoType.Text, "The FQN username. Domain\\samlaccountname"));
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.SubStringSearchInput, SoType.Text, "The string used to search for a specific value."));
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.SamAccountName, SoType.Text, "The SAM Account name"));
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Name, SoType.Text, "The name of the user"));
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Description, SoType.Text, "Description"));
+
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Email, SoType.Text, "Email Address"));
+
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Manager, SoType.Text, "The Manager"));
+
+            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.ObjectSID, SoType.Text, "An objectSID"));
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.DisplayName, SoType.Text, "Display Name"));
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.CommonName, SoType.Text, "The common name of the object."));
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.GivenName, SoType.Text, "Given Name"));
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Initials, SoType.Text, "Initials"));
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Surname, SoType.Text, "Surname"));
-            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Email, SoType.Text, "Email Address"));
-            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Description, SoType.Text, "Description"));
-            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Manager, SoType.Text, "The Manager"));
-            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.ObjectSID, SoType.Text, "An objectSID"));
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.MaxSearchResultSize, SoType.Number, "Override the default max result size per LDAP directory."));
             soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.OrganisationalUnit, SoType.Text, "OrganisationalUnit"));
-            soUser.Properties.Add(Helper.CreateProperty(Constants.Properties.ActiveDirectory.Label, SoType.Text, "The Label to use"));
 
             Method mGetUsers = Helper.CreateMethod(Constants.Methods.ActiveDirectory.GetUsers, "Get all users, filtered by exact matching of the input properties.", MethodType.List);
             mGetUsers.InputProperties.Add(Constants.Properties.ActiveDirectory.UserFQN);
@@ -94,12 +96,13 @@ namespace K2Field.K2NE.ServiceBroker
             soUser.Methods.Add(mSearchUser);
 
             Method mUMGetUsers = Helper.CreateMethod(Constants.Methods.ActiveDirectory.UMGetUsers, "Performs a search using FILTERs provided to the SMO.", MethodType.List);
+            
             mUMGetUsers.InputProperties.Add(Constants.Properties.ActiveDirectory.Name);
-            mUMGetUsers.InputProperties.Add(Constants.Properties.ActiveDirectory.Label);
+            mUMGetUsers.InputProperties.Add(Constants.Properties.ActiveDirectory.Description);
             mUMGetUsers.InputProperties.Add(Constants.Properties.ActiveDirectory.Email);
+            mUMGetUsers.InputProperties.Add(Constants.Properties.ActiveDirectory.Manager);
             mUMGetUsers.InputProperties.Add(Constants.Properties.ActiveDirectory.DisplayName);
             mUMGetUsers.InputProperties.Add(Constants.Properties.ActiveDirectory.MaxSearchResultSize);
-            mUMGetUsers.Validation.RequiredProperties.Add(Constants.Properties.ActiveDirectory.Label);
             mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.UserFQN);
             mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Name);
             mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Description);
@@ -107,6 +110,18 @@ namespace K2Field.K2NE.ServiceBroker
             mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Email);
             mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Manager);
             mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.ObjectSID);
+            
+
+            MethodParameter methParm = new MethodParameter();
+            methParm.IsRequired = true;
+            methParm.MetaData = new SourceCode.SmartObjects.Services.ServiceSDK.Objects.MetaData();
+            methParm.MetaData.Description = Constants.Properties.ActiveDirectory.Label;
+            methParm.MetaData.DisplayName = Constants.Properties.ActiveDirectory.Label;
+            methParm.Name = Constants.Properties.ActiveDirectory.Label;
+            methParm.SoType = SoType.Text;
+            methParm.Type = MapHelper.GetTypeBySoType(methParm.SoType);
+
+            mUMGetUsers.MethodParameters.Add(methParm);
             soUser.Methods.Add(mUMGetUsers);
 
             return new List<ServiceObject>() { soUser };
@@ -286,23 +301,19 @@ namespace K2Field.K2NE.ServiceBroker
 
             string sqlFilter = base.ServiceBroker.Service.ServiceObjects[0].Methods[0].SqlFilter.ToString();
 
-            string[] strArray;
-            string TmpValue, propName;
-            int firstQuoteIndex, LastQuoteIndex;
-
             foreach (string str in sqlFilter.Split(sepAndOr, StringSplitOptions.RemoveEmptyEntries))
             {
-                strArray = str.Split(sepLikeEqual, StringSplitOptions.RemoveEmptyEntries);
+                string[] strArray = str.Split(sepLikeEqual, StringSplitOptions.RemoveEmptyEntries);
 
-                TmpValue = strArray[1].Replace("%", "*");
-                firstQuoteIndex = TmpValue.IndexOf("'");
-                LastQuoteIndex = TmpValue.LastIndexOf("'");
+                string TmpValue = strArray[1].Replace("%", "*");
+                int firstQuoteIndex = TmpValue.IndexOf("'");
+                int LastQuoteIndex = TmpValue.LastIndexOf("'");
                 TmpValue = TmpValue.Substring(firstQuoteIndex + 1, LastQuoteIndex - firstQuoteIndex - 1).Trim();
 
                 //This is for performance reason, yes - we simply ignore the leading item for performance as the OOF picker always does a contains which is just damn slow on AD.
                 TmpValue = TmpValue.TrimStart('*');
 
-                propName = strArray[0].Replace("(", "").Replace(")", "").Trim();
+                string propName = strArray[0].Replace("(", "").Replace(")", "").Trim();
                 ret.Add(propName, TmpValue);
             }
 
@@ -394,7 +405,7 @@ namespace K2Field.K2NE.ServiceBroker
         {
             DirectorySearcher searcher = new DirectorySearcher(GetDirectoryEntry(ldap));
 
-            string label = base.GetStringProperty(Constants.Properties.ActiveDirectory.Label, true);
+            string label = base.GetStringParameter(Constants.Properties.ActiveDirectory.Label, true);
 
             if (string.IsNullOrEmpty(label))
             {
@@ -427,14 +438,26 @@ namespace K2Field.K2NE.ServiceBroker
             foreach (SearchResult res in col)
             {
                 dr = results.NewRow();
+
+                /*            mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.UserFQN);
+            mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.UserName);
+            mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Name);
+            mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Description);
+            mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Email);
+            mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.Manager);
+            mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.SipAccount);
+            mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.ObjectSID);
+            mUMGetUsers.ReturnProperties.Add(Constants.Properties.ActiveDirectory.DisplayName);*/
+
                 saml = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.SamlAccountName);
                 dr[Constants.Properties.ActiveDirectory.UserFQN] = string.Concat(label, ":", netbios, "\\", saml);
                 dr[Constants.Properties.ActiveDirectory.Name] = string.Concat(netbios, "\\", saml);
                 dr[Constants.Properties.ActiveDirectory.Description] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Description);
                 dr[Constants.Properties.ActiveDirectory.DisplayName] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.DisplayName);
-                dr[Constants.Properties.ActiveDirectory.Email] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Email);
+                dr[Constants.Properties.ActiveDirectory.Email] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Email); 
                 dr[Constants.Properties.ActiveDirectory.Manager] = GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Manager);
                 dr[Constants.Properties.ActiveDirectory.ObjectSID] = GetObjectSid(res.Properties, AdProperties.ObjectSID);
+                
                 lock (base.ServiceBroker.ServicePackage.ResultTable)
                 {
                     results.Rows.Add(dr);
@@ -457,11 +480,10 @@ namespace K2Field.K2NE.ServiceBroker
             ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
 
-            string ldap, net;
             Parallel.For(0, ldaps.Length, i =>
             {
-                ldap = ldaps[i];
-                net = netbioses[i];
+                string ldap = ldaps[i];
+                string net = netbioses[i];
                 RunGetUsers(ldap, net, maxResultSet);
             });
         }
@@ -512,23 +534,17 @@ namespace K2Field.K2NE.ServiceBroker
         {
             string[] ldaps = base.LDAPPaths.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             string[] netbioses = base.NetBiosNames.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            
-            //Add some wrong data into the string arrays to test the 'parallel for'.
-            //Array.Resize(ref ldaps, ldaps.Length + 1);
-            //ldaps[ldaps.Length - 1] = "LDAP://wrong,tech";
-            //Array.Resize(ref netbioses, netbioses.Length + 1);
-            //netbioses[netbioses.Length - 1] = "wrong";
 
             int maxResultSet = base.GetIntProperty(Constants.Properties.ActiveDirectory.MaxSearchResultSize, false);
 
             ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
 
-            string ldap, net;
+            
             Parallel.For(0, ldaps.Length, i =>
             {
-                ldap = ldaps[i];
-                net = netbioses[i];
+                string ldap = ldaps[i];
+                string net = netbioses[i];
                 RunGetUsers(ldap, net, maxResultSet);
             });
         }

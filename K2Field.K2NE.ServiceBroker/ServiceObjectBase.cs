@@ -203,6 +203,25 @@ namespace K2Field.K2NE.ServiceBroker
             return val;
         }
 
+
+
+        protected string GetStringParameter(string name, bool isRequired = false)
+        {
+            MethodParameter p = ServiceBroker.Service.ServiceObjects[0].Methods[0].MethodParameters[name];
+            if (p == null)
+            {
+                if (isRequired)
+                    throw new ArgumentException(string.Format(Constants.ErrorMessages.RequiredParameterNotFound, name));
+                return string.Empty;
+            }
+            string val = p.Value as string;
+            if (isRequired && string.IsNullOrEmpty(val))
+                throw new ArgumentException(string.Format("{0} is required but is empty.", name));
+
+            return val;
+        }
+
+
         /// <summary>
         /// Retrieve an integer property with the given name from the current ServiceObject.
         /// Method should always be called in the context of a 'Execute()'.

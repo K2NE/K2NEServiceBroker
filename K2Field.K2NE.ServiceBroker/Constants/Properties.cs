@@ -148,7 +148,6 @@ namespace K2Field.K2NE.ServiceBroker.Constants
                 public const string SubStringSearchInput = "SubStringSearchInput";
                 public const string OrganisationalUnit = "OrganisationalUnit";
                 public const string MaxSearchResultSize = "MaxResultSize";
-
             }
 
             public static class WorkingHoursConfiguration

@@ -1,5 +1,10 @@
 == ChangeLog
 
+=== v1.3
+- Added a UM Get Users Service Object. This can be used to replace the UMUser GetUsers method, which speeds up a number of things because this filters directly on the backend.
+  It also shows that we can convert a SQL query to a AD query. it's a bit tricky with all the properties to match, this could be done easier. But we'll see where this functionality goes.
+- Added functionality to define MULTIPLE LDAP's. Querying is done in Parallel.For-loop to not wait sequentually.
+
 === v1.2
 - Added Out of office service object
 - Added Culture information to identity object.

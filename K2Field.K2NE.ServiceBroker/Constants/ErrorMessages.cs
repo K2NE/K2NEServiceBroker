@@ -8,6 +8,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
     public static class ErrorMessages
     {
         public const string RequiredPropertyNotFound = "{0} is a required property, but does not exist.";
+        public const string RequiredParameterNotFound = "{0} is a required parameter, but does not exist.";
         public const string PropertyNotFound = "The property with name '{0}', could not be found.";
         public const string RoleNotExists = "The given role does not exist.";
         public const string RoleTypeNotSupported = "Role Type is not supported. Only User and group allowed.";
