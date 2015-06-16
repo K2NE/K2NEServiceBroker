@@ -484,7 +484,7 @@ namespace K2Field.K2NE.ServiceBroker
             {
                 string ldap = ldaps[i];
                 string net = netbioses[i];
-                RunGetUsers(ldap, net, maxResultSet);
+                RunSearchUser(ldap, net, maxResultSet, searchval);
             });
         }
 
