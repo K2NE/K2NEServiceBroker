@@ -59,11 +59,11 @@ namespace K2Field.K2NE.ServiceBroker
 
         }
 
-        public string LDAPPath
+        public string LDAPPaths
         {
             get
             {
-                return this.ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.LDAPPath].ToString();
+                return this.ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.LDAPPaths].ToString();
             }
         }
 
@@ -112,12 +112,12 @@ namespace K2Field.K2NE.ServiceBroker
             }
         }
 
-        public string NetBiosName
+        public string NetBiosNames
         {
             get
             {
 
-                return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.NetbiosName].ToString();
+                return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.NetbiosNames].ToString();
             }
         }
 
@@ -202,6 +202,25 @@ namespace K2Field.K2NE.ServiceBroker
 
             return val;
         }
+
+
+
+        protected string GetStringParameter(string name, bool isRequired = false)
+        {
+            MethodParameter p = ServiceBroker.Service.ServiceObjects[0].Methods[0].MethodParameters[name];
+            if (p == null)
+            {
+                if (isRequired)
+                    throw new ArgumentException(string.Format(Constants.ErrorMessages.RequiredParameterNotFound, name));
+                return string.Empty;
+            }
+            string val = p.Value as string;
+            if (isRequired && string.IsNullOrEmpty(val))
+                throw new ArgumentException(string.Format("{0} is required but is empty.", name));
+
+            return val;
+        }
+
 
         /// <summary>
         /// Retrieve an integer property with the given name from the current ServiceObject.
