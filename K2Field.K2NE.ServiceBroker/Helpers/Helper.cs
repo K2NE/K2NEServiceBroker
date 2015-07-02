@@ -6,7 +6,7 @@ using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using System.Text.RegularExpressions;
 
-namespace K2Field.K2NE.ServiceBroker
+namespace K2Field.K2NE.ServiceBroker.Helpers
 {
     public class Helper
     {
@@ -146,6 +146,22 @@ namespace K2Field.K2NE.ServiceBroker
         {
             char[] delimiterChars = {':'};
             return FQN.Split(delimiterChars)[1];
+        }
+        public static MethodParameter CreateParameter(string name, SoType soType, bool isRequired, string description)
+        {
+            var m = new MethodParameter()
+            {
+                Name = name,
+                IsRequired = isRequired,
+                MetaData = new MetaData()
+                {
+                    Description = name,
+                    DisplayName = name
+                },
+                SoType = soType,
+                Type = Convert.ToString(soType)
+            };
+            return m;
         }
     }
 }

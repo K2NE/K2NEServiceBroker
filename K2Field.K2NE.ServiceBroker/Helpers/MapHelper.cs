@@ -5,7 +5,7 @@ using System.Text;
 using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 
-namespace K2Field.K2NE.ServiceBroker
+namespace K2Field.K2NE.ServiceBroker.Helpers
 {
     /// <summary>
     /// MapHelper class is a simple static helper class that's used to handle supportive

@@ -9,6 +9,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using K2Field.K2NE.ServiceBroker.Helpers;
 
 namespace K2Field.K2NE.ServiceBroker
 {
@@ -32,7 +33,7 @@ namespace K2Field.K2NE.ServiceBroker
             public const string Name = "name";
         }
 
-        public override List<SourceCode.SmartObjects.Services.ServiceSDK.Objects.ServiceObject> DescribeServiceObjects()
+        public override List<ServiceObject> DescribeServiceObjects()
         {
             string[] ldaps = base.LDAPPaths.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             string[] netbios = base.NetBiosNames.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
