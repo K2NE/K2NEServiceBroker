@@ -163,5 +163,26 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             };
             return m;
         }
+        public static void AddNonStandardProperties(Dictionary<string, object> properties, IDictionary<string, object> labelUserProperties)
+        {
+            foreach (var key in (IEnumerable<string>)labelUserProperties.Keys)
+            {
+                if (!properties.ContainsKey(key))
+                    properties.Add(key, (object)null);
+            }
+        }
+
+        public static string GetSAMAccountName(string name)
+        {
+            if (name.Contains("\\"))
+            {
+                return name.Substring(name.IndexOf('\\') + 1);
+            }
+            if (name.Contains("@"))
+            {
+                return name.Substring(0, name.IndexOf('@'));
+            }
+            return name;
+        }
     }
 }
