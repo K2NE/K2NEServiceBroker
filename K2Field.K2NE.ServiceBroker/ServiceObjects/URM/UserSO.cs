@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.DirectoryServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Win32.SafeHandles;
 using SourceCode.Hosting.Server.Interfaces;
 using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
@@ -249,10 +248,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             {
                 lbl = "K2";
             }
-            var urmFilter = new URMFilter(ServiceBroker.Service.ServiceObjects[0].Methods[0].Filter);
-            var filterCollection = urmFilter.GetFilterCollection();
-
-            dSearcher.Filter = LdapHelper.GetLdapFilters(inputProperties, filterCollection, IdentityType.User );
+            
+            dSearcher.Filter = LdapHelper.GetLdapFilters(inputProperties, ServiceBroker.Service.ServiceObjects[0].Methods[0].Filter, IdentityType.User, ChangeContainsToStartWith);
             dSearcher.SizeLimit = ADMaxResultSize;
             
             dSearcher.PropertiesToLoad.Add(LdapHelper.AdProperties.Name);

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace K2Field.K2NE.ServiceBroker.Constants
 {
@@ -92,14 +89,13 @@ namespace K2Field.K2NE.ServiceBroker.Constants
 
         public static class Group
         {
-            public const string GetGroupDetails = "UMGetGroupDetails";
-            public const string GetGroups = "UMGetGroups";
-            public const string FindUserGroups = "UMFindUserGroups";
+            public const string GetGroupDetails = "UMRGetGroupDetails";
+            public const string GetGroups = "UMRGetGroups";
+            public const string FindUserGroups = "UMRFindUserGroups";
         }
         public static class User
         {
-            public const string GetUsers = "UMGetUsers";
-            
+            public const string GetUsers = "UMRGetUsers";
         }
     }
 }

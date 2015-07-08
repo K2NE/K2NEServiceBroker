@@ -64,8 +64,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             getGroups.ReturnProperties.Add(Constants.Properties.URM.Description);
             getGroups.ReturnProperties.Add(Constants.Properties.URM.Email);
             getGroups.ReturnProperties.Add(Constants.Properties.URM.Saml);
-            getGroups.InputProperties.Add(Constants.Properties.URM.FQN);
             getGroups.InputProperties.Add(Constants.Properties.URM.Name);
+            getGroups.InputProperties.Add(Constants.Properties.URM.Description);
             getGroups.InputProperties.Add(Constants.Properties.URM.Saml);
             getGroups.MethodParameters.Create(Helper.CreateParameter(Constants.Properties.URM.Label, SoType.Text, true, "Label"));
             soGroup.Methods.Create(getGroups);
@@ -131,9 +131,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             }
             else
             {
-                var fqn = GetStringProperty(Constants.Properties.URM.FQN);
                 var name = GetStringProperty(Constants.Properties.URM.Name);
-                var groupName = GetStringProperty(Constants.Properties.URM.GroupName);
                 var email = GetStringProperty(Constants.Properties.URM.Email);
                 var description = GetStringProperty(Constants.Properties.URM.Description);
                 var dtResults = ServiceBroker.ServicePackage.ResultTable;
@@ -145,14 +143,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                     {
                         switch (keyValuePair.Key)
                         {
-                            case Constants.Properties.URM.FQN:
-                                fqn = keyValuePair.Value.Replace("'", "");
-                                continue;
                             case Constants.Properties.URM.Name:
                                 name = keyValuePair.Value.Replace("'", "");
-                                continue;
-                            case Constants.Properties.URM.GroupName:
-                                groupName = keyValuePair.Value.Replace("'", "");
                                 continue;
                             case Constants.Properties.URM.Description:
                                 description = keyValuePair.Value.Replace("'", "");
@@ -166,9 +158,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                     }
                     var dictionary2 = new Dictionary<string, object>()
                     {
-                        {"FQN", fqn},
                         {"Name", name},
-                        {"GroupName", groupName},
                         {"Description", description},
                         {"Email", email}
                     };
@@ -219,10 +209,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             {
                 lbl = "K2";
             }
-            var urmFilter = new URMFilter(ServiceBroker.Service.ServiceObjects[0].Methods[0].Filter);
-            var filterCollection = urmFilter.GetFilterCollection();
-
-            dSearcher.Filter = LdapHelper.GetLdapFilters(inputProperties, filterCollection, IdentityType.Group );
+            
+            dSearcher.Filter = LdapHelper.GetLdapFilters(inputProperties, ServiceBroker.Service.ServiceObjects[0].Methods[0].Filter, IdentityType.Group, ChangeContainsToStartWith);
             dSearcher.PageSize = ADMaxResultSize;
 
             dSearcher.PropertiesToLoad.Add(AdProperties.sAMAccountName);

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 
@@ -14,7 +12,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
     public static class MapHelper
     {
         #region Private Field And Filling method
-        private static TypeMappings _map = null;
+        private static TypeMappings _map;
 
        
         private static Dictionary<SoType, string> soType2SystemTypeMapping = new Dictionary<SoType, string>() {

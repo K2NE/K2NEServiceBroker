@@ -23,6 +23,7 @@ namespace K2Field.K2NE.ServiceBroker
         internal static long _servicecount = 0L;
         internal static IIdentityService IdentityService;
         internal static ISecurityManager SecurityManager;
+        
         #endregion
 
         #region Private Methods
@@ -184,6 +185,7 @@ namespace K2Field.K2NE.ServiceBroker
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.AdMaxResultSize, false, "1000");
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.LDAPPaths, false, "LDAP://DC=denallix,DC=COM");
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.NetbiosNames, false, "Denallix");
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ChangeContainsToStartsWith, true, "true");
             return base.GetConfigSection();
         }
         public void Init(IServiceMarshalling serviceMarshalling, IServerMarshaling serverMarshaling)

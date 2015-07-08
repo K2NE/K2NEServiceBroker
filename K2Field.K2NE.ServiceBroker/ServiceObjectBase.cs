@@ -57,6 +57,13 @@ namespace K2Field.K2NE.ServiceBroker
                 return this.ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.LDAPPaths].ToString();
             }
         }
+        public bool ChangeContainsToStartWith
+        {
+            get
+            {
+                return bool.Parse(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.ChangeContainsToStartsWith].ToString());
+            }
+        }
 
         public int ADMaxResultSize
         {
