@@ -107,9 +107,7 @@
       <Link>key.snk</Link>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ServiceObjects\Forms\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if "Debug"=="$(ConfigurationName)" (

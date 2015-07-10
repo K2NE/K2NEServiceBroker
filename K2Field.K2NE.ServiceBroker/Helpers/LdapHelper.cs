@@ -123,12 +123,14 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         /// <returns></returns>
         private static string ConvertSmoToLdapFilters(string xml, bool changeContainsToStartsWith, string previousOperator)
         {
-            var filterStringBuilder = new StringBuilder();
+            StringBuilder filterStringBuilder = new StringBuilder();
             if (string.IsNullOrEmpty(xml))
-                return "";
-            var xmlDocument = new XmlDocument();
+            {
+                return string.Empty;
+            }
+            XmlDocument xmlDocument = new XmlDocument();
             xmlDocument.LoadXml(xml);
-            var nextOperator = xmlDocument.FirstChild.FirstChild.Name;
+            string nextOperator = xmlDocument.FirstChild.FirstChild.Name;
 
             if (nextOperator != previousOperator && nextOperator == Operator.Or)
             {
@@ -140,8 +142,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                 filterStringBuilder.Append("(&");
             }
 
-            if (xmlDocument.FirstChild.FirstChild.ChildNodes.Count > 1 &&
-                (nextOperator == Operator.And || nextOperator == Operator.Or))
+            if (xmlDocument.FirstChild.FirstChild.ChildNodes.Count > 1 && (nextOperator == Operator.And || nextOperator == Operator.Or))
             {
                 foreach (XmlNode childNode in xmlDocument.FirstChild.FirstChild.ChildNodes)
                 {
@@ -169,33 +170,29 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         private static string GetLdapFilter(string xml, bool changeContainsToStartsWith = false)
         {
             if (string.IsNullOrEmpty(xml))
-                return "";
+            {
+                return string.Empty;
+            }
 
-            var filterStringBuilder = new StringBuilder();
+            StringBuilder filterStringBuilder = new StringBuilder();
 
-            var xmlDocument = new XmlDocument();
+            XmlDocument xmlDocument = new XmlDocument();
             xmlDocument.LoadXml(xml);
-            var nextOperator = xmlDocument.FirstChild.Name;
+            string nextOperator = xmlDocument.FirstChild.Name;
 
             FilterItem filterItem;
             switch (nextOperator)
             {
                 case Operator.StartsWith:
-                    filterItem =
-                        GetLdapFilterItem(xmlDocument.FirstChild.ChildNodes[0].ChildNodes[0].Attributes["name"].Value,
-                            xmlDocument.FirstChild.ChildNodes[1].ChildNodes[0].InnerText);
+                    filterItem = GetLdapFilterItem(xmlDocument.FirstChild.ChildNodes[0].ChildNodes[0].Attributes["name"].Value, xmlDocument.FirstChild.ChildNodes[1].ChildNodes[0].InnerText);
                     filterStringBuilder.AppendFormat(Format.StartsWith, filterItem.Prop, filterItem.Value);
-                    return filterStringBuilder.ToString();
+                    break;
                 case Operator.EndsWith:
-                    filterItem =
-                    GetLdapFilterItem(xmlDocument.FirstChild.ChildNodes[0].ChildNodes[0].Attributes["name"].Value,
-                            xmlDocument.FirstChild.ChildNodes[1].ChildNodes[0].InnerText);
+                    filterItem = GetLdapFilterItem(xmlDocument.FirstChild.ChildNodes[0].ChildNodes[0].Attributes["name"].Value, xmlDocument.FirstChild.ChildNodes[1].ChildNodes[0].InnerText);
                     filterStringBuilder.AppendFormat(Format.EndsWith, filterItem.Prop, filterItem.Value);
-                    return filterStringBuilder.ToString();
+                    break;
                 case Operator.Contains:
-                    filterItem =
-                    GetLdapFilterItem(xmlDocument.FirstChild.ChildNodes[0].ChildNodes[0].Attributes["name"].Value,
-                            xmlDocument.FirstChild.ChildNodes[1].ChildNodes[0].InnerText);
+                    filterItem = GetLdapFilterItem(xmlDocument.FirstChild.ChildNodes[0].ChildNodes[0].Attributes["name"].Value, xmlDocument.FirstChild.ChildNodes[1].ChildNodes[0].InnerText);
                     if (changeContainsToStartsWith)
                     {
                         filterStringBuilder.AppendFormat(Format.StartsWith, filterItem.Prop, filterItem.Value);
@@ -204,39 +201,34 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                     {
                         filterStringBuilder.AppendFormat(Format.Contains, filterItem.Prop, filterItem.Value);
                     }
-                    return filterStringBuilder.ToString();
+                    break;
                 case Operator.Equals:
-                    filterItem =
-                    GetLdapFilterItem(xmlDocument.FirstChild.ChildNodes[0].ChildNodes[0].Attributes["name"].Value,
-                            xmlDocument.FirstChild.ChildNodes[1].ChildNodes[0].InnerText);
+                    filterItem = GetLdapFilterItem(xmlDocument.FirstChild.ChildNodes[0].ChildNodes[0].Attributes["name"].Value, xmlDocument.FirstChild.ChildNodes[1].ChildNodes[0].InnerText);
                     filterStringBuilder.AppendFormat(Format.Equals, filterItem.Prop, filterItem.Value);
-                    return filterStringBuilder.ToString();
+                    break;
                 case Operator.GreaterThan:
-                    filterItem =
-                    GetLdapFilterItem(xmlDocument.FirstChild.ChildNodes[0].ChildNodes[0].Attributes["name"].Value,
-                            xmlDocument.FirstChild.ChildNodes[1].ChildNodes[0].InnerText);
+                    filterItem = GetLdapFilterItem(xmlDocument.FirstChild.ChildNodes[0].ChildNodes[0].Attributes["name"].Value, xmlDocument.FirstChild.ChildNodes[1].ChildNodes[0].InnerText);
                     filterStringBuilder.AppendFormat(Format.GreaterThan, filterItem.Prop, filterItem.Value);
-                    return filterStringBuilder.ToString();
+                    break;
                 case Operator.LessThan:
                     filterItem =
-                    GetLdapFilterItem(xmlDocument.FirstChild.ChildNodes[0].ChildNodes[0].Attributes["name"].Value,
-                            xmlDocument.FirstChild.ChildNodes[1].ChildNodes[0].InnerText);
+                    GetLdapFilterItem(xmlDocument.FirstChild.ChildNodes[0].ChildNodes[0].Attributes["name"].Value, xmlDocument.FirstChild.ChildNodes[1].ChildNodes[0].InnerText);
                     filterStringBuilder.AppendFormat(Format.LessThan, filterItem.Prop, filterItem.Value);
-                    return filterStringBuilder.ToString();
+                    break;
                 case Operator.IsNull:
-                    filterItem =
-                    GetLdapFilterItem(xmlDocument.FirstChild.ChildNodes[0].ChildNodes[0].Attributes["name"].Value,
-                            "");
+                    filterItem = GetLdapFilterItem(xmlDocument.FirstChild.ChildNodes[0].ChildNodes[0].Attributes["name"].Value, string.Empty);
+
                     filterStringBuilder.AppendFormat(Format.IsNull, filterItem.Prop);
-                    return filterStringBuilder.ToString();
+                    break;
                 case Operator.Not:
                     filterStringBuilder.Append("(!");
                     filterStringBuilder.Append(GetLdapFilter(xmlDocument.FirstChild.FirstChild.InnerXml));
                     filterStringBuilder.Append(")");
-                    return filterStringBuilder.ToString();
+                    break;
                 default:
-                    return filterStringBuilder.ToString();
+                    break;
             }
+            return filterStringBuilder.ToString();
         }
         #endregion
         #region Public methods
@@ -246,19 +238,21 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             {
                 return string.Empty;
             }
-            var pvc = props[name];
+            ResultPropertyValueCollection pvc = props[name];
             if (pvc == null || pvc.Count == 0)
             {
                 return string.Empty;
             }
-            switch (name)
+            if (string.Compare(name, AdProperties.ObjectSID) == 0)
             {
-                case AdProperties.ObjectSID:
-                    var sidInBytes = (byte[])pvc[0];
-                    var sid = new SecurityIdentifier(sidInBytes, 0);
-                    return Convert.ToString(sid);
-                default:
-                    return pvc[0] as string;
+                byte[] sidInBytes = (byte[])pvc[0];
+                SecurityIdentifier sid = new SecurityIdentifier(sidInBytes, 0);
+                return Convert.ToString(sid);
+            }
+            else
+            {
+                return pvc[0] as string;
+
             }
         }
         /// <summary>
@@ -271,7 +265,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         /// <returns>LDAP query filter</returns>
         public static string GetLdapFilters(Dictionary<string, string> inputProp, string smoFilterXml, IdentityType iType, bool changeContainsToStartsWith)
         {
-            var searchFilter = new StringBuilder();
+            StringBuilder searchFilter = new StringBuilder();
             searchFilter.Append("(&");
             //Adding the type of AD object we are looking for.
             switch (iType)
@@ -292,7 +286,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                     searchFilter.AppendFormat(Format.Equals, filterItem.Prop, filterItem.Value);
                 }
             }
-            searchFilter.Append(ConvertSmoToLdapFilters(smoFilterXml, changeContainsToStartsWith, ""));
+            searchFilter.Append(ConvertSmoToLdapFilters(smoFilterXml, changeContainsToStartsWith, string.Empty));
             searchFilter.Append(")");
             return searchFilter.ToString();
         }

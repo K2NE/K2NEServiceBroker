@@ -105,20 +105,26 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
         {
             string[] strArray = sToSplit.Split('|');
             if (this._filter.ContainsKey(strArray[0]))
+            {
                 return;
+            }
             this._filter.Add(strArray[0], strArray[1]);
         }
 
         private void GetFilters(string xml, ref Dictionary<string, Dictionary<string, string>> retList)
         {
             if (string.IsNullOrEmpty(xml))
+            {
                 return;
+            }
             XmlDocument xmlDocument = new XmlDocument();
             xmlDocument.LoadXml(xml);
             if (xmlDocument.FirstChild.ChildNodes.Count != 1)
             {
                 foreach (XmlNode xmlNode in xmlDocument.FirstChild.ChildNodes)
+                {
                     this.GetFilters(xmlNode.OuterXml, ref retList);
+                }
             }
             else if (xmlDocument.FirstChild.InnerXml.Contains("<or>"))
             {

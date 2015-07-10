@@ -7,6 +7,7 @@ using SourceCode.Hosting.Server.Interfaces;
 using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using K2Field.K2NE.ServiceBroker.Helpers;
+using System.Data;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
 {
@@ -23,28 +24,18 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
 
         public override List<ServiceObject> DescribeServiceObjects()
         {
-            var soGroup = Helper.CreateServiceObject("URMUser", "URMUser");
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.FQN, SoType.Text,
-                "Fully Qualified name of the User object"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.UserName, SoType.Text,
-                "User Name as provided by label provider"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.Name, SoType.Text,
-                "Name of the user"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.Description, SoType.Text,
-                "User Description"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.Email, SoType.Text,
-                "Email address"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.Manager, SoType.Text,
-                "User manager"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.ObjectSid, SoType.Text,
-                "User SID"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.DisplayName, SoType.Text,
-                "Display name of the User object"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.Saml, SoType.Text,
-                "sAMAccountName"));
+            ServiceObject soGroup = Helper.CreateServiceObject("URMUser", "URMUser");
+            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.FQN, SoType.Text, "Fully Qualified name of the User object"));
+            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.UserName, SoType.Text, "User Name as provided by label provider"));
+            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.Name, SoType.Text, "Name of the user"));
+            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.Description, SoType.Text, "User Description"));
+            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.Email, SoType.Text, "Email address"));
+            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.Manager, SoType.Text, "User manager"));
+            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.ObjectSid, SoType.Text, "User SID"));
+            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.DisplayName, SoType.Text, "Display name of the User object"));
+            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.Saml, SoType.Text, "sAMAccountName"));
 
-            var getUsers = Helper.CreateMethod(Constants.Methods.User.GetUsers,
-                "Gets a List of groups", MethodType.List);
+            Method getUsers = Helper.CreateMethod(Constants.Methods.User.GetUsers, "Gets a List of groups", MethodType.List);
             getUsers.ReturnProperties.Add(Constants.Properties.URM.Name);
             getUsers.ReturnProperties.Add(Constants.Properties.URM.Description);
             getUsers.ReturnProperties.Add(Constants.Properties.URM.Email);
@@ -77,13 +68,14 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
 
         private void GetUsers()
         {
-            var ldaps = LDAPPaths.Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
-            var netbioses = NetBiosNames.Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
-            var lbl = GetStringParameter(Constants.Properties.URM.Label, true);
+            string[] ldaps = LDAPPaths.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] netbioses = NetBiosNames.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            string securityLabel = GetStringParameter(Constants.Properties.URM.Label, true);
             ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
-            if (lbl == "K2")
+
+            if (string.Compare(securityLabel, "K2", true) == 0)
             {
-                var threads = new List<Thread>();
+                List<Thread> threads = new List<Thread>();
                 string ldap, net;
                 Parallel.For(0, ldaps.Length, i =>
                 {
@@ -96,18 +88,18 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             }
             else
             {
-                var fqn = GetStringProperty(Constants.Properties.URM.FQN);
-                var name = GetStringProperty(Constants.Properties.URM.Name);
-                var email = GetStringProperty(Constants.Properties.URM.Email);
-                var description = GetStringProperty(Constants.Properties.URM.Description);
-                var manager = GetStringProperty(Constants.Properties.URM.Manager);
-                var displayName = GetStringProperty(Constants.Properties.URM.DisplayName);
-                var userName = GetStringProperty(Constants.Properties.URM.UserName);
-                var objectSid = GetStringProperty(Constants.Properties.URM.ObjectSid);
-                var saml = GetStringProperty(Constants.Properties.URM.Saml);
+                string fqn = GetStringProperty(Constants.Properties.URM.FQN);
+                string name = GetStringProperty(Constants.Properties.URM.Name);
+                string email = GetStringProperty(Constants.Properties.URM.Email);
+                string description = GetStringProperty(Constants.Properties.URM.Description);
+                string manager = GetStringProperty(Constants.Properties.URM.Manager);
+                string displayName = GetStringProperty(Constants.Properties.URM.DisplayName);
+                string userName = GetStringProperty(Constants.Properties.URM.UserName);
+                string objectSid = GetStringProperty(Constants.Properties.URM.ObjectSid);
+                string saml = GetStringProperty(Constants.Properties.URM.Saml);
 
-                var dtResults = ServiceBroker.ServicePackage.ResultTable;
-                var urmFilter = new URMFilter(ServiceBroker.Service.ServiceObjects[0].Methods[0].Filter);
+                DataTable dtResults = ServiceBroker.ServicePackage.ResultTable;
+                URMFilter urmFilter = new URMFilter(ServiceBroker.Service.ServiceObjects[0].Methods[0].Filter);
 
                 foreach (var dictionary in urmFilter.GetFilterCollection().Values)
                 {
@@ -166,22 +158,27 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                         }
                     };
                     Helper.AddNonStandardProperties(properties,
-                        K2NEServiceBroker.IdentityService.QueryUserProperties(lbl));
+                        K2NEServiceBroker.IdentityService.QueryUserProperties(securityLabel));
 
-                    if (!string.IsNullOrEmpty(lbl))
-                        properties[Constants.Properties.URM.Label] = (object) lbl;
+                    if (!string.IsNullOrEmpty(securityLabel))
+                        properties[Constants.Properties.URM.Label] = (object)securityLabel;
 
                     if (ADMaxResultSize != -1)
                     {
-                        properties["RowCount"] = (object) (ADMaxResultSize);
-                        properties["PageNumber"] = (object) 1;
+                        properties["RowCount"] = (object)(ADMaxResultSize);
+                        properties["PageNumber"] = (object)1;
                     }
                     var collection =
-                        K2NEServiceBroker.IdentityService.FindIdentities((IDictionary<string, object>) properties,
+                        K2NEServiceBroker.IdentityService.FindIdentities((IDictionary<string, object>)properties,
                             IdentitySearchOptions.Users);
+
+                    //TODO: can we do this rowcount different?
                     var flag = properties.ContainsKey("RowCount");
                     var result = 0;
-                    if (flag) int.TryParse((string) properties["RowCount"], out result);
+                    if (flag)
+                    {
+                        int.TryParse((string)properties["RowCount"], out result);
+                    }
                     if (collection != null)
                     {
                         foreach (var cachedIdentity in collection)
@@ -197,30 +194,32 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                                     dRow[Constants.Properties.URM.Name] = cachedIdentity.Properties["Name"].ToString();
                                     dRow[Constants.Properties.URM.Saml] = Helper.GetSAMAccountName(cachedIdentity.Properties["Name"].ToString());
                                 }
-                                if (cachedIdentity.Properties.ContainsKey("Description") &&
-                                    cachedIdentity.Properties["Description"] != null)
-                                    dRow[Constants.Properties.URM.Description] =
-                                        cachedIdentity.Properties["Description"].ToString();
-                                if (cachedIdentity.Properties.ContainsKey("Email") &&
-                                    !string.IsNullOrEmpty(cachedIdentity.Properties["Email"].ToString()))
-                                    dRow[Constants.Properties.URM.Email] = cachedIdentity.Properties["Email"].ToString();
-                                if (cachedIdentity.Properties.ContainsKey("Manager") &&
-                                    cachedIdentity.Properties["Manager"] != null)
-                                    dRow[Constants.Properties.URM.Manager] =
-                                        cachedIdentity.Properties["Manager"].ToString();
-                                if (cachedIdentity.Properties.ContainsKey("ObjectSID") &&
-                                    cachedIdentity.Properties["ObjectSID"] != null)
-                                    dRow[Constants.Properties.URM.ObjectSid] =
-                                        cachedIdentity.Properties["ObjectSID"].ToString();
-                                if (cachedIdentity.Properties.ContainsKey("DisplayName") &&
-                                    cachedIdentity.Properties["DisplayName"] != null)
-                                    dRow[Constants.Properties.URM.DisplayName] =
-                                        cachedIdentity.Properties["DisplayName"].ToString();
-                                dtResults.Rows.Add(dRow);
-                                if (flag)
+                                if (cachedIdentity.Properties.ContainsKey("Description") && cachedIdentity.Properties["Description"] != null)
                                 {
-                                    if (dtResults.Rows.Count == result)
-                                        break;
+                                    dRow[Constants.Properties.URM.Description] = cachedIdentity.Properties["Description"].ToString();
+                                }
+                                if (cachedIdentity.Properties.ContainsKey("Email") && !string.IsNullOrEmpty(cachedIdentity.Properties["Email"].ToString()))
+                                {
+                                    dRow[Constants.Properties.URM.Email] = cachedIdentity.Properties["Email"].ToString();
+                                }
+                                if (cachedIdentity.Properties.ContainsKey("Manager") && cachedIdentity.Properties["Manager"] != null)
+                                {
+                                    dRow[Constants.Properties.URM.Manager] = cachedIdentity.Properties["Manager"].ToString();
+                                }
+                                if (cachedIdentity.Properties.ContainsKey("ObjectSID") && cachedIdentity.Properties["ObjectSID"] != null)
+                                {
+                                    dRow[Constants.Properties.URM.ObjectSid] = cachedIdentity.Properties["ObjectSID"].ToString();
+                                }
+                                if (cachedIdentity.Properties.ContainsKey("DisplayName") && cachedIdentity.Properties["DisplayName"] != null)
+                                {
+                                    dRow[Constants.Properties.URM.DisplayName] = cachedIdentity.Properties["DisplayName"].ToString();
+                                }
+                                dtResults.Rows.Add(dRow);
+
+
+                                if (flag && dtResults.Rows.Count == result)
+                                {
+                                    break;
                                 }
                             }
                         }
@@ -231,7 +230,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
 
         private void RunUMGetUsers(string ldap, string net)
         {
-            var inputProperties = new Dictionary<string, string>()
+            Dictionary<string, string> inputProperties = new Dictionary<string, string>()
             {
                 {Constants.Properties.URM.FQN, GetStringProperty(Constants.Properties.URM.FQN)},
                 {Constants.Properties.URM.Name, GetStringProperty(Constants.Properties.URM.Name)},
@@ -240,18 +239,18 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                 {Constants.Properties.URM.DisplayName, GetStringProperty(Constants.Properties.URM.DisplayName)},
                 {Constants.Properties.URM.Saml, GetStringProperty(Constants.Properties.URM.Saml)}
             };
-            
-            var lbl = GetStringParameter(Constants.Properties.URM.Label, true);
-            var dSearcher = new DirectorySearcher(new DirectoryEntry(ldap));
 
-            if (string.IsNullOrEmpty(lbl))
+            string securityLabel = GetStringParameter(Constants.Properties.URM.Label, true);
+            DirectorySearcher dSearcher = new DirectorySearcher(new DirectoryEntry(ldap));
+
+            if (string.IsNullOrEmpty(securityLabel))
             {
-                lbl = "K2";
+                securityLabel = "K2";
             }
-            
+
             dSearcher.Filter = LdapHelper.GetLdapFilters(inputProperties, ServiceBroker.Service.ServiceObjects[0].Methods[0].Filter, IdentityType.User, ChangeContainsToStartWith);
             dSearcher.SizeLimit = ADMaxResultSize;
-            
+
             dSearcher.PropertiesToLoad.Add(LdapHelper.AdProperties.Name);
             dSearcher.PropertiesToLoad.Add(LdapHelper.AdProperties.Email);
             dSearcher.PropertiesToLoad.Add(LdapHelper.AdProperties.Description);
@@ -259,13 +258,13 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             dSearcher.PropertiesToLoad.Add(LdapHelper.AdProperties.DisplayName);
             dSearcher.PropertiesToLoad.Add(LdapHelper.AdProperties.ObjectSID);
 
-            var col = dSearcher.FindAll();
-            var results = ServiceBroker.ServicePackage.ResultTable;
+            SearchResultCollection col = dSearcher.FindAll();
+            DataTable results = ServiceBroker.ServicePackage.ResultTable;
             foreach (SearchResult res in col)
             {
-                var dr = results.NewRow();
-                var saml = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, LdapHelper.AdProperties.sAMAccountName);
-                dr[Constants.Properties.URM.FQN] = string.Concat(lbl, ":", net, "\\", saml);
+                DataRow dr = results.NewRow();
+                string saml = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, LdapHelper.AdProperties.sAMAccountName);
+                dr[Constants.Properties.URM.FQN] = string.Concat(securityLabel, ":", net, "\\", saml);
                 dr[Constants.Properties.URM.Name] = string.Concat(net, "\\", saml);
                 dr[Constants.Properties.URM.UserName] = string.Concat(net, "\\", saml);
                 dr[Constants.Properties.URM.Description] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, LdapHelper.AdProperties.Description);

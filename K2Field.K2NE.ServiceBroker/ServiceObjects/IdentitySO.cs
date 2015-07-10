@@ -86,16 +86,14 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             mGetThreadIdentity.InputProperties.Add(Constants.Properties.Identity.UserWindowsImpersonation);
             so.Methods.Create(mGetThreadIdentity);
 
-            var mResolveUser = Helper.CreateMethod(Constants.Methods.Identity.ResolveUserIdentity, "Resolve User Identity",
-                MethodType.Execute);
+            Method mResolveUser = Helper.CreateMethod(Constants.Methods.Identity.ResolveUserIdentity, "Resolve User Identity", MethodType.Execute);
             mResolveUser.ReturnProperties.Add(Constants.Properties.Identity.IsResolved);
             mResolveUser.InputProperties.Add(Constants.Properties.Identity.FQN);
             mResolveUser.InputProperties.Add(Constants.Properties.Identity.ResolveContainers);
             mResolveUser.Validation.RequiredProperties.Add(Constants.Properties.Identity.FQN);
             so.Methods.Create(mResolveUser);
 
-            var mResolveGroup = Helper.CreateMethod(Constants.Methods.Identity.ResolveGroupIdentity, "Resolve Group Identity",
-                MethodType.Execute);
+            Method mResolveGroup = Helper.CreateMethod(Constants.Methods.Identity.ResolveGroupIdentity, "Resolve Group Identity", MethodType.Execute);
             mResolveGroup.ReturnProperties.Add(Constants.Properties.Identity.IsResolved);
             mResolveGroup.InputProperties.Add(Constants.Properties.Identity.FQN);
             mResolveGroup.InputProperties.Add(Constants.Properties.Identity.ResolveContainers);
@@ -103,8 +101,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             mResolveGroup.Validation.RequiredProperties.Add(Constants.Properties.Identity.FQN);
             so.Methods.Create(mResolveGroup);
 
-            var mResolveRole = Helper.CreateMethod(Constants.Methods.Identity.ResolveRoleIdentity, "Resolve Role Identity",
-                MethodType.Execute);
+            Method mResolveRole = Helper.CreateMethod(Constants.Methods.Identity.ResolveRoleIdentity, "Resolve Role Identity", MethodType.Execute);
             mResolveRole.ReturnProperties.Add(Constants.Properties.Identity.IsResolved);
             mResolveRole.InputProperties.Add(Constants.Properties.Identity.FQN);
             mResolveRole.InputProperties.Add(Constants.Properties.Identity.ResolveContainers);
@@ -131,9 +128,11 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 case Constants.Methods.Identity.ResolveUserIdentity:
                     ResolveIdentity(IdentityType.User);
                     break;
+
                 case Constants.Methods.Identity.ResolveGroupIdentity:
                     ResolveIdentity(IdentityType.Group);
                     break;
+
                 case Constants.Methods.Identity.ResolveRoleIdentity:
                     ResolveIdentity(IdentityType.Role);
                     break;
@@ -201,14 +200,17 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             }
         }
 
+
+        //TODO: Rework the isResolve variable.
         public void ResolveIdentity(IdentityType iType)
         {
-            var fqn = GetStringProperty(Constants.Properties.Identity.FQN, true);
-            var resolveContainers = GetBoolProperty(Constants.Properties.Identity.ResolveContainers);
-            var resolveMembers = GetBoolProperty(Constants.Properties.Identity.ResolveMembers);
-            var serviceObject = ServiceBroker.Service.ServiceObjects[0];
+            string fqn = GetStringProperty(Constants.Properties.Identity.FQN, true);
+            bool resolveContainers = GetBoolProperty(Constants.Properties.Identity.ResolveContainers);
+            bool resolveMembers = GetBoolProperty(Constants.Properties.Identity.ResolveMembers);
+            ServiceObject serviceObject = ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
-            var results = ServiceBroker.ServicePackage.ResultTable;
+            DataTable results = ServiceBroker.ServicePackage.ResultTable;
+
             bool isResolved;
             var fqnName = new FQName(fqn);
 
@@ -220,7 +222,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             {
                 isResolved = K2NEServiceBroker.IdentityService.ResolveIdentity(fqnName, iType, IdentitySection.Members);
             }
-            isResolved = K2NEServiceBroker.IdentityService.ResolveIdentity(fqnName, iType,IdentityResolveOptions.Identity);
+            isResolved = K2NEServiceBroker.IdentityService.ResolveIdentity(fqnName, iType, IdentityResolveOptions.Identity);
 
             
             var dRow = results.NewRow();

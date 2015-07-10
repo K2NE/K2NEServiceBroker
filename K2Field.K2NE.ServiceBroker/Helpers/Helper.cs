@@ -37,7 +37,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             {
                 return string.Empty;
             }
-            var newText = new StringBuilder(name.Length + 10);
+            StringBuilder newText = new StringBuilder(name.Length + 10);
             newText.Append(name[0]);
             for (var i = 1; i < name.Length; i++)
             {
@@ -84,7 +84,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         /// <returns>The property</returns>
         public static Property CreateSpecificProperty(string name, string displayName, string description, SoType type)
         {
-            var property = new Property
+            Property property = new Property
             {
                 Name = name,
                 SoType = type,
@@ -104,7 +104,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         /// <returns></returns>
         public static Method CreateMethod(string name, string description, MethodType methodType)
         {
-            var m = new Method
+            Method m = new Method
             {
                 Name = name,
                 Type = methodType,
@@ -121,7 +121,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         /// <returns></returns>
         public static ServiceObject CreateServiceObject(string name, string description)
         {
-            var so = new ServiceObject
+            ServiceObject so = new ServiceObject
             {
                 Name = name,
                 MetaData = new MetaData(AddSpaceBeforeCaptialLetter(name), description),
@@ -136,7 +136,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         /// <returns></returns>
         public static bool SpecialCharactersExist (string zoneName)
         {
-            var pattern = new Regex(@"^[a-zA-Z0-9]*$");
+            Regex pattern = new Regex(@"^[a-zA-Z0-9]*$");
             return pattern.IsMatch(zoneName);
         }
         /// <summary>
@@ -151,7 +151,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         }
         public static MethodParameter CreateParameter(string name, SoType soType, bool isRequired, string description)
         {
-            var m = new MethodParameter
+            MethodParameter methodParam = new MethodParameter
             {
                 Name = name,
                 IsRequired = isRequired,
@@ -163,14 +163,16 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                 SoType = soType,
                 Type = Convert.ToString(soType)
             };
-            return m;
+            return methodParam;
         }
         public static void AddNonStandardProperties(Dictionary<string, object> properties, IDictionary<string, object> labelUserProperties)
         {
             foreach (var key in (IEnumerable<string>)labelUserProperties.Keys)
             {
                 if (!properties.ContainsKey(key))
+                {
                     properties.Add(key, null);
+                }
             }
         }
 
