@@ -29,6 +29,9 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         {
             public const string ReadThreadIdentity = "ReadThreadIdentity";
             public const string ReadWorkflowClientIdentity = "ReadWorkflowClientIdentity";
+            public const string ResolveUserIdentity = "ResolveUserIdentity";
+            public const string ResolveGroupIdentity = "ResolveGroupIdentity";
+            public const string ResolveRoleIdentity = "ResolveRoleIdentity";
         }
 
         public static class ProcessInstanceManagement

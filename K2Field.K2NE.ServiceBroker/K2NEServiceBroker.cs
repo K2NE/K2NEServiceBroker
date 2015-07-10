@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using K2Field.K2NE.ServiceBroker.ServiceObjects.URM;
+using K2Field.K2NE.ServiceBroker.ServiceObjects;
 using SourceCode.SmartObjects.Services.ServiceSDK;
 using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;

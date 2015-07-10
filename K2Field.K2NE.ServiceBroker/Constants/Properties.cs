@@ -94,8 +94,11 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string CurrentPrincipalAuthType = "CurrentPrincipalAuthType =";
             public const string CurrentPrincipalName = "CurrentPrincipalName";
             public const string FQN = "FQN";
-            public const string UserDescription = "UserDescription";
-            public const string UserDisplayName = "UserDisplayName";
+            public const string IsResolved = "IsResolved";
+            public const string ResolveContainers = "ResolveContainers";
+            public const string ResolveMembers = "ResolveMembers";
+            public const string IdentityDescription = "UserDescription";
+            public const string IdentityDisplayName = "UserDisplayName";
             public const string UserEmail = "UserEmail";
             public const string UserManager = "UserManager";
             public const string UserName = "UserName";

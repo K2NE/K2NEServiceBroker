@@ -10,7 +10,7 @@ using System.Data;
 
 using SourceCode.Workflow.Management.OOF;
 
-namespace K2Field.K2NE.ServiceBroker
+namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 {
     class OutOfOfficeSO : ServiceObjectBase
     {

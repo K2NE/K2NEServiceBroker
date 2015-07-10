@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 using K2Field.K2NE.ServiceBroker.Helpers;
-using SourceCode.Hosting.Client.BaseAPI;
-using SourceCode.SmartObjects.Services.ServiceSDK;
 using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using SourceCode.Workflow.Management;
 using SourceCode.Workflow.Management.Criteria;
 
-namespace K2Field.K2NE.ServiceBroker
+namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 {
     /// <summary>
     /// Implementation of the Management Service Object

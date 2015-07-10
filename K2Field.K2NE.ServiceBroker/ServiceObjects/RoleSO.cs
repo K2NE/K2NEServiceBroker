@@ -8,7 +8,7 @@ using System.Text;
 using SourceCode.Security.UserRoleManager.Management;
 using System.Data;
 
-namespace K2Field.K2NE.ServiceBroker
+namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 {
     public class RoleManagementSO : ServiceObjectBase
     {

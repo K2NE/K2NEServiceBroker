@@ -7,10 +7,8 @@ using SourceCode.Workflow.Management.Criteria;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 
-namespace K2Field.K2NE.ServiceBroker
+namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 {
     public class ProcessInstanceManagementSO : ServiceObjectBase
     {

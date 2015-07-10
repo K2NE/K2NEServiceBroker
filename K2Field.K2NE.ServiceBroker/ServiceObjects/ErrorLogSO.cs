@@ -7,7 +7,7 @@ using System.Data;
 using SourceCode.Workflow.Management;
 using SourceCode.Workflow.Management.Criteria;
 
-namespace K2Field.K2NE.ServiceBroker
+namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 {
     public class ErrorLogSO : ServiceObjectBase
     {

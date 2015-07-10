@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using K2Field.K2NE.ServiceBroker.Helpers;
 
-namespace K2Field.K2NE.ServiceBroker
+namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 {
     public class ActiveDirectorySO : ServiceObjectBase
     {
