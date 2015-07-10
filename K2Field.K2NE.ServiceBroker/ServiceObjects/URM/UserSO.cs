@@ -157,8 +157,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                             displayName == String.Empty ? (object) (string) null : (object) displayName
                         }
                     };
-                    Helper.AddNonStandardProperties(properties,
-                        K2NEServiceBroker.IdentityService.QueryUserProperties(securityLabel));
+                    Helper.AddNonStandardProperties(properties, base.ServiceBroker.IdentityService.QueryUserProperties(securityLabel));
 
                     if (!string.IsNullOrEmpty(securityLabel))
                         properties[Constants.Properties.URM.Label] = (object)securityLabel;
@@ -169,7 +168,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                         properties["PageNumber"] = (object)1;
                     }
                     var collection =
-                        K2NEServiceBroker.IdentityService.FindIdentities((IDictionary<string, object>)properties,
+                        base.ServiceBroker.IdentityService.FindIdentities((IDictionary<string, object>)properties,
                             IdentitySearchOptions.Users);
 
                     //TODO: can we do this rowcount different?

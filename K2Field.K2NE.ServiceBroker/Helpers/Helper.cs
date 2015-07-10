@@ -39,7 +39,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             }
             StringBuilder newText = new StringBuilder(name.Length + 10);
             newText.Append(name[0]);
-            for (var i = 1; i < name.Length; i++)
+            for (int i = 1; i < name.Length; i++)
             {
                 if (char.IsUpper(name[i]) && name[i - 1] != ' ')
                 {
@@ -167,7 +167,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         }
         public static void AddNonStandardProperties(Dictionary<string, object> properties, IDictionary<string, object> labelUserProperties)
         {
-            foreach (var key in (IEnumerable<string>)labelUserProperties.Keys)
+            foreach (string key in labelUserProperties.Keys)
             {
                 if (!properties.ContainsKey(key))
                 {

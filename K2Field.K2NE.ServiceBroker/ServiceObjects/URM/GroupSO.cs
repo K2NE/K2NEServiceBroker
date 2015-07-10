@@ -86,7 +86,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
             DataTable dtResults = ServiceBroker.ServicePackage.ResultTable;
 
-            var identityFromName = K2NEServiceBroker.IdentityService.GetIdentityFromName(K2NEServiceBroker.SecurityManager.GetFullyQualifiedName(fqn), IdentityType.Group, (string)null);
+            var identityFromName = base.ServiceBroker.IdentityService.GetIdentityFromName(base.ServiceBroker.SecurityManager.GetFullyQualifiedName(fqn), IdentityType.Group, (string)null);
             if (identityFromName == null)
             {
                 return;
@@ -168,7 +168,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                     {
                         dictionary2["Label"] = securityLabel as object;
                     }
-                    var identities = K2NEServiceBroker.IdentityService.FindIdentities(dictionary2, IdentitySearchOptions.Groups);
+                    var identities = base.ServiceBroker.IdentityService.FindIdentities(dictionary2, IdentitySearchOptions.Groups);
                     if (identities == null)
                     {
                         return;

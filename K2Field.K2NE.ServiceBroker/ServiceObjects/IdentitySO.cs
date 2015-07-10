@@ -216,13 +216,13 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
             if (resolveContainers)
             {
-                isResolved = K2NEServiceBroker.IdentityService.ResolveIdentity(fqnName, iType, IdentitySection.Containers);
+                isResolved = base.ServiceBroker.IdentityService.ResolveIdentity(fqnName, iType, IdentitySection.Containers);
             }
             if (resolveMembers)
             {
-                isResolved = K2NEServiceBroker.IdentityService.ResolveIdentity(fqnName, iType, IdentitySection.Members);
+                isResolved = base.ServiceBroker.IdentityService.ResolveIdentity(fqnName, iType, IdentitySection.Members);
             }
-            isResolved = K2NEServiceBroker.IdentityService.ResolveIdentity(fqnName, iType, IdentityResolveOptions.Identity);
+            isResolved = base.ServiceBroker.IdentityService.ResolveIdentity(fqnName, iType, IdentityResolveOptions.Identity);
 
             
             var dRow = results.NewRow();
