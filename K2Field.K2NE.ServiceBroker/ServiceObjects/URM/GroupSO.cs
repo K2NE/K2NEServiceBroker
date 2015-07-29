@@ -134,6 +134,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             }
             else
             {
+
+                // The below code is a copy/paste from reflected code with some modifications as we can't do anything else.
                 string name = GetStringProperty(Constants.SOProperties.URM.Name);
                 string email = GetStringProperty(Constants.SOProperties.URM.Email);
                 string description = GetStringProperty(Constants.SOProperties.URM.Description);

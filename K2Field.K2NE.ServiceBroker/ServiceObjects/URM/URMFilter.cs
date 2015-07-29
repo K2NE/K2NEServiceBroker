@@ -6,6 +6,10 @@ using System.Xml;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
 {
+
+    /// <summary>
+    /// Copied from relfected K2 code and slightly modified for readability.
+    /// </summary>
     public class URMFilter : FilterBase
     {
         private Dictionary<string, string> filter;
