@@ -28,7 +28,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.FQN, SoType.Text, "The K2 FQN of the user."));
             so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.ResolveContainers, SoType.YesNo, "If Identity containers should be also resolved."));
             so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.ResolveMembers, SoType.YesNo, "If Identity members should be also resolved."));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.IsResolved, SoType.YesNo, "Result if Resolving was successful."));
             so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.IdentityDescription, SoType.Text, "The users description."));
             so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.IdentityDisplayName, SoType.Text, "The users displayname."));
             so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.UserEmail, SoType.Text, "The users email address."));
@@ -87,14 +86,12 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             so.Methods.Create(mGetThreadIdentity);
 
             Method mResolveUser = Helper.CreateMethod(Constants.Methods.Identity.ResolveUserIdentity, "Resolve User Identity", MethodType.Execute);
-            mResolveUser.ReturnProperties.Add(Constants.SOProperties.Identity.IsResolved);
             mResolveUser.InputProperties.Add(Constants.SOProperties.Identity.FQN);
             mResolveUser.InputProperties.Add(Constants.SOProperties.Identity.ResolveContainers);
             mResolveUser.Validation.RequiredProperties.Add(Constants.SOProperties.Identity.FQN);
             so.Methods.Create(mResolveUser);
 
             Method mResolveGroup = Helper.CreateMethod(Constants.Methods.Identity.ResolveGroupIdentity, "Resolve Group Identity", MethodType.Execute);
-            mResolveGroup.ReturnProperties.Add(Constants.SOProperties.Identity.IsResolved);
             mResolveGroup.InputProperties.Add(Constants.SOProperties.Identity.FQN);
             mResolveGroup.InputProperties.Add(Constants.SOProperties.Identity.ResolveContainers);
             mResolveGroup.InputProperties.Add(Constants.SOProperties.Identity.ResolveMembers);
@@ -102,7 +99,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             so.Methods.Create(mResolveGroup);
 
             Method mResolveRole = Helper.CreateMethod(Constants.Methods.Identity.ResolveRoleIdentity, "Resolve Role Identity", MethodType.Execute);
-            mResolveRole.ReturnProperties.Add(Constants.SOProperties.Identity.IsResolved);
             mResolveRole.InputProperties.Add(Constants.SOProperties.Identity.FQN);
             mResolveRole.InputProperties.Add(Constants.SOProperties.Identity.ResolveContainers);
             mResolveRole.InputProperties.Add(Constants.SOProperties.Identity.ResolveMembers);
@@ -111,7 +107,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
             return new List<ServiceObject> { so };
         }
-        
+
 
         public override void Execute()
         {
@@ -191,7 +187,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 dr[Constants.SOProperties.Identity.IdentityDescription] = k2Con.User.Description;
                 dr[Constants.SOProperties.Identity.IdentityDisplayName] = k2Con.User.DisplayName;
                 dr[Constants.SOProperties.Identity.UserEmail] = k2Con.User.Email;
-                dr[Constants.SOProperties.Identity.UserManager] = k2Con.User.Manager; 
+                dr[Constants.SOProperties.Identity.UserManager] = k2Con.User.Manager;
                 dr[Constants.SOProperties.Identity.UserName] = k2Con.User.Name;
                 dr[Constants.SOProperties.Identity.UserUserLabel] = k2Con.User.UserLabel;
                 dr[Constants.SOProperties.Identity.CallingFQN] = CallingFQN;
@@ -201,33 +197,27 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         }
 
 
-        //TODO: Rework the isResolve variable.
         public void ResolveIdentity(IdentityType iType)
         {
             string fqn = GetStringProperty(Constants.SOProperties.Identity.FQN, true);
             bool resolveContainers = GetBoolProperty(Constants.SOProperties.Identity.ResolveContainers);
             bool resolveMembers = GetBoolProperty(Constants.SOProperties.Identity.ResolveMembers);
-            ServiceObject serviceObject = ServiceBroker.Service.ServiceObjects[0];
-            serviceObject.Properties.InitResultTable();
-            DataTable results = ServiceBroker.ServicePackage.ResultTable;
 
-            bool isResolved;
             var fqnName = new FQName(fqn);
+
+            base.ServiceBroker.IdentityService.ResolveIdentity(fqnName, iType, IdentityResolveOptions.Identity);
+
+            if (resolveMembers)
+            {
+                base.ServiceBroker.IdentityService.ResolveIdentity(fqnName, iType, IdentitySection.Members);
+            }
 
             if (resolveContainers)
             {
-                isResolved = base.ServiceBroker.IdentityService.ResolveIdentity(fqnName, iType, IdentitySection.Containers);
+                base.ServiceBroker.IdentityService.ResolveIdentity(fqnName, iType, IdentitySection.Containers);
             }
-            if (resolveMembers)
-            {
-                isResolved = base.ServiceBroker.IdentityService.ResolveIdentity(fqnName, iType, IdentitySection.Members);
-            }
-            isResolved = base.ServiceBroker.IdentityService.ResolveIdentity(fqnName, iType, IdentityResolveOptions.Identity);
 
-            
-            var dRow = results.NewRow();
-            dRow[Constants.SOProperties.Identity.IsResolved] = isResolved.ToString();
-            results.Rows.Add(dRow);
+
         }
     }
 }
