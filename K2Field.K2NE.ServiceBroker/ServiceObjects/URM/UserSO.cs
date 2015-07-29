@@ -172,8 +172,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                     var collection = base.ServiceBroker.IdentityService.FindIdentities((IDictionary<string, object>)properties, IdentitySearchOptions.Users);
 
           
-                    var flag = properties.ContainsKey("RowCount");
-                    var result = 0;
+                    bool flag = properties.ContainsKey("RowCount");
+                    int result = 0;
                     if (flag)
                     {
                         int.TryParse((string)properties["RowCount"], out result);
@@ -184,7 +184,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                         {
                             if (cachedIdentity.Type == IdentityType.User)
                             {
-                                var dRow = dtResults.NewRow();
+                                DataRow dRow = dtResults.NewRow();
                                 dRow[Constants.SOProperties.URM.FQN] = cachedIdentity.FullyQualifiedName.FQN;
                                 if (cachedIdentity.Properties.ContainsKey("Name") && cachedIdentity.Properties["Name"] != null)
                                 {

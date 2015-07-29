@@ -75,19 +75,19 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         /// <summary>
         /// Converts K2 xml filters to LDAP ones.
         /// </summary>
-        /// <param name="xml">SMO method filter</param>
+        /// <param name="k2XmlFilter">SMO method filter</param>
         /// <param name="changeContainsToStartsWith">If needed to change Contains operator to StartsWith for AD performance</param>
         /// <param name="previousOperator"></param>
         /// <returns></returns>
-        private static string ConvertSmoToLdapFilters(string xml, bool changeContainsToStartsWith, string previousOperator)
+        private static string ConvertXMLFilterToLdapFilter(string k2XmlFilter, bool changeContainsToStartsWith, string previousOperator = "")
         {
             StringBuilder filterStringBuilder = new StringBuilder();
-            if (string.IsNullOrEmpty(xml))
+            if (string.IsNullOrEmpty(k2XmlFilter))
             {
                 return string.Empty;
             }
             XmlDocument xmlDocument = new XmlDocument();
-            xmlDocument.LoadXml(xml);
+            xmlDocument.LoadXml(k2XmlFilter);
             string nextOperator = xmlDocument.FirstChild.FirstChild.Name;
 
             if (nextOperator != previousOperator && nextOperator == Constants.StringFormats.LdapOperators.Or)
@@ -104,7 +104,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             {
                 foreach (XmlNode childNode in xmlDocument.FirstChild.FirstChild.ChildNodes)
                 {
-                    filterStringBuilder.Append(ConvertSmoToLdapFilters(childNode.OuterXml, changeContainsToStartsWith, nextOperator));
+                    filterStringBuilder.Append(ConvertXMLFilterToLdapFilter(childNode.OuterXml, changeContainsToStartsWith, nextOperator));
                 }
             }
             else
@@ -248,7 +248,8 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                     searchFilter.AppendFormat(Constants.StringFormats.LdapCompareFormat.Equals, filterItem.Prop, filterItem.Value);
                 }
             }
-            searchFilter.Append(ConvertSmoToLdapFilters(smoFilterXml, changeContainsToStartsWith, string.Empty));
+
+            searchFilter.Append(ConvertXMLFilterToLdapFilter(smoFilterXml, changeContainsToStartsWith));
             searchFilter.Append(")");
             return searchFilter.ToString();
         }
