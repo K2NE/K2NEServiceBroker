@@ -82,6 +82,9 @@
     <Compile Include="Constants\ErrorMessages.cs" />
     <Compile Include="Constants\Methods.cs" />
     <Compile Include="Constants\Properties.cs" />
+    <Compile Include="Constants\SOProperties.cs" />
+    <Compile Include="Constants\StringFormats.cs" />
+    <Compile Include="Helpers\FilterItem.cs" />
     <Compile Include="Helpers\LdapHelper.cs" />
     <Compile Include="K2NEServiceBroker.cs" />
     <Compile Include="Helpers\Helper.cs" />

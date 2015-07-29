@@ -157,8 +157,8 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                 IsRequired = isRequired,
                 MetaData = new MetaData
                 {
-                    Description = name,
-                    DisplayName = name
+                    Description = description,
+                    DisplayName = AddSpaceBeforeCaptialLetter(name)
                 },
                 SoType = soType,
                 Type = Convert.ToString(soType)
@@ -176,17 +176,5 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             }
         }
 
-        public static string GetSAMAccountName(string name)
-        {
-            if (name.Contains("\\"))
-            {
-                return name.Substring(name.IndexOf('\\') + 1);
-            }
-            if (name.Contains("@"))
-            {
-                return name.Substring(0, name.IndexOf('@'));
-            }
-            return name;
-        }
     }
 }
