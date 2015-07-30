@@ -93,17 +93,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceObjectBase.cs" />
     <Compile Include="ServiceObjects\ActiveDirectorySO.cs" />
-    <Compile Include="ServiceObjects\ErrorLogSO.cs" />
+    <Compile Include="ServiceObjects\Client API\WorklistSO.cs" />
+    <Compile Include="ServiceObjects\Management API\ErrorLogSO.cs" />
     <Compile Include="ServiceObjects\IdentitySO.cs" />
-    <Compile Include="ServiceObjects\ManagementWorklistSO.cs" />
-    <Compile Include="ServiceObjects\OutOfOfficeSO.cs" />
-    <Compile Include="ServiceObjects\ProcessInstanceManagementSO.cs" />
-    <Compile Include="ServiceObjects\RoleSO.cs" />
+    <Compile Include="ServiceObjects\Management API\ManagementWorklistSO.cs" />
+    <Compile Include="ServiceObjects\Management API\OutOfOfficeSO.cs" />
+    <Compile Include="ServiceObjects\Management API\ProcessInstanceManagementSO.cs" />
+    <Compile Include="ServiceObjects\Management API\RoleSO.cs" />
     <Compile Include="ServiceObjects\URM\GroupSO.cs" />
     <Compile Include="ServiceObjects\URM\URMFilter.cs" />
     <Compile Include="ServiceObjects\URM\UserSO.cs" />
-    <Compile Include="ServiceObjects\WorkingHoursConfigurationSO.cs" />
-    <Compile Include="ServiceObjects\WorklistSO.cs" />
+    <Compile Include="ServiceObjects\Management API\WorkingHoursConfigurationSO.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Files\key.snk">
