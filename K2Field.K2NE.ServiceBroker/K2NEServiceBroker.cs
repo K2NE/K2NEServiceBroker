@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using K2Field.K2NE.ServiceBroker.ServiceObjects.EmailTemplate;
 using K2Field.K2NE.ServiceBroker.ServiceObjects.URM;
 using K2Field.K2NE.ServiceBroker.ServiceObjects;
 using SourceCode.SmartObjects.Services.ServiceSDK;
@@ -52,7 +53,8 @@ namespace K2Field.K2NE.ServiceBroker
                                 new ActiveDirectorySO(this),
                                 new WorkingHoursConfigurationSO(this),
                                 new GroupSO(this),
-                                new UserSO(this)
+                                new UserSO(this),
+                                new EmailTemplateSO(this)
                             };
 
                         }
@@ -189,6 +191,7 @@ namespace K2Field.K2NE.ServiceBroker
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.LDAPPaths, false, "LDAP://DC=denallix,DC=COM");
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.NetbiosNames, false, "Denallix");
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ChangeContainsToStartsWith, true, "true");
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.EmailTemplateCustomParameters, false, "Property1;Property2");
             return base.GetConfigSection();
         }
         public void Init(IServiceMarshalling serviceMarshalling, IServerMarshaling serverMarshaling)

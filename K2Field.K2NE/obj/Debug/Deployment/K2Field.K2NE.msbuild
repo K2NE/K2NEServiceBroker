@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="CoreDeploy">
+  <PropertyGroup>
+    <Deploy_SmartObjects_And_Associations>True</Deploy_SmartObjects_And_Associations>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TestOnly Condition="$(TestOnly) == ''">False</TestOnly>
+    <Environment Condition="$(Environment) == ''">Development</Environment>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(Environment) == 'Development'">
+    <EnvironmentFields>
+      <Root Name="Development" xmlns="">
+        <Field Name="SmartObject Server" Value="Integrated=True;IsPrimaryLogin=True;Authenticate=True;EncryptedPassword=False;Host=k2.denallix.com;Port=5555" />
+        <Field Name="MDM-AL.ReadOnlyForm.Url" Value="https://k2.denallix.com/Runtime/Runtime/Form/MDM-AL.Request.ReadOnlyForm/" />
+        <Field Name="METROCC.IN.SAM.Report.MyClosedRequests.Url" Value="https://dlx.denallix.com/ReportServer?/METROCC.IN.SAM.REPORT/MetroCC.IN.SAM.Report.MyClosedRequests" />
+        <Field Name="Category Server" Value="Integrated=True;IsPrimaryLogin=True;Authenticate=True;EncryptedPassword=False;Host=k2.denallix.com;Port=5555" />
+        <Field Name="ServiceObject Server" Value="Integrated=True;IsPrimaryLogin=True;Authenticate=True;EncryptedPassword=False;Host=k2.denallix.com;Port=5555" />
+        <Field Name="SmartForms Runtime" Value="https://k2.denallix.com/Runtime/Runtime" />
+        <Field Name="MDM-AL.Report.CMDashBoard.Url" Value="https://dlx.denallix.com/ReportServer?/MDM-AL.Reports/MDM-AL.Report.CMDashBoard" />
+        <Field Name="METROCC.IN.SAM.TimeZone" Value="MetroCCInSamTimeZone" />
+        <Field Name="METROCC.IN.SAM.Report.MyActiveRequests.Url" Value="https://dlx.denallix.com/ReportServer?/METROCC.IN.SAM.REPORT/MetroCC.IN.SAM.Report.MyActiveRequests" />
+        <Field Name="SmartForms Designer Runtime SSL" Value="https://k2.denallix.com/Designer/Runtime" />
+        <Field Name="MDM-AL.Report.RequestOverview.Url" Value="https://dlx.denallix.com/ReportServer?/MDM-AL.Reports/MDM-AL.Report.RequestOverview" />
+        <Field Name="Default Reporting Services URL" Value="https://dlx.denallix.com/ReportServer/" />
+        <Field Name="Mail Server" Value="dlx.denallix.com" />
+        <Field Name="MDM-AL.Report.CentralCoordinationDB.Url" Value="https://dlx.denallix.com/ReportServer?/MDM-AL.Reports/MDM-AL.Report.CentralCoordinationDB" />
+        <Field Name="Workflow Server" Value="Integrated=True;IsPrimaryLogin=True;Authenticate=True;EncryptedPassword=False;Host=k2.denallix.com;Port=5252" />
+        <Field Name="Web Service URL SSL" Value="https://k2.denallix.com" />
+        <Field Name="MDM-AL.ViewFlow.Url" Value="https://k2.denallix.com/ViewFlow/ViewFlow.aspx?ProcessID=" />
+        <Field Name="SmartForms Designer" Value="https://k2.denallix.com/Designer" />
+        <Field Name="From Address" Value="k2service@denallix.com" />
+        <Field Name="METROCC.IN.SAM.Report.MyParticipatedRequests.Url" Value="https://dlx.denallix.com/ReportServer?/METROCC.IN.SAM.REPORT/MetroCC.IN.SAM.Report.MyParticipatedRequests" />
+        <Field Name="CRM Server" Value="URL=https://crm.denallix.com;Organization=Denallix" />
+        <Field Name="Web Service URL" Value="https://k2.denallix.com" />
+        <Field Name="METROCC.IN.SAM.Report.AllRequests.Url" Value="https://dlx.denallix.com/ReportServer?/METROCC.IN.SAM.REPORT/MetroCC.IN.SAM.Report.AllRequests" />
+        <Field Name="SmartForms Runtime URL" Value="https://k2.denallix.com/Runtime/Runtime" />
+        <Field Name="Defaul Viewflow URL" Value="https://k2.denallix.com/ViewFlow/ViewFlow.aspx?ProcessID=" />
+        <Field Name="SmartForms Server" Value="Integrated=True;IsPrimaryLogin=True;Authenticate=True;EncryptedPassword=False;Host=k2.denallix.com;Port=5555" />
+        <Field Name="Exchange Server" Value="ExchangeServer=dlx.denallix.com;DefaultStorageGroup=;DefaultMailboxDatabase=" />
+        <Field Name="SmartForms Designer SSL" Value="https://k2.denallix.com/Designer" />
+        <Field Name="Workspace Url SSL" Value="https://k2.denallix.com" />
+        <Field Name="ViewFlowURL" Value="https://k2.denallix.com/ViewFlow/ViewFlow.aspx?ProcessID=" />
+        <Field Name="SmartForms Runtime SSL" Value="https://k2.denallix.com/Runtime/Runtime" />
+        <Field Name="Workspace Url" Value="https://k2.denallix.com" />
+        <Field Name="Workflow Management Server" Value="Integrated=True;IsPrimaryLogin=True;Authenticate=True;EncryptedPassword=False;Host=k2.denallix.com;Port=5555" />
+        <Field Name="MDM-AL.MDMGroupEmail" Value="bob@denallix.com" />
+        <Field Name="SmartForms Designer Runtime" Value="https://k2.denallix.com/Designer/Runtime" />
+      </Root>
+    </EnvironmentFields>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(Environment) == 'Production'">
+    <EnvironmentFields>
+      <Root Name="Production" xmlns="">
+        <Field Name="SmartObject Server" Value="Integrated=True;IsPrimaryLogin=True;Authenticate=True;EncryptedPassword=False;Host=k2.denallix.com;Port=5555" />
+        <Field Name="MDM-AL.ReadOnlyForm.Url" Value="" />
+        <Field Name="METROCC.IN.SAM.Report.MyClosedRequests.Url" Value="" />
+        <Field Name="Category Server" Value="Integrated=True;IsPrimaryLogin=True;Authenticate=True;EncryptedPassword=False;Host=k2.denallix.com;Port=5555" />
+        <Field Name="ServiceObject Server" Value="Integrated=True;IsPrimaryLogin=True;Authenticate=True;EncryptedPassword=False;Host=k2.denallix.com;Port=5555" />
+        <Field Name="SmartForms Runtime" Value="https://k2.denallix.com/Runtime/Runtime" />
+        <Field Name="MDM-AL.Report.CMDashBoard.Url" Value="" />
+        <Field Name="METROCC.IN.SAM.TimeZone" Value="" />
+        <Field Name="METROCC.IN.SAM.Report.MyActiveRequests.Url" Value="" />
+        <Field Name="SmartForms Designer Runtime SSL" Value="https://k2.denallix.com/Designer/Runtime" />
+        <Field Name="MDM-AL.Report.RequestOverview.Url" Value="" />
+        <Field Name="Default Reporting Services URL" Value="" />
+        <Field Name="Mail Server" Value="dlx.denallix.com" />
+        <Field Name="MDM-AL.Report.CentralCoordinationDB.Url" Value="" />
+        <Field Name="Workflow Server" Value="Integrated=True;IsPrimaryLogin=True;Authenticate=True;EncryptedPassword=False;Host=k2.denallix.com;Port=5252" />
+        <Field Name="Web Service URL SSL" Value="https://k2.denallix.com" />
+        <Field Name="MDM-AL.ViewFlow.Url" Value="" />
+        <Field Name="SmartForms Designer" Value="https://k2.denallix.com/Designer" />
+        <Field Name="From Address" Value="k2service@denallix.com" />
+        <Field Name="METROCC.IN.SAM.Report.MyParticipatedRequests.Url" Value="" />
+        <Field Name="CRM Server" Value="URL=https://crm.denallix.com;Organization=Denallix" />
+        <Field Name="Web Service URL" Value="https://k2.denallix.com" />
+        <Field Name="METROCC.IN.SAM.Report.AllRequests.Url" Value="" />
+        <Field Name="SmartForms Runtime URL" Value="" />
+        <Field Name="Defaul Viewflow URL" Value="" />
+        <Field Name="SmartForms Server" Value="Integrated=True;IsPrimaryLogin=True;Authenticate=True;EncryptedPassword=False;Host=k2.denallix.com;Port=5555" />
+        <Field Name="Exchange Server" Value="ExchangeServer=dlx.denallix.com;DefaultStorageGroup=;DefaultMailboxDatabase=" />
+        <Field Name="SmartForms Designer SSL" Value="https://k2.denallix.com/Designer" />
+        <Field Name="Workspace Url SSL" Value="https://k2.denallix.com" />
+        <Field Name="ViewFlowURL" Value="" />
+        <Field Name="SmartForms Runtime SSL" Value="https://k2.denallix.com/Runtime/Runtime" />
+        <Field Name="Workspace Url" Value="https://k2.denallix.com" />
+        <Field Name="Workflow Management Server" Value="Integrated=True;IsPrimaryLogin=True;Authenticate=True;EncryptedPassword=False;Host=k2.denallix.com;Port=5555" />
+        <Field Name="MDM-AL.MDMGroupEmail" Value="" />
+        <Field Name="SmartForms Designer Runtime" Value="https://k2.denallix.com/Designer/Runtime" />
+      </Root>
+    </EnvironmentFields>
+  </PropertyGroup>
+  <PropertyGroup>
+    <WorkflowManagementConnectionStringProperty>$Field=Workflow Management Server</WorkflowManagementConnectionStringProperty>
+    <SmartObjectConnectionStringProperty>$Field=SmartObject Server</SmartObjectConnectionStringProperty>
+    <DeploymentLabelName>DENALLIX\administrator - 7/21/2015 4:30:30 PM</DeploymentLabelName>
+    <DeploymentLabelDescription />
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageResource Include="Resources\e98aebb6-d96f-450b-9db5-918e44e06f68-K2Field.K2NE-SMO-K2Field.K2NE.SMO.EmailTemplate.SmartObjects.res">
+      <Name>e98aebb6-d96f-450b-9db5-918e44e06f68-K2Field.K2NE-SMO-K2Field.K2NE.SMO.EmailTemplate</Name>
+      <Group>SmartObjects</Group>
+    </PackageResource>
+  </ItemGroup>
+  <Target Name="Deploy" DependsOnTargets="Deploy SmartObjects and Associations" />
+  <Import Project="ProjectDeployment.targets" />
+  <Target Name="Deploy SmartObjects and Associations" Condition="$(Deploy_SmartObjects_And_Associations) == 'true'">
+    <SourceCode.DeploymentTasks.SmartObjects.SmartObjectDeployTask TaskGuid="d03e78a77cd044b59cf9c6bb65cfd26e" />
+  </Target>
+  <UsingTask TaskName="SourceCode.DeploymentTasks.SmartObjects.SmartObjectDeployTask" AssemblyFile="Bin\SourceCode.DeploymentTasks.dll" />
+</Project>

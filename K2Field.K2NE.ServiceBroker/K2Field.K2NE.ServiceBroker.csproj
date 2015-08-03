@@ -55,6 +55,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\K2 blackpearl\Bin\SourceCode.Security.UserRoleManager.Management.dll</HintPath>
     </Reference>
+    <Reference Include="SourceCode.SmartObjects.Client, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\K2 blackpearl\Bin\SourceCode.SmartObjects.Client.dll</HintPath>
+    </Reference>
     <Reference Include="SourceCode.SmartObjects.Services.ServiceSDK, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\K2 blackpearl\Bin\SourceCode.SmartObjects.Services.ServiceSDK.dll</HintPath>
@@ -93,6 +97,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceObjectBase.cs" />
     <Compile Include="ServiceObjects\ActiveDirectorySO.cs" />
+    <Compile Include="ServiceObjects\EmailTemplate\EmailTemplateSO.cs" />
+    <Compile Include="ServiceObjects\EmailTemplate\SmoClientHelper.cs" />
+    <Compile Include="ServiceObjects\EmailTemplate\Template.cs" />
     <Compile Include="ServiceObjects\ErrorLogSO.cs" />
     <Compile Include="ServiceObjects\IdentitySO.cs" />
     <Compile Include="ServiceObjects\ManagementWorklistSO.cs" />
@@ -116,12 +123,15 @@
     <PostBuildEvent>if "Debug"=="$(ConfigurationName)" (
   xcopy /R /Y "$(TargetPath)" "c:\Program Files (x86)\K2 blackpearl\ServiceBroker\"
 )
-
+net start "K2 blackpearl server"
 if "Release"=="$(ConfigurationName)" (
 xcopy /R /Y "$(TargetPath)" "$(SolutionDir)\chocoPackage\tools\"
 cd "$(SolutionDir)\chocoPackage\"
 cpack
 )</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>net stop "K2 blackpearl server"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

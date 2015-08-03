@@ -100,5 +100,10 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         {
             public const string GetUsers = "UMRGetUsers";
         }
+        public static class EmailTemplate
+        {
+            public const string GetEmailTemplate = "GetEmailTemplate";
+            public const string ListEmailTemplates = "ListEmailTemplates";
+        }
     }
 }

@@ -1,0 +1,22 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreDeployDependsOn></PreDeployDependsOn>
+    <PostDeployDependsOn></PostDeployDependsOn>
+    <CoreDeployDependsOn>PreDeploy;Deploy;PostDeploy</CoreDeployDependsOn>
+  </PropertyGroup>
+
+  <Target Name="InitDeploy" Outputs="$(TestOnly);$(Environment)" >
+    <CreateProperty Value="$(TestOnly)">
+      <Output TaskParameter="Value" PropertyName="TestOnly" />
+    </CreateProperty>
+    <CreateProperty Value="$(Environment)">
+      <Output TaskParameter="Value" PropertyName="Environment" />
+    </CreateProperty>
+  </Target>
+  <Target Name="PreDeploy" DependsOnTargets="$(PreDeployDependsOn)"/>
+  <Target Name="PostDeploy"  DependsOnTargets="$(PostDeployDependsOn)"/>
+  <Target Name="CoreDeploy" DependsOnTargets="$(CoreDeployDependsOn)"/>
+
+  <!-- Custom targets -->
+ 
+</Project>

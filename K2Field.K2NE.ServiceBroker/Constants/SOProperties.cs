@@ -200,5 +200,21 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string SipAccount = "SipAccount";
             public const string ObjectSid = "ObjectSID";
         }
+
+        public static class EmailTemplate
+        {
+            public const string EmailTemplateId = "Id";
+            public const string EmailSubject = "EmailSubject";
+            public const string EmailBody = "EmailBody";
+            public const string TemplateName = "TemplateName";
+            public const string TemplateLanguage = "TemplateLanguage";
+
+            //Workflow Properties
+            public const string ProcessInstanceId = "ProcessInstanceId";
+            public const string ProcessFolio = "Process.Folio";
+            public const string ProcessStartDate = "Process.StartDate";
+            public const string ProcessName = "Process.Name";
+            public const string ProcessOriginator = "Process.Originator";
+        }
     }
 }

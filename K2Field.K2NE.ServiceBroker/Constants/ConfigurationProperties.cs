@@ -16,6 +16,8 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         public const string NetbiosNames = "AD Netbios Name";
         public const string AdMaxResultSize = "AD Maximum Resultsize";
         public const string ChangeContainsToStartsWith = "Change Contains operator to StartsWith for AD";
+        public const string EmailTemplateCustomParameters = "EmailTemplateCustomParameters";
+
     }
 
 }

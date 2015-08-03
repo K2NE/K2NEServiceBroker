@@ -1,0 +1,2 @@
+C:\!GitHub\K2NEServiceBroker\K2Field.K2NE\bin\Debug\K2Field.K2NE.dll
+C:\!GitHub\K2NEServiceBroker\K2Field.K2NE\obj\Debug\K2Field.K2NE.dll

@@ -73,6 +73,17 @@ namespace K2Field.K2NE.ServiceBroker
 
             }
         }
+        /// <summary>
+        /// Returns the array of custom properties for EmailTemplate SO for PlaceHolders
+        /// </summary>
+        protected string EmailTemplateCustomParameters
+        {
+            get
+            {
+                return
+                    Convert.ToString(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.EmailTemplateCustomParameters]);
+            }
+        }
 
 
         /// <summary>
@@ -215,6 +226,28 @@ namespace K2Field.K2NE.ServiceBroker
             string val = p.Value as string;
             if (isRequired && string.IsNullOrEmpty(val))
                 throw new ArgumentException(string.Format("{0} is required but is empty.", name));
+
+            return val;
+        }
+        /// <summary>
+        /// Gets the int parameter value
+        /// </summary>
+        /// <param name="name">Name of the parameter</param>
+        /// <param name="isRequired"></param>
+        /// <returns>Value of the integer/number parameter</returns>
+        protected int GetIntParameter(string name, bool isRequired = false)
+        {
+            MethodParameter p = ServiceBroker.Service.ServiceObjects[0].Methods[0].MethodParameters[name];
+            if (p == null)
+            {
+                if (isRequired)
+                    throw new ArgumentException(string.Format(Constants.ErrorMessages.RequiredParameterNotFound, name));
+                return 0;
+            }
+            int val;
+            int.TryParse(Convert.ToString(p.Value), out val);
+            if (isRequired && val == 0)
+                throw new ArgumentException(string.Format("{0} is required but is empty or equals 0.", name));
 
             return val;
         }
