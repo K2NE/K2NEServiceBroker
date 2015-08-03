@@ -1,12 +1,12 @@
 ﻿
-7/23/2015 2:51:31 PM:  ===============	Deploy SmartObjects and Associations: Task started	===============
+8/3/2015 3:04:05 PM:  ===============	Deploy SmartObjects and Associations: Task started	===============
 
-7/23/2015 2:51:31 PM:  Creating connection on K2.DENALLIX.COM : 5555 ...
-7/23/2015 2:51:31 PM:  Connected
+8/3/2015 3:04:05 PM:  Creating connection on K2.DENALLIX.COM : 5555 ...
+8/3/2015 3:04:05 PM:  Connected
 
-7/23/2015 2:51:32 PM:  ===============	Smartobjects deployed:	===============
+8/3/2015 3:04:05 PM:  ===============	Smartobjects deployed:	===============
 
 K2Field.K2NE.SMO.EmailTemplate
 
-7/23/2015 2:51:32 PM:  ===============	Deploy SmartObjects and Associations: Task completed	===============
+8/3/2015 3:04:05 PM:  ===============	Deploy SmartObjects and Associations: Task completed	===============
 

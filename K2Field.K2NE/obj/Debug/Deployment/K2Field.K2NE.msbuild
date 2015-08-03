@@ -104,7 +104,7 @@
   <Target Name="Deploy" DependsOnTargets="Deploy SmartObjects and Associations" />
   <Import Project="ProjectDeployment.targets" />
   <Target Name="Deploy SmartObjects and Associations" Condition="$(Deploy_SmartObjects_And_Associations) == 'true'">
-    <SourceCode.DeploymentTasks.SmartObjects.SmartObjectDeployTask TaskGuid="d03e78a77cd044b59cf9c6bb65cfd26e" />
+    <SourceCode.DeploymentTasks.SmartObjects.SmartObjectDeployTask TaskGuid="375c4c35e5fd480487439cad318652f0" />
   </Target>
   <UsingTask TaskName="SourceCode.DeploymentTasks.SmartObjects.SmartObjectDeployTask" AssemblyFile="Bin\SourceCode.DeploymentTasks.dll" />
 </Project>

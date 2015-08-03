@@ -31,5 +31,10 @@
       <Include>NewFolder1</Include>
     </Folder>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="SMO\K2Field.K2NE.SMO.EmailTemplate.sodx">
+      <SubType>Content</SubType>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SourceCode\v3.5\ProjectSystem.targets" />
 </Project>
