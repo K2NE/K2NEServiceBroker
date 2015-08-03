@@ -7,16 +7,44 @@ The primary goal of the Email Template ServiceObject is to allow K2 users to cha
 The overall logic of the SO uses the following components:
 
 * EmailTemplateSO - loads the requested template and replaces the placeholders with the provided values;
-* K2Field.K2NE.SMO.EmailTemplate - the smartobject, which stores Email Templates and is used by the EmailTemplateSO.
+* K2Field.K2NE.SMO.EmailTemplate - the smartobject, which stores Email Bodies and Subjects and is used by the EmailTemplateSO to retrieve data (**System Name: _K2Field_K2NE_SMO_EmailTemplate_**).
 
 ## Installation
 
 1. Deploy the **K2Field.K2NE.SMO.EmailTemplate** SmartObject. You can find it in the K2NEServiceBroker solution.
 2. Deploy **K2NEServiceBroker** and register the ServiceInstance.
-3. If you need to use some custom input parameters for the placeholders, you can specify them in the Service Key **EmailTemplateCustomParameters** in the following format: _PlaceHolderName1;PlaceHolderName2;..._
+3. If you need to use some custom input parameters for the placeholders, you can specify them in the Service Key **EmailTemplateCustomParameters** in the following format: _PlaceHolderName1;PlaceHolderName2;..._ - the placeholders will be %PlaceHolderName1%, %PlaceHolderName2%...
 
 ## Usage
 
-##### Get Email Template
+##### Creation of Email Template
 
+You can create Email Template with placeholders in Email Subjects and/or Bodies in the following format _%PlaceholderName%_
+The Service Object uses several internal placeholders, the values of which are received from the workflow data:
+
+* _%Process.Folio%_
+* _%Process.Name%_
+* _%Process.StartDate%_
+* _%Process.Originator%_
+* _%DataField.DatafieldName%_ (eg. %DataField.RequestId%, %DataField.ContractType%...)
+
+In order to take advantage of the internal workflow data, you need to specify Process Instance Id as an input parameter for the SO methods.
+
+
+##### Getting an Email Template
+
+Static input parameters:
+
+* Template Name - the name of the template;
+* Template Language - Language of the template;
+* Process Instance Id;
+
+Other input parameters are created dynamically by splitting the Service Key **EmailTemplateCustomParameters**.
+
+The code behind will take the first found EmailTemplate filtered by Template Name and Template Language. That is why you need to take care that your template Names/Languages are unique.
+
+##### Inserting templates inside other templates as placeholders
+
+You can use the whole template text as a replacement for placeholder in another template. This scenario is often used when you need to have headers/footers in your emails. In order to achive this, you need specify the placeholder in the following format: %Template._TemplateName_% 
+**Since recursion is used to achive this, the level of recursion is limited and hardcoded to 3 levels. It means that the SO will not go down only by 3 levels trying to find new templates inside other templates.**
 
