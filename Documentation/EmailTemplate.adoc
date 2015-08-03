@@ -45,7 +45,7 @@ The code behind will take the first found EmailTemplate filtered by Template Nam
 
 ##### Inserting templates inside other templates as placeholders
 
-You can use the whole template text as a replacement for placeholder in another template. This scenario is often used when you need to have headers/footers in your emails. In order to achive this, you need specify the placeholder in the following format: %Template._TemplateName_%
+You can use the whole template text as a replacement for placeholder in another template. This scenario is often used when you need to have headers/footers in your emails. In order to achive this, you need specify the placeholder in the following format: %Template._TemplateName_% 
 
 **Since recursion is used to achive this, the level of recursion is limited and hardcoded to 3 levels. It means that the SO will go down only by 3 levels trying to find new templates inside other templates.**
 
