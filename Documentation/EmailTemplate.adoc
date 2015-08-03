@@ -1,22 +1,22 @@
 # EmailTemplate
-The primary goal of the Email Template ServiceObject is to allow K2 users to change Workflow Email and/or Task Notifications dynamically without the necessity to redeploy the workflow. Also the EmailTemplate service object can support multilanguage projects, where a user can load templates for a certain language.
+
+The primary goal of the Email Template ServiceObject is to allow K2 users to change Workflow Email and/or Task Notifications dynamically without the necessity to redeploy the workflow. Also the EmailTemplate service object can support multilanguage projects, where a user can load Email templates for a certain language.
 
 ## Contents
 
-Al and dynamicall EmailTemplate and automatically replace the placeholders for some application and
-/or workflow specific values, sent to the SMO as input parameters. One of the core uses is to change email notifications without redeploying workflows etc. This service object is finalized, but I cannot find time to write some manual, cause without it you will have to read code. I hope to finish it this week and then Ruben will  get the pull request from meThe EmailTemplate Service Object is aimed at providing K2 O  is to replace the URM Service Broker that K2 provides out of the box. The current (we're in the 4.6.10 timeframe here) issue is that these Service Objects are often used but are not very performant.
-Most people expirience issues with the Active Directory performance. The reason for this is that the Filter that is supplied from the User Interface (picker control and so on) is pass to the SMO, but the serivce broker does not utilize this filter.
-This means that the Service Object code will retrieve /all/ the items in a Get List from the AD, which is just slow. There's nothing that K2 or any C# coder can change about that.
+The overall logic of the SO uses the following components:
 
-The URM Service Objects check if the label is 'K2' and if so, performs it's own filtered query against the AD, which is faster as the result set will be smaller and we utilize the indexes.
-The service instance has an option to "Change Contains operator to StartsWith for AD" - this option by default is true as AD is not able to use indexes when it does a contains filter.
+* EmailTemplateSO - loads the requested template and replaces the placeholders with the provided values;
+* K2Field.K2NE.SMO.EmailTemplate - the smartobject, which stores Email Templates and is used by the EmailTemplateSO.
 
-If the label is not 'K2' then the service broker will simply execute the originial method. This code is copied from reflector and therefor a bit messy and probably not well tested.
+## Installation
 
-=== URM Group
-* URM Get Group Details - Retrieve the group details.
-* URM Get Groups - retrieve all groups. Use this in your picker control and so on.
+1. Deploy the **K2Field.K2NE.SMO.EmailTemplate** SmartObject. You can find it in the K2NEServiceBroker solution.
+2. Deploy **K2NEServiceBroker** and register the ServiceInstance.
+3. If you need to use some custom input parameters for the placeholders, you can specify them in the Service Key **EmailTemplateCustomParameters** in the following format: _PlaceHolderName1;PlaceHolderName2;..._
+
+## Usage
+
+##### Get Email Template
 
 
-=== URM User
-* URM Get Users - Retrieve all users. Use this in your picker control and so on.
