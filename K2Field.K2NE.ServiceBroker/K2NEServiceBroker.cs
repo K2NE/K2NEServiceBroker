@@ -17,15 +17,17 @@ namespace K2Field.K2NE.ServiceBroker
         private static readonly object serviceObjectLock = new object();
         private static Dictionary<string, Type> _serviceObjectToType = new Dictionary<string, Type>();
         private List<ServiceObjectBase> _serviceObjects;
-        #endregion
+        #endregion Private Properties
 
         #region Internal properties
-        internal object syncobject = new object();
-        internal static long _servicecount = 0L;
-        internal static IIdentityService IdentityService;
-        internal static ISecurityManager SecurityManager;
-        
+        private object syncobject = new object();
         #endregion
+
+        public Logger Logger { get; private set; }
+        public IIdentityService IdentityService { get; private set; }
+        public ISecurityManager SecurityManager { get; private set; }
+
+
 
         #region Private Methods
         private IEnumerable<ServiceObjectBase> ServiceObjects
@@ -96,7 +98,7 @@ namespace K2Field.K2NE.ServiceBroker
             return newSf;
         }
         #endregion
-        
+
         #region Constructor
         /// <summary>
         /// A new instance is called for every new connection that is created to the K2 server. A new instance of this class is not created
@@ -191,49 +193,38 @@ namespace K2Field.K2NE.ServiceBroker
         }
         public void Init(IServiceMarshalling serviceMarshalling, IServerMarshaling serverMarshaling)
         {
-            if (serviceMarshalling == null)
-                throw new ArgumentNullException("serviceMarshalling");
-            if (serverMarshaling == null)
-                throw new ArgumentNullException("serverMarshaling");
             lock (syncobject)
             {
+                if (Logger.SelfLoaded == true)
+                {
+                    string type = typeof(SourceCode.Logging.Logger).ToString();
+                    if (serviceMarshalling.IsServiceHosted(type))
+                    {
+                        Logger = new Logger((SourceCode.Logging.Logger)serviceMarshalling.GetHostedService(type));
+                        Logger.LogDebug("Logger loaded from ServiceMarshalling");
+                    }
+                }
+
+
                 if (IdentityService == null)
                 {
                     IdentityService = serviceMarshalling.GetHostedService(typeof(IIdentityService)) as IIdentityService;
-                    SecurityManager = serverMarshaling.GetSecurityManagerContext();
-
-                    if (IdentityService == null)
-                        throw new Exception("ServiceBroker.Init, IdentityService handle invalid");
-                    if (SecurityManager == null)
-                        throw new Exception("ServiceBroker.Init, SecurityManager handle invalid");
-                    ++_servicecount;
                 }
-                else
-                    ++_servicecount;
+                if (SecurityManager == null)
+                {
+                    SecurityManager = serverMarshaling.GetSecurityManagerContext();
+                }
+
             }
 
-            if (!Logger.SelfLoaded) return;
-            var type = typeof(SourceCode.Logging.Logger).ToString();
-            if (!serviceMarshalling.IsServiceHosted(type)) return;
-            {
-                Logger = new Logger((SourceCode.Logging.Logger)serviceMarshalling.GetHostedService(type));
-                Logger.LogDebug("Logger loaded from ServiceMarshalling");
-            }
         }
         public override void Extend() { }
         public void Unload()
         {
             Logger.LogDebug("Service Broker unloaded.");
-            lock (syncobject)
-            {
-                if (_servicecount != 0L)
-                    return;
-                IdentityService = (IIdentityService)null;
-                SecurityManager = (ISecurityManager)null;
-            }
         }
         #endregion Public overrides for ServiceAssemblyBase
 
-        public Logger Logger { get; private set; }
+
     }
 }

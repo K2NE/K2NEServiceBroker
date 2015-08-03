@@ -8,7 +8,7 @@ namespace K2Field.K2NE.ServiceBroker
     public class Logger
     {
         private SourceCode.Logging.Logger logger;
-        private readonly string LogIdentifier = "CMSF";
+        private readonly string LogIdentifier = "K2NE Service Broker";
 
         public bool SelfLoaded { get; private set; }
         

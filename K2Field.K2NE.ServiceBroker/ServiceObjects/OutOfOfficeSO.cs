@@ -30,46 +30,46 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
             ServiceObject so = Helper.CreateServiceObject("OutOfOfficeManagement", "Allows for managing user Out Of Offcie status");
 
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.OutOfOffice.UserFQN, SoType.Text, @"The users FQN with label, ex.'K2:DOMAIN\User' (no quotes)."));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.OutOfOffice.DestinationUser, SoType.Text, "User to forward worktask items to"));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.OutOfOffice.UserStatus, SoType.Text, "Status of a user"));
-            so.Properties.Add(Helper.CreateProperty(Constants.Properties.OutOfOffice.CallSuccess, SoType.YesNo, "Success of method call"));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.OutOfOffice.UserFQN, SoType.Text, @"The users FQN with label, ex.'K2:DOMAIN\User' (no quotes)."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.OutOfOffice.DestinationUser, SoType.Text, "User to forward worktask items to"));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.OutOfOffice.UserStatus, SoType.Text, "Status of a user"));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.OutOfOffice.CallSuccess, SoType.YesNo, "Success of method call"));
 
             Method setOutOfOffice = Helper.CreateMethod(Constants.Methods.OutOfOffice.SetOutOfOffice, "Set the office status of a user to Out of Office", MethodType.Execute);
-            setOutOfOffice.InputProperties.Add(Constants.Properties.OutOfOffice.UserFQN);
-            setOutOfOffice.Validation.RequiredProperties.Add(Constants.Properties.OutOfOffice.UserFQN);
-            setOutOfOffice.ReturnProperties.Add(Constants.Properties.OutOfOffice.UserFQN);
-            setOutOfOffice.ReturnProperties.Add(Constants.Properties.OutOfOffice.CallSuccess);
+            setOutOfOffice.InputProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
+            setOutOfOffice.Validation.RequiredProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
+            setOutOfOffice.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
+            setOutOfOffice.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.CallSuccess);
             so.Methods.Add(setOutOfOffice);
 
             Method setInOffice = Helper.CreateMethod(Constants.Methods.OutOfOffice.SetInOffice, "Set the office status of a users.", MethodType.Execute);
-            setInOffice.InputProperties.Add(Constants.Properties.OutOfOffice.UserFQN);
-            setInOffice.Validation.RequiredProperties.Add(Constants.Properties.OutOfOffice.UserFQN);
-            setInOffice.ReturnProperties.Add(Constants.Properties.OutOfOffice.UserFQN);
-            setInOffice.ReturnProperties.Add(Constants.Properties.OutOfOffice.CallSuccess);
+            setInOffice.InputProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
+            setInOffice.Validation.RequiredProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
+            setInOffice.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
+            setInOffice.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.CallSuccess);
             so.Methods.Add(setInOffice);
 
             Method getUserStatus = Helper.CreateMethod(Constants.Methods.OutOfOffice.GetUserStatus, "Get the office status of a user.", MethodType.Read);
-            getUserStatus.InputProperties.Add(Constants.Properties.OutOfOffice.UserFQN);
-            getUserStatus.Validation.RequiredProperties.Add(Constants.Properties.OutOfOffice.UserFQN);
-            getUserStatus.ReturnProperties.Add(Constants.Properties.OutOfOffice.UserStatus);
-            getUserStatus.ReturnProperties.Add(Constants.Properties.OutOfOffice.UserFQN);
+            getUserStatus.InputProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
+            getUserStatus.Validation.RequiredProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
+            getUserStatus.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.UserStatus);
+            getUserStatus.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
             so.Methods.Add(getUserStatus);
 
             Method addOutOfOffice = Helper.CreateMethod(Constants.Methods.OutOfOffice.AddOutOfOffice, "Get the office status of a user.", MethodType.Read);
-            addOutOfOffice.InputProperties.Add(Constants.Properties.OutOfOffice.UserFQN);
-            addOutOfOffice.InputProperties.Add(Constants.Properties.OutOfOffice.DestinationUser);
-            addOutOfOffice.Validation.RequiredProperties.Add(Constants.Properties.OutOfOffice.UserFQN);
-            addOutOfOffice.Validation.RequiredProperties.Add(Constants.Properties.OutOfOffice.DestinationUser);
-            addOutOfOffice.ReturnProperties.Add(Constants.Properties.OutOfOffice.UserFQN);
-            addOutOfOffice.ReturnProperties.Add(Constants.Properties.OutOfOffice.DestinationUser);
-            addOutOfOffice.ReturnProperties.Add(Constants.Properties.OutOfOffice.CallSuccess);
+            addOutOfOffice.InputProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
+            addOutOfOffice.InputProperties.Add(Constants.SOProperties.OutOfOffice.DestinationUser);
+            addOutOfOffice.Validation.RequiredProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
+            addOutOfOffice.Validation.RequiredProperties.Add(Constants.SOProperties.OutOfOffice.DestinationUser);
+            addOutOfOffice.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
+            addOutOfOffice.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.DestinationUser);
+            addOutOfOffice.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.CallSuccess);
             so.Methods.Add(addOutOfOffice);
 
             Method listSharedUsers = Helper.CreateMethod(Constants.Methods.OutOfOffice.ListSharedUsers, "Get the destiination users for OOF user", MethodType.List);
-            listSharedUsers.InputProperties.Add(Constants.Properties.OutOfOffice.UserFQN);
-            listSharedUsers.Validation.RequiredProperties.Add(Constants.Properties.OutOfOffice.UserFQN);
-            listSharedUsers.ReturnProperties.Add(Constants.Properties.OutOfOffice.DestinationUser);
+            listSharedUsers.InputProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
+            listSharedUsers.Validation.RequiredProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
+            listSharedUsers.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.DestinationUser);
             so.Methods.Add(listSharedUsers);
 
             return new List<ServiceObject>() { so };
@@ -99,7 +99,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
         private void GetUserStatus()
         {
-            string userFQN = base.GetStringProperty(Constants.Properties.OutOfOffice.UserFQN);
+            string userFQN = base.GetStringProperty(Constants.SOProperties.OutOfOffice.UserFQN);
 
             ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
@@ -113,8 +113,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 UserStatuses status = mngServer.GetUserStatus(userFQN);
 
                 DataRow dr = results.NewRow();
-                dr[Constants.Properties.OutOfOffice.UserFQN] = userFQN;
-                dr[Constants.Properties.OutOfOffice.UserStatus] = status.ToString();
+                dr[Constants.SOProperties.OutOfOffice.UserFQN] = userFQN;
+                dr[Constants.SOProperties.OutOfOffice.UserStatus] = status.ToString();
 
                 results.Rows.Add(dr);
             }
@@ -122,7 +122,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
         private void SetInOffice()
         {
-            string userFQN = base.GetStringProperty(Constants.Properties.OutOfOffice.UserFQN);
+            string userFQN = base.GetStringProperty(Constants.SOProperties.OutOfOffice.UserFQN);
 
             ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
@@ -141,8 +141,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
 
                 DataRow dr = results.NewRow();
-                dr[Constants.Properties.OutOfOffice.UserFQN] = userFQN;
-                dr[Constants.Properties.OutOfOffice.CallSuccess] = result;
+                dr[Constants.SOProperties.OutOfOffice.UserFQN] = userFQN;
+                dr[Constants.SOProperties.OutOfOffice.CallSuccess] = result;
                 results.Rows.Add(dr);
             }
         }
@@ -150,7 +150,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
       
         private void SetOutOfOffice()
         {
-            string userFQN = base.GetStringProperty(Constants.Properties.OutOfOffice.UserFQN);
+            string userFQN = base.GetStringProperty(Constants.SOProperties.OutOfOffice.UserFQN);
 
             ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
@@ -168,8 +168,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
                 bool result = mngServer.SetUserStatus(userFQN, UserStatuses.OOF);
                 DataRow dr = results.NewRow();
-                dr[Constants.Properties.OutOfOffice.UserFQN] = userFQN;
-                dr[Constants.Properties.OutOfOffice.CallSuccess] = result;
+                dr[Constants.SOProperties.OutOfOffice.UserFQN] = userFQN;
+                dr[Constants.SOProperties.OutOfOffice.CallSuccess] = result;
                 results.Rows.Add(dr);
             }
         }
@@ -178,8 +178,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
         private void AddOutOfOffice()
         {
-            string userFQN = base.GetStringProperty(Constants.Properties.OutOfOffice.UserFQN);
-            string destinationUser = base.GetStringProperty(Constants.Properties.OutOfOffice.DestinationUser);
+            string userFQN = base.GetStringProperty(Constants.SOProperties.OutOfOffice.UserFQN);
+            string destinationUser = base.GetStringProperty(Constants.SOProperties.OutOfOffice.DestinationUser);
 
             ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
@@ -208,9 +208,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     bool result = mngServer.ShareWorkList(userFQN, worklistshare);
 
                     DataRow dr = results.NewRow();
-                    dr[Constants.Properties.OutOfOffice.UserFQN] = userFQN;
-                    dr[Constants.Properties.OutOfOffice.DestinationUser] = destinationUser;
-                    dr[Constants.Properties.OutOfOffice.CallSuccess] = result;
+                    dr[Constants.SOProperties.OutOfOffice.UserFQN] = userFQN;
+                    dr[Constants.SOProperties.OutOfOffice.DestinationUser] = destinationUser;
+                    dr[Constants.SOProperties.OutOfOffice.CallSuccess] = result;
                     results.Rows.Add(dr); ;
 
                 }
@@ -236,9 +236,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     mngServer.SetUserStatus(userFQN, UserStatuses.Available);
 
                     DataRow dr = results.NewRow();
-                    dr[Constants.Properties.OutOfOffice.UserFQN] = userFQN;
-                    dr[Constants.Properties.OutOfOffice.DestinationUser] = destinationUser;
-                    dr[Constants.Properties.OutOfOffice.CallSuccess] = result;
+                    dr[Constants.SOProperties.OutOfOffice.UserFQN] = userFQN;
+                    dr[Constants.SOProperties.OutOfOffice.DestinationUser] = destinationUser;
+                    dr[Constants.SOProperties.OutOfOffice.CallSuccess] = result;
                     results.Rows.Add(dr);
                 }
                  
@@ -247,7 +247,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         
         private void ListSharedUsers()
         {
-            string userFQN = base.GetStringProperty(Constants.Properties.OutOfOffice.UserFQN);
+            string userFQN = base.GetStringProperty(Constants.SOProperties.OutOfOffice.UserFQN);
 
             ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
@@ -273,7 +273,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                         foreach (Destination dest in wt.Destinations)
                         {
                             DataRow dr = results.NewRow();
-                            dr[Constants.Properties.OutOfOffice.DestinationUser] = dest.Name.ToString();
+                            dr[Constants.SOProperties.OutOfOffice.DestinationUser] = dest.Name.ToString();
                             results.Rows.Add(dr);
                         }
                     }

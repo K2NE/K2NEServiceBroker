@@ -28,60 +28,60 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             ServiceObject soRoleItem = Helper.CreateServiceObject("RoleManagement", "K2 Role management (add/remove/list K2 roles)");
 
 
-            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.Properties.Role.RoleName, SoType.Text, "The name of the role to manage."));
-            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.Properties.Role.RoleItemType, SoType.Text, "The type of role item (Group, User, SmartObject)."));
-            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.Properties.Role.RoleExclude, SoType.YesNo, "Excluded role item."));
-            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.Properties.Role.RoleItem, SoType.Text, "The FQN name of the role item."));
-            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.Properties.Role.RoleDescription, SoType.Text, "A short description of the role."));
-            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.Properties.Role.RoleItem, SoType.Text, "The FQN name of the role item."));
-            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.Properties.Role.RoleDynamic, SoType.YesNo, "Is a role dynamic?"));
+            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Role.RoleName, SoType.Text, "The name of the role to manage."));
+            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Role.RoleItemType, SoType.Text, "The type of role item (Group, User, SmartObject)."));
+            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Role.RoleExclude, SoType.YesNo, "Excluded role item."));
+            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Role.RoleItem, SoType.Text, "The FQN name of the role item."));
+            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Role.RoleDescription, SoType.Text, "A short description of the role."));
+            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Role.RoleItem, SoType.Text, "The FQN name of the role item."));
+            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Role.RoleDynamic, SoType.YesNo, "Is a role dynamic?"));
 
             Method addRoleItem = Helper.CreateMethod(Constants.Methods.Role.AddRoleItem, "Add a RoleItem to a role" ,MethodType.Create);
-            addRoleItem.InputProperties.Add(Constants.Properties.Role.RoleName);
-            addRoleItem.InputProperties.Add(Constants.Properties.Role.RoleItem);
-            addRoleItem.InputProperties.Add(Constants.Properties.Role.RoleExclude);
-            addRoleItem.InputProperties.Add(Constants.Properties.Role.RoleItemType);
-            addRoleItem.Validation.RequiredProperties.Add(Constants.Properties.Role.RoleName);
-            addRoleItem.Validation.RequiredProperties.Add(Constants.Properties.Role.RoleItem);
-            addRoleItem.Validation.RequiredProperties.Add(Constants.Properties.Role.RoleItemType);
+            addRoleItem.InputProperties.Add(Constants.SOProperties.Role.RoleName);
+            addRoleItem.InputProperties.Add(Constants.SOProperties.Role.RoleItem);
+            addRoleItem.InputProperties.Add(Constants.SOProperties.Role.RoleExclude);
+            addRoleItem.InputProperties.Add(Constants.SOProperties.Role.RoleItemType);
+            addRoleItem.Validation.RequiredProperties.Add(Constants.SOProperties.Role.RoleName);
+            addRoleItem.Validation.RequiredProperties.Add(Constants.SOProperties.Role.RoleItem);
+            addRoleItem.Validation.RequiredProperties.Add(Constants.SOProperties.Role.RoleItemType);
             soRoleItem.Methods.Add(addRoleItem);
 
 
             Method deleteRoleItem = Helper.CreateMethod(Constants.Methods.Role.RemoveRoleItem, "Remove a RoleItem from a role", MethodType.Delete);
-            deleteRoleItem.InputProperties.Add(Constants.Properties.Role.RoleName);
-            deleteRoleItem.InputProperties.Add(Constants.Properties.Role.RoleItem);
-            deleteRoleItem.Validation.RequiredProperties.Add(Constants.Properties.Role.RoleName);
-            deleteRoleItem.Validation.RequiredProperties.Add(Constants.Properties.Role.RoleItem);
+            deleteRoleItem.InputProperties.Add(Constants.SOProperties.Role.RoleName);
+            deleteRoleItem.InputProperties.Add(Constants.SOProperties.Role.RoleItem);
+            deleteRoleItem.Validation.RequiredProperties.Add(Constants.SOProperties.Role.RoleName);
+            deleteRoleItem.Validation.RequiredProperties.Add(Constants.SOProperties.Role.RoleItem);
             soRoleItem.Methods.Add(deleteRoleItem);
 
             Method listRoleItems = Helper.CreateMethod(Constants.Methods.Role.ListRoleItem, "List the RoleItems in a role", MethodType.List);
-            listRoleItems.InputProperties.Add(Constants.Properties.Role.RoleName);
-            listRoleItems.ReturnProperties.Add(Constants.Properties.Role.RoleItem);
-            listRoleItems.ReturnProperties.Add(Constants.Properties.Role.RoleExclude);
-            listRoleItems.ReturnProperties.Add(Constants.Properties.Role.RoleItemType);
+            listRoleItems.InputProperties.Add(Constants.SOProperties.Role.RoleName);
+            listRoleItems.ReturnProperties.Add(Constants.SOProperties.Role.RoleItem);
+            listRoleItems.ReturnProperties.Add(Constants.SOProperties.Role.RoleExclude);
+            listRoleItems.ReturnProperties.Add(Constants.SOProperties.Role.RoleItemType);
             soRoleItem.Methods.Add(listRoleItems);
 
 
             Method addRole = Helper.CreateMethod(Constants.Methods.Role.AddRole, "Add K2 Role to K2 system", MethodType.Create);
-            addRole.InputProperties.Add(Constants.Properties.Role.RoleName);
-            addRole.InputProperties.Add(Constants.Properties.Role.RoleDescription);
-            addRole.InputProperties.Add(Constants.Properties.Role.RoleDynamic);
-            addRole.InputProperties.Add(Constants.Properties.Role.RoleItemType);
-            addRole.InputProperties.Add(Constants.Properties.Role.RoleItem);
-            addRole.Validation.RequiredProperties.Add(Constants.Properties.Role.RoleName);
-            addRole.Validation.RequiredProperties.Add(Constants.Properties.Role.RoleItem);
-            addRole.Validation.RequiredProperties.Add(Constants.Properties.Role.RoleItemType);
+            addRole.InputProperties.Add(Constants.SOProperties.Role.RoleName);
+            addRole.InputProperties.Add(Constants.SOProperties.Role.RoleDescription);
+            addRole.InputProperties.Add(Constants.SOProperties.Role.RoleDynamic);
+            addRole.InputProperties.Add(Constants.SOProperties.Role.RoleItemType);
+            addRole.InputProperties.Add(Constants.SOProperties.Role.RoleItem);
+            addRole.Validation.RequiredProperties.Add(Constants.SOProperties.Role.RoleName);
+            addRole.Validation.RequiredProperties.Add(Constants.SOProperties.Role.RoleItem);
+            addRole.Validation.RequiredProperties.Add(Constants.SOProperties.Role.RoleItemType);
             soRoleItem.Methods.Add(addRole);
 
             Method removeRole = Helper.CreateMethod(Constants.Methods.Role.RemoveRole, "Remove K2 Role to K2 system", MethodType.Delete);
-            removeRole.InputProperties.Add(Constants.Properties.Role.RoleName);
-            removeRole.Validation.RequiredProperties.Add(Constants.Properties.Role.RoleName);
+            removeRole.InputProperties.Add(Constants.SOProperties.Role.RoleName);
+            removeRole.Validation.RequiredProperties.Add(Constants.SOProperties.Role.RoleName);
             soRoleItem.Methods.Add(removeRole);
 
             Method listRoles = Helper.CreateMethod(Constants.Methods.Role.ListRoles, "list all K2 Roles", MethodType.List);
-            listRoles.ReturnProperties.Add(Constants.Properties.Role.RoleName);
-            listRoles.ReturnProperties.Add(Constants.Properties.Role.RoleDescription);
-            listRoles.ReturnProperties.Add(Constants.Properties.Role.RoleDynamic);
+            listRoles.ReturnProperties.Add(Constants.SOProperties.Role.RoleName);
+            listRoles.ReturnProperties.Add(Constants.SOProperties.Role.RoleDescription);
+            listRoles.ReturnProperties.Add(Constants.SOProperties.Role.RoleDynamic);
             soRoleItem.Methods.Add(listRoles);
 
             return new List<ServiceObject>() {soRoleItem};
@@ -124,7 +124,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             ServiceObject serviceObject = this.ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
 
-            string roleName = base.GetStringProperty(Constants.Properties.Role.RoleName, true);
+            string roleName = base.GetStringProperty(Constants.SOProperties.Role.RoleName, true);
             UserRoleManager urmServer = new UserRoleManager();
             using (urmServer.CreateConnection())
             {
@@ -135,7 +135,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     throw new ApplicationException(Constants.ErrorMessages.RoleNotExists);
                 }
 
-                string roleItemName = base.GetStringProperty(Constants.Properties.Role.RoleItem, true);
+                string roleItemName = base.GetStringProperty(Constants.SOProperties.Role.RoleItem, true);
                 RoleItem remItem = null;
                 foreach (RoleItem ri in role.Include)
                 {
@@ -173,14 +173,14 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             using (urmServer.CreateConnection())
             {
                 urmServer.Connection.Open(base.BaseAPIConnectionString);
-                Role role = urmServer.GetRole(base.GetStringProperty(Constants.Properties.Role.RoleName,true));
+                Role role = urmServer.GetRole(base.GetStringProperty(Constants.SOProperties.Role.RoleName,true));
                 if (role == null)
                 {
                     throw new ApplicationException(Constants.ErrorMessages.RoleNotExists);
                 }
-                string roleItemName = base.GetStringProperty(Constants.Properties.Role.RoleItem, true);
-                string roleItemType = base.GetStringProperty(Constants.Properties.Role.RoleItemType, true);
-                bool exclude = base.GetBoolProperty(Constants.Properties.Role.RoleExclude);
+                string roleItemName = base.GetStringProperty(Constants.SOProperties.Role.RoleItem, true);
+                string roleItemType = base.GetStringProperty(Constants.SOProperties.Role.RoleItemType, true);
+                bool exclude = base.GetBoolProperty(Constants.SOProperties.Role.RoleExclude);
                 switch (roleItemType.ToUpper())
                 {
                     case "GROUP":
@@ -212,7 +212,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             using (urmServer.CreateConnection())
             {
                 urmServer.Connection.Open(base.BaseAPIConnectionString);
-                Role role = urmServer.GetRole(base.GetStringProperty(Constants.Properties.Role.RoleName, true));
+                Role role = urmServer.GetRole(base.GetStringProperty(Constants.SOProperties.Role.RoleName, true));
                 if (role == null)
                 {
                     throw new ApplicationException(Constants.ErrorMessages.RoleNotExists);
@@ -233,23 +233,23 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         }
         private static DataRow FillRoleItemRow(DataRow row, RoleItem ri, bool exclude)
         {
-            row[Constants.Properties.Role.RoleItem] = ri.Name;
-            row[Constants.Properties.Role.RoleExclude] = exclude;
+            row[Constants.SOProperties.Role.RoleItem] = ri.Name;
+            row[Constants.SOProperties.Role.RoleExclude] = exclude;
             if (ri is GroupItem)
             {
-                row[Constants.Properties.Role.RoleItemType] = "Group";
+                row[Constants.SOProperties.Role.RoleItemType] = "Group";
             }
             else if (ri is UserItem)
             {
-                row[Constants.Properties.Role.RoleItemType] = "User" ;
+                row[Constants.SOProperties.Role.RoleItemType] = "User" ;
             }
             else if (ri is SmartObjectItem)
             {
-                row[Constants.Properties.Role.RoleItemType] = "SmartObject";
+                row[Constants.SOProperties.Role.RoleItemType] = "SmartObject";
             }
             else
             {
-                row[Constants.Properties.Role.RoleItemType] = "Unknown";
+                row[Constants.SOProperties.Role.RoleItemType] = "Unknown";
             }
             return row;
         }
@@ -268,9 +268,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 foreach (Role r in roles)
                 {
                     DataRow row = results.NewRow();
-                    row[Constants.Properties.Role.RoleName] = r.Name;
-                    row[Constants.Properties.Role.RoleDescription] = r.Description;
-                    row[Constants.Properties.Role.RoleDynamic] = r.IsDynamic;
+                    row[Constants.SOProperties.Role.RoleName] = r.Name;
+                    row[Constants.SOProperties.Role.RoleDescription] = r.Description;
+                    row[Constants.SOProperties.Role.RoleDynamic] = r.IsDynamic;
                     results.Rows.Add(row);
                 }
             }
@@ -285,13 +285,13 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             {
                 urmServer.Connection.Open(base.BaseAPIConnectionString);
 
-                role.Name = base.GetStringProperty(Constants.Properties.Role.RoleName, true);
-                role.Description = base.GetStringProperty(Constants.Properties.Role.RoleDescription);;
-                role.IsDynamic = base.GetBoolProperty(Constants.Properties.Role.RoleDynamic);
+                role.Name = base.GetStringProperty(Constants.SOProperties.Role.RoleName, true);
+                role.Description = base.GetStringProperty(Constants.SOProperties.Role.RoleDescription);;
+                role.IsDynamic = base.GetBoolProperty(Constants.SOProperties.Role.RoleDynamic);
 
                 // At least one roleItem has to be created with the new group
-                string roleItemName = base.GetStringProperty(Constants.Properties.Role.RoleItem, true);
-                string roleItemType = base.GetStringProperty(Constants.Properties.Role.RoleItemType, true);
+                string roleItemName = base.GetStringProperty(Constants.SOProperties.Role.RoleItem, true);
+                string roleItemType = base.GetStringProperty(Constants.SOProperties.Role.RoleItemType, true);
                 switch (roleItemType.ToUpper())
                 {
                     case "GROUP":
@@ -318,7 +318,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             using (urmServer.CreateConnection())
             {
                 urmServer.Connection.Open(base.BaseAPIConnectionString);
-                string roleName = base.GetStringProperty(Constants.Properties.Role.RoleName, true);
+                string roleName = base.GetStringProperty(Constants.SOProperties.Role.RoleName, true);
                 Role role = urmServer.GetRole(roleName);
                 if (role == null)
                 {

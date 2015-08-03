@@ -7,6 +7,7 @@ using SourceCode.Hosting.Server.Interfaces;
 using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using K2Field.K2NE.ServiceBroker.Helpers;
+using System.Data;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
 {
@@ -31,43 +32,35 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
 
         public override List<ServiceObject> DescribeServiceObjects()
         {
-            var soGroup = Helper.CreateServiceObject("URMGroup", "URMGroup");
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.FQN, SoType.Text,
-                "Fully Qualified name of the Group object"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.GroupName, SoType.Text,
-                "Formatted name of Group Name for a label"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.Name, SoType.Text,
-                "Name of Group"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.Description, SoType.Text,
-                "Description of group"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.Email, SoType.Text,
-                "Email of group"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.Properties.URM.Saml, SoType.Text,
-                "sAMAccountName"));
+            ServiceObject soGroup = Helper.CreateServiceObject("URMGroup", "URMGroup");
+            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.FQN, SoType.Text, "Fully Qualified name of the Group object"));
+            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.GroupName, SoType.Text, "Formatted name of Group Name for a label"));
+            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.Name, SoType.Text, "Name of Group"));
+            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.Description, SoType.Text, "Description of group"));
+            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.Email, SoType.Text, "Email of group"));
+            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.Saml, SoType.Text, "sAMAccountName"));
 
-            var getGroupDetails = Helper.CreateMethod(Constants.Methods.Group.GetGroupDetails,
-                "Get Details for a specific group", MethodType.Read);
-            getGroupDetails.ReturnProperties.Add(Constants.Properties.URM.FQN);
-            getGroupDetails.ReturnProperties.Add(Constants.Properties.URM.GroupName);
-            getGroupDetails.ReturnProperties.Add(Constants.Properties.URM.Name);
-            getGroupDetails.ReturnProperties.Add(Constants.Properties.URM.Description);
-            getGroupDetails.ReturnProperties.Add(Constants.Properties.URM.Email);
-            getGroupDetails.InputProperties.Add(Constants.Properties.URM.FQN);
-            getGroupDetails.Validation.RequiredProperties.Add(Constants.Properties.URM.FQN);
+            Method getGroupDetails = Helper.CreateMethod(Constants.Methods.Group.GetGroupDetails, "Get Details for a specific group", MethodType.Read);
+            getGroupDetails.ReturnProperties.Add(Constants.SOProperties.URM.FQN);
+            getGroupDetails.ReturnProperties.Add(Constants.SOProperties.URM.GroupName);
+            getGroupDetails.ReturnProperties.Add(Constants.SOProperties.URM.Name);
+            getGroupDetails.ReturnProperties.Add(Constants.SOProperties.URM.Description);
+            getGroupDetails.ReturnProperties.Add(Constants.SOProperties.URM.Email);
+            getGroupDetails.InputProperties.Add(Constants.SOProperties.URM.FQN);
+            getGroupDetails.Validation.RequiredProperties.Add(Constants.SOProperties.URM.FQN);
             soGroup.Methods.Create(getGroupDetails);
 
-            var getGroups = Helper.CreateMethod(Constants.Methods.Group.GetGroups,
-                "Gets a List of groups", MethodType.List);
-            getGroups.ReturnProperties.Add(Constants.Properties.URM.FQN);
-            getGroups.ReturnProperties.Add(Constants.Properties.URM.GroupName);
-            getGroups.ReturnProperties.Add(Constants.Properties.URM.Name);
-            getGroups.ReturnProperties.Add(Constants.Properties.URM.Description);
-            getGroups.ReturnProperties.Add(Constants.Properties.URM.Email);
-            getGroups.ReturnProperties.Add(Constants.Properties.URM.Saml);
-            getGroups.InputProperties.Add(Constants.Properties.URM.Name);
-            getGroups.InputProperties.Add(Constants.Properties.URM.Description);
-            getGroups.InputProperties.Add(Constants.Properties.URM.Saml);
-            getGroups.MethodParameters.Create(Helper.CreateParameter(Constants.Properties.URM.Label, SoType.Text, true, "Label"));
+            Method getGroups = Helper.CreateMethod(Constants.Methods.Group.GetGroups, "Gets a List of groups", MethodType.List);
+            getGroups.ReturnProperties.Add(Constants.SOProperties.URM.FQN);
+            getGroups.ReturnProperties.Add(Constants.SOProperties.URM.GroupName);
+            getGroups.ReturnProperties.Add(Constants.SOProperties.URM.Name);
+            getGroups.ReturnProperties.Add(Constants.SOProperties.URM.Description);
+            getGroups.ReturnProperties.Add(Constants.SOProperties.URM.Email);
+            getGroups.ReturnProperties.Add(Constants.SOProperties.URM.Saml);
+            getGroups.InputProperties.Add(Constants.SOProperties.URM.Name);
+            getGroups.InputProperties.Add(Constants.SOProperties.URM.Description);
+            getGroups.InputProperties.Add(Constants.SOProperties.URM.Saml);
+            getGroups.MethodParameters.Create(Helper.CreateParameter(Constants.SOProperties.URM.Label, SoType.Text, true, "Label"));
             soGroup.Methods.Create(getGroups);
 
             return new List<ServiceObject>() { soGroup };
@@ -88,37 +81,46 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
 
         private void GetGroupDetails()
         {
-            var fqn = GetStringProperty(Constants.Properties.URM.FQN, true);
+            string fqn = GetStringProperty(Constants.SOProperties.URM.FQN, true);
 
             ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
-            var dtResults = ServiceBroker.ServicePackage.ResultTable;
+            DataTable dtResults = ServiceBroker.ServicePackage.ResultTable;
 
-            var identityFromName = K2NEServiceBroker.IdentityService.GetIdentityFromName(K2NEServiceBroker.SecurityManager.GetFullyQualifiedName(fqn), IdentityType.Group, (string)null);
-            if (identityFromName == null) return;
+            var identityFromName = base.ServiceBroker.IdentityService.GetIdentityFromName(base.ServiceBroker.SecurityManager.GetFullyQualifiedName(fqn), IdentityType.Group, (string)null);
+            if (identityFromName == null)
+            {
+                return;
+            }
 
-            var dRow = dtResults.NewRow();
-            dRow[Constants.Properties.URM.FQN] = identityFromName.FullyQualifiedName.FQN;
-            dRow[Constants.Properties.URM.GroupName] = identityFromName.FullyQualifiedName.FullName;
+            DataRow dRow = dtResults.NewRow();
+            dRow[Constants.SOProperties.URM.FQN] = identityFromName.FullyQualifiedName.FQN;
+            dRow[Constants.SOProperties.URM.GroupName] = identityFromName.FullyQualifiedName.FullName;
             if (identityFromName.Properties.ContainsKey("Name") && identityFromName.Properties["Name"] != null)
-                dRow[Constants.Properties.URM.Name] = identityFromName.Properties["Name"].ToString();
+            {
+                dRow[Constants.SOProperties.URM.Name] = identityFromName.Properties["Name"].ToString();
+            }
             if (identityFromName.Properties.ContainsKey("Description") && identityFromName.Properties["Description"] != null)
-                dRow[Constants.Properties.URM.Description] = identityFromName.Properties["Description"].ToString();
+            {
+                dRow[Constants.SOProperties.URM.Description] = identityFromName.Properties["Description"].ToString();
+            }
             if (identityFromName.Properties.ContainsKey("Email") && !string.IsNullOrEmpty(identityFromName.Properties["Email"].ToString()))
-                dRow[Constants.Properties.URM.Email] = identityFromName.Properties["Email"].ToString();
+            {
+                dRow[Constants.SOProperties.URM.Email] = identityFromName.Properties["Email"].ToString();
+            }
 
             dtResults.Rows.Add(dRow);
         }
         private void GetGroups()
         {
-            var ldaps = LDAPPaths.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            var netbioses = NetBiosNames.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            var lbl = GetStringParameter(Constants.Properties.URM.Label, true);
+            string[] ldaps = LDAPPaths.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] netbioses = NetBiosNames.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            string securityLabel = GetStringParameter(Constants.SOProperties.URM.Label, true);
             ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
 
 
-            if (lbl == "K2")
+            if (string.Compare(securityLabel, "K2", true) == 0)
             {
-                var threads = new List<Thread>();
+                List<Thread> threads = new List<Thread>();
                 string ldap, net;
                 Parallel.For(0, ldaps.Length, i =>
                 {
@@ -126,91 +128,102 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                     net = netbioses[i];
                     RunUMGetGroups(ldap, net);
                 });
+
                 //This line of code is needed so that the received items are not filtered again by K2 internal filtering of SMO.
                 ServiceBroker.Service.ServiceObjects[0].Methods[0].Filter = null;
             }
             else
             {
-                var name = GetStringProperty(Constants.Properties.URM.Name);
-                var email = GetStringProperty(Constants.Properties.URM.Email);
-                var description = GetStringProperty(Constants.Properties.URM.Description);
-                var dtResults = ServiceBroker.ServicePackage.ResultTable;
-                var urmFilter = new URMFilter(ServiceBroker.Service.ServiceObjects[0].Methods[0].Filter);
 
-                foreach (var dictionary1 in urmFilter.GetFilterCollection().Values)
+                // The below code is a copy/paste from reflected code with some modifications as we can't do anything else.
+                string name = GetStringProperty(Constants.SOProperties.URM.Name);
+                string email = GetStringProperty(Constants.SOProperties.URM.Email);
+                string description = GetStringProperty(Constants.SOProperties.URM.Description);
+                DataTable dtResults = ServiceBroker.ServicePackage.ResultTable;
+                URMFilter urmFilter = new URMFilter(ServiceBroker.Service.ServiceObjects[0].Methods[0].Filter);
+
+                foreach (var filterCollectionValues in urmFilter.GetFilterCollection().Values)
                 {
-                    foreach (var keyValuePair in dictionary1)
+                    foreach (var keyValuePair in filterCollectionValues)
                     {
                         switch (keyValuePair.Key)
                         {
-                            case Constants.Properties.URM.Name:
+                            case Constants.SOProperties.URM.Name:
                                 name = keyValuePair.Value.Replace("'", "");
                                 continue;
-                            case Constants.Properties.URM.Description:
+                            case Constants.SOProperties.URM.Description:
                                 description = keyValuePair.Value.Replace("'", "");
                                 continue;
-                            case Constants.Properties.URM.Email:
+                            case Constants.SOProperties.URM.Email:
                                 email = keyValuePair.Value.Replace("'", "");
                                 continue;
                             default:
                                 continue;
                         }
                     }
-                    var dictionary2 = new Dictionary<string, object>()
+                    Dictionary<string, object> dictionary2 = new Dictionary<string, object>()
                     {
                         {"Name", name},
                         {"Description", description},
                         {"Email", email}
                     };
-                    if (!string.IsNullOrEmpty(lbl))
-                        dictionary2["Label"] = (object) lbl;
-                    var identities = K2NEServiceBroker.IdentityService.FindIdentities(dictionary2,
-                        IdentitySearchOptions.Groups);
-                    if (identities == null) return;
+                    if (!string.IsNullOrEmpty(securityLabel))
+                    {
+                        dictionary2["Label"] = securityLabel as object;
+                    }
+                    var identities = base.ServiceBroker.IdentityService.FindIdentities(dictionary2, IdentitySearchOptions.Groups);
+                    if (identities == null)
+                    {
+                        return;
+                    }
 
                     foreach (var cachedIdentity in identities)
                     {
                         if (cachedIdentity.Type == IdentityType.Group)
                         {
-                            var dRow = dtResults.NewRow();
-                            dRow[Constants.Properties.URM.FQN] = cachedIdentity.FullyQualifiedName.FQN;
-                            dRow[Constants.Properties.URM.GroupName] = cachedIdentity.FullyQualifiedName.FullName;
-                            dRow[Constants.Properties.URM.Saml] = cachedIdentity.FullyQualifiedName.FullName;
-                            if (cachedIdentity.Properties.ContainsKey("Name") &&
-                                cachedIdentity.Properties["Name"] != null)
-                                dRow[Constants.Properties.URM.Name] = cachedIdentity.Properties["Name"].ToString();
-                            if (cachedIdentity.Properties.ContainsKey("Description") &&
-                                cachedIdentity.Properties["Description"] != null)
-                                dRow[Constants.Properties.URM.Description] =
-                                    cachedIdentity.Properties["Description"].ToString();
-                            if (cachedIdentity.Properties.ContainsKey("Email") &&
-                                !string.IsNullOrEmpty(cachedIdentity.Properties["Email"].ToString()))
-                                dRow[Constants.Properties.URM.Email] = cachedIdentity.Properties["Email"].ToString();
+                            DataRow dRow = dtResults.NewRow();
+                            dRow[Constants.SOProperties.URM.FQN] = cachedIdentity.FullyQualifiedName.FQN;
+                            dRow[Constants.SOProperties.URM.GroupName] = cachedIdentity.FullyQualifiedName.FullName;
+                            dRow[Constants.SOProperties.URM.Saml] = cachedIdentity.FullyQualifiedName.FullName;
+
+                            if (cachedIdentity.Properties.ContainsKey("Name") && cachedIdentity.Properties["Name"] != null)
+                            {
+                                dRow[Constants.SOProperties.URM.Name] = cachedIdentity.Properties["Name"].ToString();
+                            }
+                            if (cachedIdentity.Properties.ContainsKey("Description") && cachedIdentity.Properties["Description"] != null)
+                            {
+                                dRow[Constants.SOProperties.URM.Description] = cachedIdentity.Properties["Description"].ToString();
+                            }
+                            if (cachedIdentity.Properties.ContainsKey("Email") && !string.IsNullOrEmpty(cachedIdentity.Properties["Email"].ToString()))
+                            {
+                                dRow[Constants.SOProperties.URM.Email] = cachedIdentity.Properties["Email"].ToString();
+                            }
                             dtResults.Rows.Add(dRow);
                         }
                     }
                 }
             }
         }
+
         private void RunUMGetGroups(string ldap, string net)
         {
-            var inputProperties = new Dictionary<string, string>()
+            Dictionary<string, string> inputProperties = new Dictionary<string, string>()
             {
-                {Constants.Properties.URM.FQN, GetStringProperty(Constants.Properties.URM.FQN)},
-                {Constants.Properties.URM.Name, GetStringProperty(Constants.Properties.URM.Name)},
-                {Constants.Properties.URM.Description, GetStringProperty(Constants.Properties.URM.Description)},
-                {Constants.Properties.URM.Email, GetStringProperty(Constants.Properties.URM.Email)}
+                {Constants.SOProperties.URM.FQN, GetStringProperty(Constants.SOProperties.URM.FQN)},
+                {Constants.SOProperties.URM.Name, GetStringProperty(Constants.SOProperties.URM.Name)},
+                {Constants.SOProperties.URM.Description, GetStringProperty(Constants.SOProperties.URM.Description)},
+                {Constants.SOProperties.URM.Email, GetStringProperty(Constants.SOProperties.URM.Email)}
             };
             
-            var lbl = GetStringParameter(Constants.Properties.URM.Label, true);
+            string securityLabel = GetStringParameter(Constants.SOProperties.URM.Label, true);
             var dSearcher = new DirectorySearcher(new DirectoryEntry(ldap));
 
-            if (string.IsNullOrEmpty(lbl))
+            if (string.IsNullOrEmpty(securityLabel))
             {
-                lbl = "K2";
+                securityLabel = "K2";
             }
             
-            dSearcher.Filter = LdapHelper.GetLdapFilters(inputProperties, ServiceBroker.Service.ServiceObjects[0].Methods[0].Filter, IdentityType.Group, ChangeContainsToStartWith);
+            dSearcher.Filter = LdapHelper.GetLdapQueryString(inputProperties, ServiceBroker.Service.ServiceObjects[0].Methods[0].Filter, IdentityType.Group, ChangeContainsToStartWith);
             dSearcher.PageSize = ADMaxResultSize;
 
             dSearcher.PropertiesToLoad.Add(AdProperties.sAMAccountName);
@@ -218,18 +231,18 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             dSearcher.PropertiesToLoad.Add(AdProperties.Email);
             dSearcher.PropertiesToLoad.Add(AdProperties.Description);
 
-            var col = dSearcher.FindAll();
-            var results = ServiceBroker.ServicePackage.ResultTable;
+            SearchResultCollection col = dSearcher.FindAll();
+            DataTable results = ServiceBroker.ServicePackage.ResultTable;
             foreach (SearchResult res in col)
             {
-                var dr = results.NewRow();
-                var saml = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.sAMAccountName);
-                dr[Constants.Properties.URM.FQN] = string.Concat(lbl, ":", net, "\\", saml);
-                dr[Constants.Properties.URM.Name] = string.Concat(net, "\\", saml);
-                dr[Constants.Properties.URM.GroupName] = string.Concat(net, "\\", saml);
-                dr[Constants.Properties.URM.Description] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Description);
-                dr[Constants.Properties.URM.Email] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Email);
-                dr[Constants.Properties.URM.Saml] = saml;
+                DataRow dr = results.NewRow();
+                string saml = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.sAMAccountName);
+                dr[Constants.SOProperties.URM.FQN] = string.Concat(securityLabel, ":", net, "\\", saml);
+                dr[Constants.SOProperties.URM.Name] = string.Concat(net, "\\", saml);
+                dr[Constants.SOProperties.URM.GroupName] = string.Concat(net, "\\", saml);
+                dr[Constants.SOProperties.URM.Description] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Description);
+                dr[Constants.SOProperties.URM.Email] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Email);
+                dr[Constants.SOProperties.URM.Saml] = saml;
 
                 lock (ServiceBroker.ServicePackage.ResultTable)
                 {
