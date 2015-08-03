@@ -27,11 +27,6 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="SMO\K2Field.K2NE.SMO.EmailTemplate.sodx">
-      <SubType>Content</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="SMO">
       <Include>NewFolder1</Include>
     </Folder>
