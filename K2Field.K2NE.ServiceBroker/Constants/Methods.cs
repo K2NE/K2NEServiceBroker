@@ -92,13 +92,13 @@ namespace K2Field.K2NE.ServiceBroker.Constants
 
         public static class Group
         {
-            public const string GetGroupDetails = "UMRGetGroupDetails";
-            public const string GetGroups = "UMRGetGroups";
-            public const string FindUserGroups = "UMRFindUserGroups";
+            public const string GetGroupDetails = "URMGetGroupDetails";
+            public const string GetGroups = "URMGetGroups";
+            public const string FindUserGroups = "URMFindUserGroups";
         }
         public static class User
         {
-            public const string GetUsers = "UMRGetUsers";
+            public const string GetUsers = "URMGetUsers";
         }
         public static class EmailTemplate
         {
