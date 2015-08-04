@@ -160,9 +160,9 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                         filterStringBuilder.AppendFormat(Constants.StringFormats.LdapCompareFormat.Contains, filterItem.Prop, filterItem.Value);
                     }
                     break;
-                case Constants.StringFormats.LdapOperators.Equals:
+                case Constants.StringFormats.LdapOperators.Equal:
                     filterItem = ConvertSmoToLdapFilter(xmlDocument.FirstChild.ChildNodes[0].ChildNodes[0].Attributes["name"].Value, xmlDocument.FirstChild.ChildNodes[1].ChildNodes[0].InnerText);
-                    filterStringBuilder.AppendFormat(Constants.StringFormats.LdapCompareFormat.Equals, filterItem.Prop, filterItem.Value);
+                    filterStringBuilder.AppendFormat(Constants.StringFormats.LdapCompareFormat.Equal, filterItem.Prop, filterItem.Value);
                     break;
                 case Constants.StringFormats.LdapOperators.GreaterThan:
                     filterItem = ConvertSmoToLdapFilter(xmlDocument.FirstChild.ChildNodes[0].ChildNodes[0].Attributes["name"].Value, xmlDocument.FirstChild.ChildNodes[1].ChildNodes[0].InnerText);
@@ -245,7 +245,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                 if (!String.IsNullOrEmpty(item.Value))
                 {
                     FilterItem filterItem = ConvertSmoToLdapFilter(item.Key, item.Value);
-                    searchFilter.AppendFormat(Constants.StringFormats.LdapCompareFormat.Equals, filterItem.Prop, filterItem.Value);
+                    searchFilter.AppendFormat(Constants.StringFormats.LdapCompareFormat.Equal, filterItem.Prop, filterItem.Value);
                 }
             }
 
