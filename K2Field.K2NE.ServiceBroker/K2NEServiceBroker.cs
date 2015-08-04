@@ -88,13 +88,15 @@ namespace K2Field.K2NE.ServiceBroker
                 folderName = "Other";
                 description = "Other";
             }
-            foreach (var sf in Service.ServiceFolders)
+            foreach (ServiceFolder sf in Service.ServiceFolders)
             {
                 if (string.Compare(sf.Name, folderName) == 0)
+                {
                     return sf;
+                }
             }
-            var newSf = new ServiceFolder(folderName, new MetaData(folderName, description));
-            Service.ServiceFolders.Create(newSf);
+            ServiceFolder newSf = new ServiceFolder(folderName, new MetaData(folderName, description));
+            Service.ServiceFolders.Add(newSf);
             return newSf;
         }
         #endregion
@@ -130,7 +132,7 @@ namespace K2Field.K2NE.ServiceBroker
             {
                 foreach (var so in entry.DescribeServiceObjects())
                 {
-                    Service.ServiceObjects.Create(so);
+                    Service.ServiceObjects.Add(so);
                     if (requireServiceFolders)
                     {
                         var sf = InitializeServiceFolder(entry.ServiceFolder, entry.ServiceFolder);

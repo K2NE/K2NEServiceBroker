@@ -23,32 +23,32 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             ServiceObject so = Helper.CreateServiceObject("Identity", "Useful methods to determine the identities being used.");
 
 
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.CurrentPrincipalAuthType, SoType.Text, "The current principal's authentication type"));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.CurrentPrincipalName, SoType.Text, "The current principal's authentication identity name."));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.FQN, SoType.Text, "The K2 FQN of the user."));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.ResolveContainers, SoType.YesNo, "If Identity containers should be also resolved."));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.ResolveMembers, SoType.YesNo, "If Identity members should be also resolved."));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.IdentityDescription, SoType.Text, "The users description."));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.IdentityDisplayName, SoType.Text, "The users displayname."));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.UserEmail, SoType.Text, "The users email address."));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.UserManager, SoType.Text, "The users manager."));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.UserName, SoType.Text, "The users name."));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.UserUserLabel, SoType.Text, "The users label."));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.CallingFQN, SoType.Text, "The FQN determined by the service instance."));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.WindowsIdentityAuthType, SoType.Text, "Windows Identity Authentication Type"));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.WindowsIdentityName, SoType.Text, "WIndows Identity Name"));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.ServiceBrokerAuthType, SoType.Text, "Service Broker Authentication Type"));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.ServiceBrokerUserName, SoType.Text, "Service Broker UserName"));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.ServiceBrokerPassword, SoType.Text, "Service Broker password"));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.UserWindowsImpersonation, SoType.YesNo, "Tells the service broker to use (windows) impersonation or not."));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.DefaultNetworkCredentialsDomain, SoType.Text, "Default Network Credentials Domain."));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.DefaultNetworkCredentialsPassword, SoType.Text, "Default Network Credentials Password."));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.DefaultNetworkCredentialsUsername, SoType.Text, "Default Network Credentials Username."));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.UserCultureDateTimeFormat, SoType.Text, "User Culture Date/Time format."));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.UserCultureDisplayName, SoType.Text, "User Culture Display Name."));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.UserCultureLCID, SoType.Text, "User Culture LCID."));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.UserCultureName, SoType.Text, "User Culture Name."));
-            so.Properties.Create(Helper.CreateProperty(Constants.SOProperties.Identity.UserCultureNumberFormat, SoType.Text, "User Culture Number format."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.CurrentPrincipalAuthType, SoType.Text, "The current principal's authentication type"));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.CurrentPrincipalName, SoType.Text, "The current principal's authentication identity name."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.FQN, SoType.Text, "The K2 FQN of the user."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.ResolveContainers, SoType.YesNo, "If Identity containers should be also resolved."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.ResolveMembers, SoType.YesNo, "If Identity members should be also resolved."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.IdentityDescription, SoType.Text, "The users description."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.IdentityDisplayName, SoType.Text, "The users displayname."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.UserEmail, SoType.Text, "The users email address."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.UserManager, SoType.Text, "The users manager."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.UserName, SoType.Text, "The users name."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.UserUserLabel, SoType.Text, "The users label."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.CallingFQN, SoType.Text, "The FQN determined by the service instance."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.WindowsIdentityAuthType, SoType.Text, "Windows Identity Authentication Type"));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.WindowsIdentityName, SoType.Text, "WIndows Identity Name"));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.ServiceBrokerAuthType, SoType.Text, "Service Broker Authentication Type"));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.ServiceBrokerUserName, SoType.Text, "Service Broker UserName"));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.ServiceBrokerPassword, SoType.Text, "Service Broker password"));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.UserWindowsImpersonation, SoType.YesNo, "Tells the service broker to use (windows) impersonation or not."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.DefaultNetworkCredentialsDomain, SoType.Text, "Default Network Credentials Domain."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.DefaultNetworkCredentialsPassword, SoType.Text, "Default Network Credentials Password."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.DefaultNetworkCredentialsUsername, SoType.Text, "Default Network Credentials Username."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.UserCultureDateTimeFormat, SoType.Text, "User Culture Date/Time format."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.UserCultureDisplayName, SoType.Text, "User Culture Display Name."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.UserCultureLCID, SoType.Text, "User Culture LCID."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.UserCultureName, SoType.Text, "User Culture Name."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.UserCultureNumberFormat, SoType.Text, "User Culture Number format."));
 
 
 
@@ -63,7 +63,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             mGetWorkflowClientIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.CallingFQN);
 
             mGetWorkflowClientIdentity.InputProperties.Add(Constants.SOProperties.Identity.UserWindowsImpersonation);
-            so.Methods.Create(mGetWorkflowClientIdentity);
+            so.Methods.Add(mGetWorkflowClientIdentity);
 
             Method mGetThreadIdentity = Helper.CreateMethod(Constants.Methods.Identity.ReadThreadIdentity, "Retrieve who you are for the API Identity", MethodType.Read);
             mGetThreadIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.CallingFQN);
@@ -83,27 +83,27 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             mGetThreadIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.UserCultureName);
             mGetThreadIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.UserCultureNumberFormat);
             mGetThreadIdentity.InputProperties.Add(Constants.SOProperties.Identity.UserWindowsImpersonation);
-            so.Methods.Create(mGetThreadIdentity);
+            so.Methods.Add(mGetThreadIdentity);
 
             Method mResolveUser = Helper.CreateMethod(Constants.Methods.Identity.ResolveUserIdentity, "Resolve User Identity", MethodType.Execute);
             mResolveUser.InputProperties.Add(Constants.SOProperties.Identity.FQN);
             mResolveUser.InputProperties.Add(Constants.SOProperties.Identity.ResolveContainers);
             mResolveUser.Validation.RequiredProperties.Add(Constants.SOProperties.Identity.FQN);
-            so.Methods.Create(mResolveUser);
+            so.Methods.Add(mResolveUser);
 
             Method mResolveGroup = Helper.CreateMethod(Constants.Methods.Identity.ResolveGroupIdentity, "Resolve Group Identity", MethodType.Execute);
             mResolveGroup.InputProperties.Add(Constants.SOProperties.Identity.FQN);
             mResolveGroup.InputProperties.Add(Constants.SOProperties.Identity.ResolveContainers);
             mResolveGroup.InputProperties.Add(Constants.SOProperties.Identity.ResolveMembers);
             mResolveGroup.Validation.RequiredProperties.Add(Constants.SOProperties.Identity.FQN);
-            so.Methods.Create(mResolveGroup);
+            so.Methods.Add(mResolveGroup);
 
             Method mResolveRole = Helper.CreateMethod(Constants.Methods.Identity.ResolveRoleIdentity, "Resolve Role Identity", MethodType.Execute);
             mResolveRole.InputProperties.Add(Constants.SOProperties.Identity.FQN);
             mResolveRole.InputProperties.Add(Constants.SOProperties.Identity.ResolveContainers);
             mResolveRole.InputProperties.Add(Constants.SOProperties.Identity.ResolveMembers);
             mResolveRole.Validation.RequiredProperties.Add(Constants.SOProperties.Identity.FQN);
-            so.Methods.Create(mResolveRole);
+            so.Methods.Add(mResolveRole);
 
             return new List<ServiceObject> { so };
         }

@@ -25,15 +25,15 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
         public override List<ServiceObject> DescribeServiceObjects()
         {
             ServiceObject soGroup = Helper.CreateServiceObject("URMUser", "URMUser");
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.FQN, SoType.Text, "Fully Qualified name of the User object"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.UserName, SoType.Text, "User Name as provided by label provider"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.Name, SoType.Text, "Name of the user"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.Description, SoType.Text, "User Description"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.Email, SoType.Text, "Email address"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.Manager, SoType.Text, "User manager"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.ObjectSid, SoType.Text, "User SID"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.DisplayName, SoType.Text, "Display name of the User object"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.Saml, SoType.Text, "sAMAccountName"));
+            soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.FQN, SoType.Text, "Fully Qualified name of the User object"));
+            soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.UserName, SoType.Text, "User Name as provided by label provider"));
+            soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.Name, SoType.Text, "Name of the user"));
+            soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.Description, SoType.Text, "User Description"));
+            soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.Email, SoType.Text, "Email address"));
+            soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.Manager, SoType.Text, "User manager"));
+            soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.ObjectSid, SoType.Text, "User SID"));
+            soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.DisplayName, SoType.Text, "Display name of the User object"));
+            soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.Saml, SoType.Text, "sAMAccountName"));
 
             Method getUsers = Helper.CreateMethod(Constants.Methods.User.GetUsers, "Gets a List of groups", MethodType.List);
             getUsers.ReturnProperties.Add(Constants.SOProperties.URM.Name);
@@ -50,8 +50,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             getUsers.InputProperties.Add(Constants.SOProperties.URM.Email);
             getUsers.InputProperties.Add(Constants.SOProperties.URM.DisplayName);
             getUsers.InputProperties.Add(Constants.SOProperties.URM.Saml);
-            getUsers.MethodParameters.Create(Helper.CreateParameter(Constants.SOProperties.URM.Label, SoType.Text, true, "The label to use"));
-            soGroup.Methods.Create(getUsers);
+            getUsers.MethodParameters.Add(Helper.CreateParameter(Constants.SOProperties.URM.Label, SoType.Text, true, "The label to use"));
+            soGroup.Methods.Add(getUsers);
 
             return new List<ServiceObject>() { soGroup };
         }

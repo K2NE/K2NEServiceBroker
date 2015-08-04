@@ -2,6 +2,7 @@
 
 === v1.4.1
 - Restructure of files
+- Backwards compatibility (.Create() vs .Add())
 
 === v1.4
 - Added URM service objects

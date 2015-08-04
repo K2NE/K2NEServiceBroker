@@ -33,12 +33,12 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
         public override List<ServiceObject> DescribeServiceObjects()
         {
             ServiceObject soGroup = Helper.CreateServiceObject("URMGroup", "URMGroup");
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.FQN, SoType.Text, "Fully Qualified name of the Group object"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.GroupName, SoType.Text, "Formatted name of Group Name for a label"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.Name, SoType.Text, "Name of Group"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.Description, SoType.Text, "Description of group"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.Email, SoType.Text, "Email of group"));
-            soGroup.Properties.Create(Helper.CreateProperty(Constants.SOProperties.URM.Saml, SoType.Text, "sAMAccountName"));
+            soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.FQN, SoType.Text, "Fully Qualified name of the Group object"));
+            soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.GroupName, SoType.Text, "Formatted name of Group Name for a label"));
+            soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.Name, SoType.Text, "Name of Group"));
+            soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.Description, SoType.Text, "Description of group"));
+            soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.Email, SoType.Text, "Email of group"));
+            soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.Saml, SoType.Text, "sAMAccountName"));
 
             Method getGroupDetails = Helper.CreateMethod(Constants.Methods.Group.GetGroupDetails, "Get Details for a specific group", MethodType.Read);
             getGroupDetails.ReturnProperties.Add(Constants.SOProperties.URM.FQN);
@@ -48,7 +48,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             getGroupDetails.ReturnProperties.Add(Constants.SOProperties.URM.Email);
             getGroupDetails.InputProperties.Add(Constants.SOProperties.URM.FQN);
             getGroupDetails.Validation.RequiredProperties.Add(Constants.SOProperties.URM.FQN);
-            soGroup.Methods.Create(getGroupDetails);
+            soGroup.Methods.Add(getGroupDetails);
 
             Method getGroups = Helper.CreateMethod(Constants.Methods.Group.GetGroups, "Gets a List of groups", MethodType.List);
             getGroups.ReturnProperties.Add(Constants.SOProperties.URM.FQN);
@@ -60,8 +60,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             getGroups.InputProperties.Add(Constants.SOProperties.URM.Name);
             getGroups.InputProperties.Add(Constants.SOProperties.URM.Description);
             getGroups.InputProperties.Add(Constants.SOProperties.URM.Saml);
-            getGroups.MethodParameters.Create(Helper.CreateParameter(Constants.SOProperties.URM.Label, SoType.Text, true, "Label"));
-            soGroup.Methods.Create(getGroups);
+            getGroups.MethodParameters.Add(Helper.CreateParameter(Constants.SOProperties.URM.Label, SoType.Text, true, "Label"));
+            soGroup.Methods.Add(getGroups);
 
             return new List<ServiceObject>() { soGroup };
         }
