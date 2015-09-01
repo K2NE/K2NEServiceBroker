@@ -108,7 +108,6 @@ namespace K2Field.K2NE.ServiceBroker
         /// </summary>
         public K2NEServiceBroker()
         {
-            Logger = new Logger();
         }
         #endregion
 
@@ -197,16 +196,11 @@ namespace K2Field.K2NE.ServiceBroker
         {
             lock (syncobject)
             {
-                if (Logger.SelfLoaded == true)
+                if (Logger == null)
                 {
-                    string type = typeof(SourceCode.Logging.Logger).ToString();
-                    if (serviceMarshalling.IsServiceHosted(type))
-                    {
-                        Logger = new Logger((SourceCode.Logging.Logger)serviceMarshalling.GetHostedService(type));
-                        Logger.LogDebug("Logger loaded from ServiceMarshalling");
-                    }
+                    Logger = new Logger(serviceMarshalling.GetHostedService(typeof(SourceCode.Logging.ILogger)) as SourceCode.Logging.ILogger);
+                    Logger.LogDebug("Logger loaded from ServiceMarshalling");
                 }
-
 
                 if (IdentityService == null)
                 {
@@ -218,12 +212,13 @@ namespace K2Field.K2NE.ServiceBroker
                 }
 
             }
+            
 
         }
         public override void Extend() { }
         public void Unload()
         {
-            Logger.LogDebug("Service Broker unloaded.");
+            Logger.Dispose();
         }
         #endregion Public overrides for ServiceAssemblyBase
 
