@@ -17,13 +17,10 @@ namespace K2Field.K2NE.ServiceBroker
         private static readonly object serviceObjectLock = new object();
         private static Dictionary<string, Type> _serviceObjectToType = new Dictionary<string, Type>();
         private List<ServiceObjectBase> _serviceObjects;
+        //private object syncobject = new object();
         #endregion Private Properties
 
-        #region Internal properties
-        private object syncobject = new object();
-        #endregion
-
-        public Logger Logger { get; private set; }
+        //public Logger Logger { get; private set; }
         public IIdentityService IdentityService { get; private set; }
         public ISecurityManager SecurityManager { get; private set; }
 
@@ -108,7 +105,6 @@ namespace K2Field.K2NE.ServiceBroker
         /// </summary>
         public K2NEServiceBroker()
         {
-            Logger = new Logger();
         }
         #endregion
 
@@ -197,16 +193,11 @@ namespace K2Field.K2NE.ServiceBroker
         {
             lock (syncobject)
             {
-                if (Logger.SelfLoaded == true)
-                {
-                    string type = typeof(SourceCode.Logging.Logger).ToString();
-                    if (serviceMarshalling.IsServiceHosted(type))
-                    {
-                        Logger = new Logger((SourceCode.Logging.Logger)serviceMarshalling.GetHostedService(type));
-                        Logger.LogDebug("Logger loaded from ServiceMarshalling");
-                    }
-                }
-
+                //if (Logger == null)
+                //{
+                //    Logger = new Logger(serviceMarshalling.GetHostedService(typeof(SourceCode.Logging.ILogger)) as SourceCode.Logging.ILogger);
+                //    Logger.LogDebug("Logger loaded from ServiceMarshalling");
+                //}
 
                 if (IdentityService == null)
                 {
@@ -218,12 +209,13 @@ namespace K2Field.K2NE.ServiceBroker
                 }
 
             }
+            
 
         }
         public override void Extend() { }
         public void Unload()
         {
-            Logger.LogDebug("Service Broker unloaded.");
+            //Logger.Dispose();
         }
         #endregion Public overrides for ServiceAssemblyBase
 
