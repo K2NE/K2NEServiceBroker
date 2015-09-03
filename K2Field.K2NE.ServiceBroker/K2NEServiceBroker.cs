@@ -17,7 +17,7 @@ namespace K2Field.K2NE.ServiceBroker
         private static readonly object serviceObjectLock = new object();
         private static Dictionary<string, Type> _serviceObjectToType = new Dictionary<string, Type>();
         private List<ServiceObjectBase> _serviceObjects;
-        //private object syncobject = new object();
+        private object syncobject = new object();
         #endregion Private Properties
 
         //public Logger Logger { get; private set; }
