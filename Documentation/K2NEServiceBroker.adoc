@@ -11,3 +11,5 @@ Any functionality that will be used from within the platform, will eventually be
 include::ClientAPI.adoc[]
 
 include::ManagementAPI.adoc[]
+
+include::URM.adoc[]

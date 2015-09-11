@@ -1,21 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Data.SqlClient;
-using System.Collections;
 using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
-using SourceCode.Workflow.Management;
 using SourceCode.Hosting.Client.BaseAPI;
 using SourceCode.Workflow.Client;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
-using System.Diagnostics;
 using SourceCode.EnvironmentSettings.Client;
-using System.Reflection;
-using System.IO;
 using System.Threading;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.AccessControl;
 using System.Security.Principal;
 
@@ -64,6 +55,13 @@ namespace K2Field.K2NE.ServiceBroker
             get
             {
                 return this.ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.LDAPPaths].ToString();
+            }
+        }
+        public bool ChangeContainsToStartWith
+        {
+            get
+            {
+                return bool.Parse(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.ChangeContainsToStartsWith].ToString());
             }
         }
 
@@ -369,8 +367,7 @@ namespace K2Field.K2NE.ServiceBroker
             }
             return this.baseConnection.ToString();
         }
-
-
+        
 
         private string ReplaceEnvironmentFields(string value)
         {

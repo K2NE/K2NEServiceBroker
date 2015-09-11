@@ -1,5 +1,15 @@
 == ChangeLog
 
+=== v1.5.0
+- Memory leak fixed. Removed logging, still commented for future reference.
+
+=== v1.4.1
+- Restructure of files
+- Backwards compatibility (.Create() vs .Add())
+
+=== v1.4
+- Added URM service objects
+
 === v1.3.1
 - Fix a silly copy/paste mistake
 

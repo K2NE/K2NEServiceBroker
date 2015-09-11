@@ -5,24 +5,14 @@ using System.Text;
 
 namespace K2Field.K2NE.ServiceBroker
 {
-    public class Logger
+    public class Logger : IDisposable
     {
-        private SourceCode.Logging.Logger logger;
-        private readonly string LogIdentifier = "CMSF";
+        private SourceCode.Logging.ILogger logger = null;
+        private readonly string LogIdentifier = "K2NE Service Broker";
 
-        public bool SelfLoaded { get; private set; }
-        
 
-        public Logger()
+        public Logger(SourceCode.Logging.ILogger log)
         {
-            SelfLoaded = true;
-            logger = new SourceCode.Logging.Logger("HostServerLogging.config");
-            logger.StartLogger();
-        }
-
-        public Logger(SourceCode.Logging.Logger log)
-        {
-            SelfLoaded = false;
             logger = log;
         }
 
@@ -57,6 +47,12 @@ namespace K2Field.K2NE.ServiceBroker
         public void LogError(string inputLine)
         {
             logger.LogErrorMessage(LogIdentifier, inputLine);
+        }
+
+        public void Dispose()
+        {
+            logger.LogDebugMessage(LogIdentifier, "Unloading logger");
+            logger = null;
         }
     }
 }
