@@ -123,10 +123,16 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         {
             public const string ActivityName = "ActivityName";
             public const string ProcessInstanceId = "ProcessInstanceId";
+        }
+
+        public static class ProcessInstanceClient
+        {
             public const string ProcessName = "ProcessName";
             public const string StartSync = "StartSynchronous";
             public const string ProcessFolio = "Folio";
+            public const string ProcessInstanceId = "ProcessInstanceId";
             public const string ProcessVersion = "ProcessVersion";
+
         }
 
         public static class ActiveDirectory
