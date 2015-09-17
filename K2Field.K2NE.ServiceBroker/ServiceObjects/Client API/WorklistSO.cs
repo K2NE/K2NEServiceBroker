@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using K2Field.K2NE.ServiceBroker.Helpers;
 using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.Workflow.Client;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using System.Data;
 
-namespace K2Field.K2NE.ServiceBroker.ServiceObjects
+namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
 {
     public class WorklistSO : ServiceObjectBase
     {

@@ -1,5 +1,9 @@
 == ChangeLog
 
+=== v1.6.0
+- Added Process Instance Client
+- Ability to specify custom properties for URM User Service Object.
+
 === v1.5.0
 - Memory leak fixed. Removed logging, still commented for future reference.
 

@@ -37,8 +37,12 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         public static class ProcessInstanceManagement
         {
                 public const string GotoActivity = "GotoActivity";
-                public const string StartProcessInstance = "StartProcessInstance";
+        }
 
+        public static class ProcessInstanceClient
+        {
+            public const string StartProcessInstance = "StartProcessInstance";
+            public const string StartProcess = "Start";
         }
 
         public static class Role
