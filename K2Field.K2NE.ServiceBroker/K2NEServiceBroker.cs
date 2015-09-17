@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using K2Field.K2NE.ServiceBroker.ServiceObjects.URM;
 using K2Field.K2NE.ServiceBroker.ServiceObjects;
+using K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API;
 using SourceCode.SmartObjects.Services.ServiceSDK;
 using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
@@ -45,6 +46,7 @@ namespace K2Field.K2NE.ServiceBroker
                                 new WorklistSO(this),
                                 new OutOfOfficeSO(this),
                                 new ProcessInstanceManagementSO(this),
+                                new ProcessInstanceClientSO(this),
                                 new RoleManagementSO(this),
                                 new ActiveDirectorySO(this),
                                 new WorkingHoursConfigurationSO(this),
@@ -187,6 +189,7 @@ namespace K2Field.K2NE.ServiceBroker
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.LDAPPaths, false, "LDAP://DC=denallix,DC=COM");
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.NetbiosNames, false, "Denallix");
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ChangeContainsToStartsWith, true, "true");
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.AdditionalADProps, false, "cn;sn");
             return base.GetConfigSection();
         }
         public void Init(IServiceMarshalling serviceMarshalling, IServerMarshaling serverMarshaling)

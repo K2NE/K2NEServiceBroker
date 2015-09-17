@@ -74,6 +74,16 @@ namespace K2Field.K2NE.ServiceBroker
             }
         }
 
+        public string[] AdditionalADProps
+        {
+            get
+            {
+                return
+                    ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.AdditionalADProps]
+                        .ToString().Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+            }
+        }
+
 
         /// <summary>
         /// This is the k2 client api connectionSetup object that can be used to create a connection.
