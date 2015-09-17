@@ -385,7 +385,7 @@ namespace K2Field.K2NE.ServiceBroker
             }
             return this.baseConnection.ToString();
         }
-        
+
 
         private string ReplaceEnvironmentFields(string value)
         {

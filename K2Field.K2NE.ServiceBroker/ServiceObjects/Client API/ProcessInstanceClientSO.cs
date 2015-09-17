@@ -27,11 +27,12 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ProcessInstanceClient.ProcessName, SoType.Text, "The full name of the process."));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ProcessInstanceClient.StartSync, SoType.YesNo, "Start the process synchronously or not."));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ProcessInstanceClient.ProcessInstanceId, SoType.Number, "The process instance ID."));
-
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ProcessInstanceClient.ProcessVersion, SoType.Number, "The version number to start. Leave empty for default."));
 
             Method startProcessInstance = Helper.CreateMethod(Constants.Methods.ProcessInstanceClient.StartProcessInstance, "Start a new process instance", MethodType.Create);
             startProcessInstance.InputProperties.Add(Constants.SOProperties.ProcessInstanceClient.ProcessName);
             startProcessInstance.InputProperties.Add(Constants.SOProperties.ProcessInstanceClient.ProcessFolio);
+            startProcessInstance.InputProperties.Add(Constants.SOProperties.ProcessInstanceClient.ProcessVersion);
             startProcessInstance.InputProperties.Add(Constants.SOProperties.ProcessInstanceClient.StartSync);
             startProcessInstance.Validation.RequiredProperties.Add(Constants.SOProperties.ProcessInstanceClient.ProcessName);
             startProcessInstance.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceClient.ProcessInstanceId);
@@ -48,16 +49,19 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
                 foreach (ProcessSet pSet in pSets)
                 {
                     string displayName = Constants.Methods.ProcessInstanceClient.StartProcess + "_" + pSet.FullName;
+                    string description = "Starts " + pSet.FullName;
                     Method m = new Method
                     {
                         Name = pSet.FullName,
                         Type = MethodType.Create,
-                        MetaData = new MetaData(displayName, "Starts " + pSet.FullName)
+                        MetaData = new MetaData(displayName, description)
                     };
                     m.InputProperties.Add(Constants.SOProperties.ProcessInstanceClient.ProcessFolio);
                     m.InputProperties.Add(Constants.SOProperties.ProcessInstanceClient.StartSync);
+                    m.InputProperties.Add(Constants.SOProperties.ProcessInstanceClient.ProcessVersion);
                     m.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceClient.ProcessInstanceId);
                     m.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceClient.ProcessFolio);
+
                     foreach (ProcessDataField pDataField in mngServer.GetProcessDataFields(pSet.ProcID))
                     {
                         m.MethodParameters.Add(Helper.CreateParameter(pDataField.Name, GetDataFieldType(pDataField.Type), false, pDataField.Name));
