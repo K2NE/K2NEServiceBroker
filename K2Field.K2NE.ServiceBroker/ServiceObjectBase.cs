@@ -78,9 +78,17 @@ namespace K2Field.K2NE.ServiceBroker
         {
             get
             {
-                return
-                    ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.AdditionalADProps]
-                        .ToString().Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+                if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.AdditionalADProps))
+                {
+                    return new string[0];
+                }
+
+                string adProps = ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.AdditionalADProps].ToString();
+                if (!string.IsNullOrEmpty(adProps))
+                {
+                    return adProps.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                }
+                return new string[0];
             }
         }
 
