@@ -120,8 +120,8 @@
 
 if "Release"=="$(ConfigurationName)" (
 xcopy /R /Y "$(TargetPath)" "$(SolutionDir)\chocoPackage\tools\"
-cd "$(SolutionDir)\chocoPackage\"
-cpack
+REM cd "$(SolutionDir)\chocoPackage\"
+REM cpack
 )</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

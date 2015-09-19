@@ -189,6 +189,7 @@ namespace K2Field.K2NE.ServiceBroker
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.LDAPPaths, false, "LDAP://DC=denallix,DC=COM");
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.NetbiosNames, false, "Denallix");
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ChangeContainsToStartsWith, true, "true");
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.AdditionalADProps, false, "");
             return base.GetConfigSection();
         }
         public void Init(IServiceMarshalling serviceMarshalling, IServerMarshaling serverMarshaling)
