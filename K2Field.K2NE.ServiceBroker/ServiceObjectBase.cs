@@ -83,7 +83,8 @@ namespace K2Field.K2NE.ServiceBroker
                     return new string[0];
                 }
 
-                string adProps = ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.AdditionalADProps].ToString();
+
+                string adProps = ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.AdditionalADProps] as string;
                 if (!string.IsNullOrEmpty(adProps))
                 {
                     return adProps.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
