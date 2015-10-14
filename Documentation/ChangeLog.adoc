@@ -1,5 +1,9 @@
 == ChangeLog
 
+=== v1.6.1
+- Added ListShares/ListUserShares to get all the delegates from the OOF
+- Refactored a lot of the out of office code, removed the callStatus property, which would break SMO's if you used that flag.
+
 === v1.6.0
 - Added Process Instance Client
 - Ability to specify custom properties for URM User Service Object.
