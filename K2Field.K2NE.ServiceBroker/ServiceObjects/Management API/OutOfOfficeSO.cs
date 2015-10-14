@@ -16,7 +16,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
     {
         public OutOfOfficeSO(K2NEServiceBroker api) : base(api) { }
 
-        
+
         public override string ServiceFolder
         {
             get
@@ -24,7 +24,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 return "Management API";
             }
         }
-        
+
         public override List<ServiceObject> DescribeServiceObjects()
         {
 
@@ -72,6 +72,12 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             listSharedUsers.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.DestinationUser);
             so.Methods.Add(listSharedUsers);
 
+            Method listUsers = Helper.CreateMethod(Constants.Methods.OutOfOffice.ListUsers, "Retrieve all users and their deligates for OOF", MethodType.List);
+            listUsers.ReturnProperties.Add(Constants.Properties.OutOfOffice.UserFQN);
+            listUsers.ReturnProperties.Add(Constants.Properties.OutOfOffice.DestinationUser);
+            listUsers.ReturnProperties.Add(Constants.Properties.OutOfOffice.UserStatus);
+            so.Methods.Add(listUsers);
+
             return new List<ServiceObject>() { so };
         }
 
@@ -94,6 +100,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 case Constants.Methods.OutOfOffice.ListSharedUsers:
                     ListSharedUsers();
                     break;
+
+                case Constants.Methods.OutOfOffice.ListUsers:
+                    ListUsers();
+                    break;
             }
         }
 
@@ -109,7 +119,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
             using (mngServer.CreateConnection())
             {
-                mngServer.Open(BaseAPIConnectionString);  
+                mngServer.Open(BaseAPIConnectionString);
                 UserStatuses status = mngServer.GetUserStatus(userFQN);
 
                 DataRow dr = results.NewRow();
@@ -136,7 +146,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 // None for userstatus means the users is not configured, throw an exception
                 if (UserStatuses.None == mngServer.GetUserStatus(userFQN))
                     throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
-                
+
                 bool result = mngServer.SetUserStatus(userFQN, UserStatuses.Available);
 
 
@@ -147,7 +157,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             }
         }
 
-      
+
         private void SetOutOfOffice()
         {
             string userFQN = base.GetStringProperty(Constants.SOProperties.OutOfOffice.UserFQN);
@@ -203,7 +213,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 //  If configuration exist already, add to it
                 if (wsColl.Count == 1)
                 {
-                    
+
                     WorklistShare worklistshare = wsColl[0];
                     worklistshare.WorkTypes[0].Destinations.Add(new Destination(destinationUser, DestinationType.User));
                     bool result = mngServer.ShareWorkList(userFQN, worklistshare);
@@ -242,10 +252,48 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     dr[Constants.SOProperties.OutOfOffice.CallSuccess] = result;
                     results.Rows.Add(dr);
                 }
-                 
+
             }
         }
-        
+
+        private void ListUsers()
+        {
+            ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
+            serviceObject.Properties.InitResultTable();
+            DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
+            WorkflowManagementServer mngServer = new WorkflowManagementServer();
+
+            using (mngServer.CreateConnection())
+            {
+                mngServer.Open(BaseAPIConnectionString);
+
+                SourceCode.Workflow.Management.OOF.Users users = mngServer.GetUsers(ShareType.OOF);
+
+                foreach (SourceCode.Workflow.Management.OOF.User user in users)
+                {
+                    if (user.Status != UserStatuses.None)
+                    {
+                        WorklistShares wsColl = mngServer.GetCurrentSharingSettings(user.FQN, ShareType.OOF);
+                        foreach (WorklistShare ws in wsColl)
+                        {
+                            foreach (WorkType wt in ws.WorkTypes)
+                            {
+                                foreach (Destination dest in wt.Destinations)
+                                {
+                                    DataRow dr = results.NewRow();
+                                    dr[Constants.Properties.OutOfOffice.UserFQN] = user.FQN;
+                                    dr[Constants.Properties.OutOfOffice.DestinationUser] = dest.Name;
+                                    dr[Constants.Properties.OutOfOffice.UserStatus] = user.Status.ToString();
+                                    results.Rows.Add(dr);
+                                }
+                            }
+                        }
+                    }
+                }
+                
+            }
+        }
+
         private void ListSharedUsers()
         {
             string userFQN = base.GetStringProperty(Constants.SOProperties.OutOfOffice.UserFQN);
@@ -255,7 +303,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
             WorkflowManagementServer mngServer = new WorkflowManagementServer();
-            
+
             using (mngServer.CreateConnection())
             {
                 mngServer.Open(BaseAPIConnectionString);
@@ -279,7 +327,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                         }
                     }
                 }
-                
+
             }
         }
     }
