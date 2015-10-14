@@ -164,8 +164,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
                 // None for userstatus means the users is not configured, throw an exception
                 if (UserStatuses.None == mngServer.GetUserStatus(userFQN))
+                {
                     throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
-
+                }
                 bool result = mngServer.SetUserStatus(userFQN, UserStatuses.OOF);
                 DataRow dr = results.NewRow();
                 dr[Constants.SOProperties.OutOfOffice.UserFQN] = userFQN;
@@ -260,14 +261,14 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 mngServer.Open(BaseAPIConnectionString);
 
                 // None for userstatus means the users is not configured, throw an exception
-                if (UserStatuses.None == mngServer.GetUserStatus(userFQN))
+                if (mngServer.GetUserStatus(userFQN) == UserStatuses.None)
+                {
                     throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
-                                
+                }
                 WorklistShares wsColl = mngServer.GetCurrentSharingSettings(userFQN, ShareType.OOF);
 
                 foreach (WorklistShare ws in wsColl)
                 {
-                    //throw new ApplicationException("collection count is: "+ wsColl.Count.ToString());
                     foreach (WorkType wt in ws.WorkTypes)
                     {
                         foreach (Destination dest in wt.Destinations)
