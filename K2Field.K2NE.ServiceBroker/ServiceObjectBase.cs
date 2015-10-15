@@ -74,6 +74,25 @@ namespace K2Field.K2NE.ServiceBroker
             }
         }
 
+        public string[] AdditionalADProps
+        {
+            get
+            {
+                if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.AdditionalADProps))
+                {
+                    return new string[0];
+                }
+
+
+                string adProps = ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.AdditionalADProps] as string;
+                if (!string.IsNullOrEmpty(adProps))
+                {
+                    return adProps.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                }
+                return new string[0];
+            }
+        }
+
 
         /// <summary>
         /// This is the k2 client api connectionSetup object that can be used to create a connection.
@@ -367,7 +386,7 @@ namespace K2Field.K2NE.ServiceBroker
             }
             return this.baseConnection.ToString();
         }
-        
+
 
         private string ReplaceEnvironmentFields(string value)
         {

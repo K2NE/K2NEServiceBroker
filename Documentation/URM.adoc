@@ -8,6 +8,8 @@ The service instance has an option to "Change Contains operator to StartsWith fo
 
 If the label is not 'K2' then the service broker will simply execute the originial method. This code is copied from reflector and therefor a bit messy and probably not well tested.
 
+THere is also a Service Instance property to supply custom active Directory properties, for when you are using the K2 label. This allows one to read custom properties from the AD.
+
 === URM Group
 * URM Get Group Details - Retrieve the group details.
 * URM Get Groups - retrieve all groups. Use this in your picker control and so on.
