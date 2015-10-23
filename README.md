@@ -14,12 +14,13 @@ For other documentation on the functionality, see our [Documentation](Documentat
 The code will be 'work in progress' for quite a while, but the functionality in our master branch is stable.
 
 ## Installation
-The installer uses chocolatey, please see https://chocolatey.org/ on how to install that.
-
-From that, you can simply run:
-`cinst K2NEServiceBroker`
-
-NOTE: The package is currently not hosted online but it will build automatically when you build the solution. Copy the nupkg in your repository and enjoy it.
+At the moment, there is no installer.
+To install:
+1. Download and open in Visual Studio (2013)
+2. Build
+3. Copy assembly to the K2 ServiceBroker folder. This happens automatically to in DEBUG build mode.
+4. Register Service type with SmartObject tester tool
+5. Create service instance.
 
 
 ## Disclaimer
