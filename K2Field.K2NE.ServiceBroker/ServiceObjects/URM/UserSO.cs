@@ -34,7 +34,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.ObjectSid, SoType.Text, "User SID"));
             soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.DisplayName, SoType.Text, "Display name of the User object"));
             soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.Saml, SoType.Text, "sAMAccountName"));
-            //Adding additional properties
+            //Adding additional properties to Service Object
             foreach (string prop in AdditionalADProps)
             {
                 soGroup.Properties.Add(Helper.CreateProperty(prop, SoType.Text, prop));
@@ -56,9 +56,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             getUsers.ReturnProperties.Add(Constants.SOProperties.URM.UserName);
             getUsers.ReturnProperties.Add(Constants.SOProperties.URM.ObjectSid);
             getUsers.ReturnProperties.Add(Constants.SOProperties.URM.Saml);
-            //Addint additional AD properties
+            //Adding additional AD properties to the Methods
             foreach (string prop in AdditionalADProps)
             {
+                getUsers.InputProperties.Add(prop);
                 getUsers.ReturnProperties.Add(prop);
             }
             getUsers.MethodParameters.Add(Helper.CreateParameter(Constants.SOProperties.URM.Label, SoType.Text, true, "The label to use"));
@@ -248,6 +249,11 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                 {Constants.SOProperties.URM.DisplayName, GetStringProperty(Constants.SOProperties.URM.DisplayName)},
                 {Constants.SOProperties.URM.Saml, GetStringProperty(Constants.SOProperties.URM.Saml)}
             };
+            //Adding additional AD properties to inputProperties for filtration
+            foreach (string prop in AdditionalADProps)
+            {
+                inputProperties.Add(prop, GetStringProperty(prop));
+            }
 
             string securityLabel = GetStringParameter(Constants.SOProperties.URM.Label, true);
             DirectorySearcher dSearcher = new DirectorySearcher(new DirectoryEntry(ldap));
