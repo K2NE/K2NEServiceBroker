@@ -1,5 +1,9 @@
 == ChangeLog
 
+=== v1.6.2
+- Better exception handling within the AD parallel methods to report on which AD is causing the error.
+- Added custom properties to Active Directory options.
+
 === v1.6.1
 - Added ListShares/ListUserShares to get all the delegates from the OOF
 - Refactored a lot of the out of office code, removed the callStatus property, which would break SMO's if you used that flag.
