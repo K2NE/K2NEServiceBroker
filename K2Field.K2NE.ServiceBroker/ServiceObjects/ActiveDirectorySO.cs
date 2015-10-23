@@ -37,7 +37,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         {
             string[] ldaps = base.LDAPPaths.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             string[] netbios = base.NetBiosNames.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            if (ldaps.Count() != netbios.Count())
+            if (ldaps.Length != netbios.Length)
             {
                 throw new ArgumentException("The LDAP paths and NetBioses count do not match.");
             }
