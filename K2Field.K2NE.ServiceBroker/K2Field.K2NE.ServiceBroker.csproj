@@ -118,12 +118,6 @@
   xcopy /R /Y "$(TargetPath)" "c:\Program Files (x86)\K2 blackpearl\ServiceBroker\"
 )
 
-if "Release"=="$(ConfigurationName)" (
-  xcopy /R /Y "$(TargetPath)" "$(SolutionDir)\chocoPackage\tools\"
-  REM cd "$(SolutionDir)\chocoPackage\"
-  REM cpack
-)
-
 xcopy /y /r "$(SolutionDir)\Installer\Install.ps1" "$(SolutionDir)\Release\"
 xcopy /y /r "$(SolutionDir)\Documentation\*.adoc" "$(SolutionDir)\Release\"
 xcopy /q /y "$(TargetPath)" "$(SolutionDir)\Release\"
