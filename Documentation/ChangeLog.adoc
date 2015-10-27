@@ -1,5 +1,10 @@
 == ChangeLog
 
+=== v1.6.3
+- Added powershell installer.
+- Removed choco installer
+- Created release folder after build.
+
 === v1.6.2
 - Better exception handling within the AD parallel methods to report on which AD is causing the error.
 - Added custom properties to Active Directory options.
