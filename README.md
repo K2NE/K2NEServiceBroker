@@ -16,10 +16,10 @@ The code will be 'work in progress' for quite a while, but the functionality in 
 ## Installation
 At the moment, there is no installer.
 To install:
-1. Download and open in Visual Studio (2013)
-2. Build
-3. Open and/or copy the Release folder in the solution directory to the K2 server.
-4. Run install.ps1
+- Download and open in Visual Studio (2013)
+- Build
+- Open and/or copy the Release folder in the solution directory to the K2 server.
+- Run install.ps1
 
 
 ## Disclaimer
