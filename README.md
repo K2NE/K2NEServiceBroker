@@ -18,9 +18,8 @@ At the moment, there is no installer.
 To install:
 1. Download and open in Visual Studio (2013)
 2. Build
-3. Copy assembly to the K2 ServiceBroker folder. This happens automatically to in DEBUG build mode.
-4. Register Service type with SmartObject tester tool
-5. Create service instance.
+3. Open and/or copy the Release folder in the solution directory to the K2 server.
+4. Run install.ps1
 
 
 ## Disclaimer
