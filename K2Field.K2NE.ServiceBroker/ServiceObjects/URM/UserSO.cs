@@ -34,8 +34,19 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.ObjectSid, SoType.Text, "User SID"));
             soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.DisplayName, SoType.Text, "Display name of the User object"));
             soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.Saml, SoType.Text, "sAMAccountName"));
+            //Adding additional properties to Service Object
+            foreach (string prop in AdditionalADProps)
+            {
+                soGroup.Properties.Add(Helper.CreateProperty(prop, SoType.Text, prop));
+            }
 
-            Method getUsers = Helper.CreateMethod(Constants.Methods.User.GetUsers, "Gets a List of groups", MethodType.List);
+
+            Method getUsers = Helper.CreateMethod(Constants.Methods.User.GetUsers, "Gets a List of users", MethodType.List);
+            getUsers.InputProperties.Add(Constants.SOProperties.URM.Name);
+            getUsers.InputProperties.Add(Constants.SOProperties.URM.Description);
+            getUsers.InputProperties.Add(Constants.SOProperties.URM.Email);
+            getUsers.InputProperties.Add(Constants.SOProperties.URM.DisplayName);
+            getUsers.InputProperties.Add(Constants.SOProperties.URM.Saml);
             getUsers.ReturnProperties.Add(Constants.SOProperties.URM.Name);
             getUsers.ReturnProperties.Add(Constants.SOProperties.URM.Description);
             getUsers.ReturnProperties.Add(Constants.SOProperties.URM.Email);
@@ -45,11 +56,12 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             getUsers.ReturnProperties.Add(Constants.SOProperties.URM.UserName);
             getUsers.ReturnProperties.Add(Constants.SOProperties.URM.ObjectSid);
             getUsers.ReturnProperties.Add(Constants.SOProperties.URM.Saml);
-            getUsers.InputProperties.Add(Constants.SOProperties.URM.Name);
-            getUsers.InputProperties.Add(Constants.SOProperties.URM.Description);
-            getUsers.InputProperties.Add(Constants.SOProperties.URM.Email);
-            getUsers.InputProperties.Add(Constants.SOProperties.URM.DisplayName);
-            getUsers.InputProperties.Add(Constants.SOProperties.URM.Saml);
+            //Adding additional AD properties to the Methods
+            foreach (string prop in AdditionalADProps)
+            {
+                getUsers.InputProperties.Add(prop);
+                getUsers.ReturnProperties.Add(prop);
+            }
             getUsers.MethodParameters.Add(Helper.CreateParameter(Constants.SOProperties.URM.Label, SoType.Text, true, "The label to use"));
             soGroup.Methods.Add(getUsers);
 
@@ -237,6 +249,11 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                 {Constants.SOProperties.URM.DisplayName, GetStringProperty(Constants.SOProperties.URM.DisplayName)},
                 {Constants.SOProperties.URM.Saml, GetStringProperty(Constants.SOProperties.URM.Saml)}
             };
+            //Adding additional AD properties to inputProperties for filtration
+            foreach (string prop in AdditionalADProps)
+            {
+                inputProperties.Add(prop, GetStringProperty(prop));
+            }
 
             string securityLabel = GetStringParameter(Constants.SOProperties.URM.Label, true);
             DirectorySearcher dSearcher = new DirectorySearcher(new DirectoryEntry(ldap));
@@ -255,6 +272,11 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             dSearcher.PropertiesToLoad.Add(Constants.Properties.AdProperties.sAMAccountName);
             dSearcher.PropertiesToLoad.Add(Constants.Properties.AdProperties.DisplayName);
             dSearcher.PropertiesToLoad.Add(Constants.Properties.AdProperties.ObjectSID);
+            //Adding additional AD Properties to load
+            foreach (string prop in AdditionalADProps)
+            {
+                dSearcher.PropertiesToLoad.Add(prop);
+            }
 
             SearchResultCollection col = dSearcher.FindAll();
             DataTable results = ServiceBroker.ServicePackage.ResultTable;
@@ -271,6 +293,11 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                 dr[Constants.SOProperties.URM.ObjectSid] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, Constants.Properties.AdProperties.ObjectSID);
                 dr[Constants.SOProperties.URM.Manager] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, Constants.Properties.AdProperties.Manager);
                 dr[Constants.SOProperties.URM.Saml] = saml;
+                //Adding additional AD Properties
+                foreach (string prop in AdditionalADProps)
+                {
+                    dr[prop] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, prop);
+                }
                 lock (ServiceBroker.ServicePackage.ResultTable)
                 {
                     results.Rows.Add(dr);

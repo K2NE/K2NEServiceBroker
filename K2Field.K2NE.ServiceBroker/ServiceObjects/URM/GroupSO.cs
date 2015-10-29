@@ -39,6 +39,11 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.Description, SoType.Text, "Description of group"));
             soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.Email, SoType.Text, "Email of group"));
             soGroup.Properties.Add(Helper.CreateProperty(Constants.SOProperties.URM.Saml, SoType.Text, "sAMAccountName"));
+            //Adding additional properties to Service Object
+            foreach (string prop in AdditionalADProps)
+            {
+                soGroup.Properties.Add(Helper.CreateProperty(prop, SoType.Text, prop));
+            }
 
             Method getGroupDetails = Helper.CreateMethod(Constants.Methods.Group.GetGroupDetails, "Get Details for a specific group", MethodType.Read);
             getGroupDetails.ReturnProperties.Add(Constants.SOProperties.URM.FQN);
@@ -61,7 +66,13 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             getGroups.InputProperties.Add(Constants.SOProperties.URM.Description);
             getGroups.InputProperties.Add(Constants.SOProperties.URM.Saml);
             getGroups.MethodParameters.Add(Helper.CreateParameter(Constants.SOProperties.URM.Label, SoType.Text, true, "Label"));
+            foreach (string prop in AdditionalADProps)
+            {
+                getGroups.InputProperties.Add(prop);
+                getGroups.ReturnProperties.Add(prop);
+            }
             soGroup.Methods.Add(getGroups);
+
 
             return new List<ServiceObject>() { soGroup };
         }
@@ -116,7 +127,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             string[] netbioses = NetBiosNames.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             string securityLabel = GetStringParameter(Constants.SOProperties.URM.Label, true);
             ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
-
 
             if (string.Compare(securityLabel, "K2", true) == 0)
             {
@@ -214,6 +224,11 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                 {Constants.SOProperties.URM.Description, GetStringProperty(Constants.SOProperties.URM.Description)},
                 {Constants.SOProperties.URM.Email, GetStringProperty(Constants.SOProperties.URM.Email)}
             };
+            //Adding additional AD properties to inputProperties for filtration
+            foreach (string prop in AdditionalADProps)
+            {
+                inputProperties.Add(prop, GetStringProperty(prop));
+            }
             
             string securityLabel = GetStringParameter(Constants.SOProperties.URM.Label, true);
             var dSearcher = new DirectorySearcher(new DirectoryEntry(ldap));
@@ -230,6 +245,11 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             dSearcher.PropertiesToLoad.Add(AdProperties.Name);
             dSearcher.PropertiesToLoad.Add(AdProperties.Email);
             dSearcher.PropertiesToLoad.Add(AdProperties.Description);
+            //Adding additional AD Properties to load
+            foreach (string prop in AdditionalADProps)
+            {
+                dSearcher.PropertiesToLoad.Add(prop);
+            }
 
             SearchResultCollection col = dSearcher.FindAll();
             DataTable results = ServiceBroker.ServicePackage.ResultTable;
@@ -243,6 +263,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                 dr[Constants.SOProperties.URM.Description] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Description);
                 dr[Constants.SOProperties.URM.Email] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, AdProperties.Email);
                 dr[Constants.SOProperties.URM.Saml] = saml;
+                foreach (string prop in AdditionalADProps)
+                {
+                    dr[prop] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, prop);
+                }
 
                 lock (ServiceBroker.ServicePackage.ResultTable)
                 {

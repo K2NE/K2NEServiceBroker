@@ -1,5 +1,9 @@
 == Client API
 
+=== Process Instance Client
+A service object that generates a method for all the processes it can start. Be careful with permissions on processes here!
+This allows us to start processes WITH a datafield.
+
 === Worklist
 * Get Worklist: Retrieves the worklistitems for the current user. Any input will become a AND-filtered query, except for the 'IncludeShared' option, which indicates if shared worklist items should be retrieved as well.
 

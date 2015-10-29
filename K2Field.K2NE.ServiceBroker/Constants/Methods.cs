@@ -37,8 +37,12 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         public static class ProcessInstanceManagement
         {
                 public const string GotoActivity = "GotoActivity";
-                public const string StartProcessInstance = "StartProcessInstance";
+        }
 
+        public static class ProcessInstanceClient
+        {
+            public const string StartProcessInstance = "StartProcessInstance";
+            public const string StartProcess = "Start";
         }
 
         public static class Role
@@ -85,9 +89,10 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         {
             public const string SetOutOfOffice = "SetOutOfOffice";
             public const string SetInOffice = "SetInOffice";
-            public const string ListSharedUsers = "ListSharedUsers";
+            public const string ListUserShares = "ListUserShares";
             public const string AddOutOfOffice = "AddOutOfOffice";
             public const string GetUserStatus = "GetUserStatus";
+            public const string ListShares = "ListShares";
         }
 
         public static class Group

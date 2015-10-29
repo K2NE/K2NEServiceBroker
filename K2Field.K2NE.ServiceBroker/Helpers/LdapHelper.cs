@@ -37,37 +37,17 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                     filter.Prop = Constants.Properties.AdProperties.sAMAccountName;
                     filter.Value = smoValue.Substring(smoValue.IndexOf('\\') + 1);
                     break;
-                case Constants.SOProperties.URM.Email:
-                    filter.Prop = Constants.Properties.AdProperties.Email;
-                    filter.Value = smoValue;
-                    break;
-                case Constants.SOProperties.URM.Description:
-                    filter.Prop = Constants.Properties.AdProperties.Description;
-                    filter.Value = smoValue;
-                    break;
-                case Constants.SOProperties.URM.Manager:
-                    filter.Prop = Constants.Properties.AdProperties.Manager;
-                    filter.Value = smoValue;
-                    break;
-                case Constants.SOProperties.URM.DisplayName:
-                    filter.Prop = Constants.Properties.AdProperties.DisplayName;
-                    filter.Value = smoValue;
-                    break;
                 case Constants.SOProperties.URM.UserName:
-                    filter.Prop = Constants.Properties.AdProperties.sAMAccountName;
-                    filter.Value = smoValue;
-                    break;
-                case Constants.SOProperties.URM.ObjectSid:
-                    filter.Prop = Constants.Properties.AdProperties.ObjectSID;
-                    filter.Value = smoValue;
-                    break;
-                case Constants.SOProperties.URM.Saml:
                     filter.Prop = Constants.Properties.AdProperties.sAMAccountName;
                     filter.Value = smoValue;
                     break;
                 case Constants.SOProperties.URM.GroupName:
                     filter.Prop = Constants.Properties.AdProperties.sAMAccountName;
                     filter.Value = smoValue.Substring(smoValue.IndexOf('\\') + 1);
+                    break;
+                default:
+                    filter.Prop = smoProp;
+                    filter.Value = smoValue;
                     break;
             }
             return filter;
@@ -209,7 +189,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             }
             else
             {
-                return pvc[0] as string;
+                return Convert.ToString(pvc[0]);
 
             }
         }

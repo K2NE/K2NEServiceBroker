@@ -20,6 +20,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         public const string WorkingHoursNotSet = "No working hours have been set. Please set the working hours using the K2 Workspace.";
         //Out Of Office
         public const string OutOfOfficeNotConfiguredForUser = "User does not have out of office configured.  Please configure the users out of office settings.";
+        public const string FailedToSetOOF = "Failed to get/set the OOF status for the given user.";
         public const string MultipleOOFConfigurations = "Multiple OOF scenarios detected for this user which is supported by this method.";
     }
 }
