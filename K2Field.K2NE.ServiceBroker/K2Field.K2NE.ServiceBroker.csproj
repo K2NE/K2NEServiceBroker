@@ -118,11 +118,10 @@
   xcopy /R /Y "$(TargetPath)" "c:\Program Files (x86)\K2 blackpearl\ServiceBroker\"
 )
 
-if "Release"=="$(ConfigurationName)" (
-xcopy /R /Y "$(TargetPath)" "$(SolutionDir)\chocoPackage\tools\"
-REM cd "$(SolutionDir)\chocoPackage\"
-REM cpack
-)</PostBuildEvent>
+xcopy /y /r "$(SolutionDir)\Installer\Install.ps1" "$(SolutionDir)\Release\"
+xcopy /y /r "$(SolutionDir)\Documentation\*.adoc" "$(SolutionDir)\Release\"
+xcopy /q /y "$(TargetPath)" "$(SolutionDir)\Release\"
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
