@@ -33,24 +33,24 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.OutOfOffice.DestinationUser, SoType.Text, "User to forward worktask items to"));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.OutOfOffice.UserStatus, SoType.Text, "Status of a user"));
 
-            Method setOutOfOffice = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.SetOutOfOffice, "Set the office status of a user to Out of Office", MethodType.Execute);
+            Method setOutOfOffice = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.SetOutOfOffice, "Set the office status of a current user to Out of Office", MethodType.Execute);
             so.Methods.Add(setOutOfOffice);
 
-            Method setInOffice = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.SetInOffice, "Set the office status of a users.", MethodType.Execute);
+            Method setInOffice = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.SetInOffice, "Set the office status of a a current user to Available", MethodType.Execute);
             so.Methods.Add(setInOffice);
 
-            Method getUserStatus = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.GetUserStatus, "Get the office status of a user.", MethodType.Read);
+            Method getUserStatus = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.GetUserStatus, "Get the office status of a current user.", MethodType.Read);
 
             getUserStatus.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.UserStatus);
             so.Methods.Add(getUserStatus);
 
-            Method addOutOfOffice = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.AddOutOfOffice, "Add user share (destination user) for a user.", MethodType.Read);
+            Method addOutOfOffice = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.AddOutOfOffice, "Add user share (destination user) for a current user.", MethodType.Read);
             addOutOfOffice.InputProperties.Add(Constants.SOProperties.OutOfOffice.DestinationUser);
             addOutOfOffice.Validation.RequiredProperties.Add(Constants.SOProperties.OutOfOffice.DestinationUser);
             addOutOfOffice.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.DestinationUser);
             so.Methods.Add(addOutOfOffice);
 
-            Method listUserShares = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.ListUserShares, "Get all the destination users for OOF user", MethodType.List);
+            Method listUserShares = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.ListUserShares, "Get all the destination users for OOF shares of current user", MethodType.List);
             listUserShares.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.DestinationUser);
             so.Methods.Add(listUserShares);
 
