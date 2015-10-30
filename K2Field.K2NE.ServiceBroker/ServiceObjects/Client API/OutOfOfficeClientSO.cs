@@ -5,7 +5,6 @@ using System.Text;
 using K2Field.K2NE.ServiceBroker.Helpers;
 using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
-//using SourceCode.Workflow.Management;
 using System.Data;
 
 using SourceCode.Workflow.Management.OOF;
@@ -17,7 +16,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
     {
         public OutOfOfficeClientSO(K2NEServiceBroker api) : base(api) { }
 
-        
+
         public override string ServiceFolder
         {
             get
@@ -25,51 +24,33 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 return "Client API";
             }
         }
-        
+
         public override List<ServiceObject> DescribeServiceObjects()
         {
 
             ServiceObject so = Helper.CreateServiceObject("OutOfOfficeClient", "Allows for self-service configuring user Out Of Office status");
 
-            //so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.OutOfOffice.UserFQN, SoType.Text, @"The users FQN with label, ex.'K2:DOMAIN\User' (no quotes)."));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.OutOfOffice.DestinationUser, SoType.Text, "User to forward worktask items to"));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.OutOfOffice.UserStatus, SoType.Text, "Status of a user"));
-            //so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.OutOfOffice., SoType.YesNo, "Success of method call"));
 
             Method setOutOfOffice = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.SetOutOfOffice, "Set the office status of a user to Out of Office", MethodType.Execute);
-            //setOutOfOffice.InputProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
-            //setOutOfOffice.Validation.RequiredProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
-            //setOutOfOffice.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
-            //setOutOfOffice.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.CallSuccess);
             so.Methods.Add(setOutOfOffice);
 
             Method setInOffice = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.SetInOffice, "Set the office status of a users.", MethodType.Execute);
-            //setInOffice.InputProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
-            //setInOffice.Validation.RequiredProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
-            //setInOffice.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
-            //setInOffice.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.CallSuccess);
             so.Methods.Add(setInOffice);
 
             Method getUserStatus = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.GetUserStatus, "Get the office status of a user.", MethodType.Read);
-            //getUserStatus.InputProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
-            //getUserStatus.Validation.RequiredProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
+
             getUserStatus.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.UserStatus);
-            //getUserStatus.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
             so.Methods.Add(getUserStatus);
 
-            Method addOutOfOffice = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.AddOutOfOffice, "Get the office status of a user.", MethodType.Read);
-            //addOutOfOffice.InputProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
+            Method addOutOfOffice = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.AddOutOfOffice, "Add user share (destination user) for a user.", MethodType.Read);
             addOutOfOffice.InputProperties.Add(Constants.SOProperties.OutOfOffice.DestinationUser);
-            //addOutOfOffice.Validation.RequiredProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
             addOutOfOffice.Validation.RequiredProperties.Add(Constants.SOProperties.OutOfOffice.DestinationUser);
-            addOutOfOffice.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
             addOutOfOffice.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.DestinationUser);
-            //addOutOfOffice.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.CallSuccess);
             so.Methods.Add(addOutOfOffice);
 
-            Method listUserShares = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.ListUserShares, "Get the destiination users for OOF user", MethodType.List);
-            //listUserShares.InputProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
-            //listUserShares.Validation.RequiredProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
+            Method listUserShares = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.ListUserShares, "Get all the destination users for OOF user", MethodType.List);
             listUserShares.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.DestinationUser);
             so.Methods.Add(listUserShares);
 
@@ -104,11 +85,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         /// </summary>
         private void GetUserStatus()
         {
-            //string userFQN = base.GetStringProperty(Constants.SOProperties.OutOfOffice.UserFQN);
 
             ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
-            DataTable results = base.ServiceBroker.ServicePackage.ResultTable;            
+            DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
             using (Connection k2Con = new Connection())
             {
@@ -116,29 +96,30 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
                 SourceCode.Workflow.Client.UserStatuses status = k2Con.GetUserStatus();
                 DataRow dr = results.NewRow();
-                //dr[Constants.SOProperties.OutOfOffice.UserFQN] = userFQN;
+
                 dr[Constants.SOProperties.OutOfOffice.UserStatus] = status.ToString();
 
                 results.Rows.Add(dr);
 
                 k2Con.Close();
-            }         
-            
-            
+            }
+
+
         }
 
-
+        /// <summary>
+        /// Set OOF status for a user
+        /// </summary>
+        /// <param name="status">OOF Status (Available, OOF, None)</param>
         private void SetStatus(SourceCode.Workflow.Client.UserStatuses status)
         {
-            //string userFQN = base.GetStringProperty(Constants.SOProperties.OutOfOffice.UserFQN);
-
-
             using (Connection k2Con = new Connection())
             {
                 k2Con.Open(base.K2ClientConnectionSetup);
                 // None for userstatus means the users is not configured, throw an exception
-                if (UserStatuses.None == k2Con.GetUserStatus())
+                if (UserStatuses.None == k2Con.GetUserStatus() && UserStatuses.OOF == status)
                 {
+                    // exception should be thrown only in case that user tries to  set OOF, 
                     throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
                 }
 
@@ -154,20 +135,21 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 k2Con.Close();
             }
         }
-              
+
 
         // Example from page - http://help.k2.com/onlinehelp/k2blackpearl/DevRef/4.6.9/default.htm#How_to_set_a_users_Out_of_Office_Status.html%3FTocPath%3DRuntime%2520APIs%2520and%2520Services%7CWorkflow%7CWorkflow%2520Client%2520API%7CWorkflow%2520Client%2520API%2520Samples%7C_____10
-
+        /// <summary>
+        /// Add OOF share for current user
+        /// </summary>
         private void AddOutOfOffice()
         {
-            //string userFQN = base.GetStringProperty(Constants.SOProperties.OutOfOffice.UserFQN);
+
             string destinationUser = base.GetStringProperty(Constants.SOProperties.OutOfOffice.DestinationUser);
 
             ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            //WorkflowManagementServer mngServer = new WorkflowManagementServer();
 
             using (Connection k2Con = new Connection())
             {
@@ -184,15 +166,15 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 //  If configuration exist already, add to it
                 if (wsColl.Count == 1)
                 {
-                    
+
                     WorklistShare worklistshare = wsColl[0];
                     worklistshare.WorkTypes[0].Destinations.Add(new Destination(destinationUser, DestinationType.User));
                     bool result = k2Con.ShareWorkList(worklistshare);
 
                     DataRow dr = results.NewRow();
-                    //dr[Constants.SOProperties.OutOfOffice.UserFQN] = userFQN;
+
                     dr[Constants.SOProperties.OutOfOffice.DestinationUser] = destinationUser;
-                    //dr[Constants.SOProperties.OutOfOffice.CallSuccess] = result;
+
                     results.Rows.Add(dr); ;
 
                 }
@@ -218,19 +200,22 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     k2Con.SetUserStatus(UserStatuses.Available);
 
                     DataRow dr = results.NewRow();
-                    //dr[Constants.SOProperties.OutOfOffice.UserFQN] = userFQN;
+
                     dr[Constants.SOProperties.OutOfOffice.DestinationUser] = destinationUser;
-                    //dr[Constants.SOProperties.OutOfOffice.CallSuccess] = result;
+
                     results.Rows.Add(dr);
                 }
 
                 k2Con.Close();
             }
         }
-        
+
+        /// <summary>
+        /// List all existing shares for a current user
+        /// </summary>
         private void ListSharedUsers()
         {
-            //string userFQN = base.GetStringProperty(Constants.SOProperties.OutOfOffice.UserFQN);
+
 
             ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
@@ -261,7 +246,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 }
 
                 k2Con.Close();
-                
+
             }
         }
     }
