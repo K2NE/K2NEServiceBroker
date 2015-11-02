@@ -44,6 +44,7 @@ namespace K2Field.K2NE.ServiceBroker
                                 new ErrorLogSO(this),
                                 new IdentitySO(this),
                                 new WorklistSO(this),
+                                new OutOfOfficeClientSO(this),
                                 new OutOfOfficeSO(this),
                                 new ProcessInstanceManagementSO(this),
                                 new ProcessInstanceClientSO(this),

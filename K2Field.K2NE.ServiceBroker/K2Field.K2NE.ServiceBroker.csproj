@@ -94,6 +94,7 @@
     <Compile Include="ServiceObjectBase.cs" />
     <Compile Include="ServiceObjects\ActiveDirectorySO.cs" />
     <Compile Include="ServiceObjects\Client API\ProcessInstanceClientSO.cs" />
+    <Compile Include="ServiceObjects\Client API\OutOfOfficeClientSO.cs" />
     <Compile Include="ServiceObjects\Client API\WorklistSO.cs" />
     <Compile Include="ServiceObjects\Management API\ErrorLogSO.cs" />
     <Compile Include="ServiceObjects\IdentitySO.cs" />
