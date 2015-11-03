@@ -1,5 +1,8 @@
 == ChangeLog
 
+=== v1.6.4
+- Added Redirect to Client API
+
 === v1.6.3
 - Added powershell installer.
 - Removed choco installer

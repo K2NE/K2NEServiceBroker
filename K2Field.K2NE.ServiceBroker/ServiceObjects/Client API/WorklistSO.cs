@@ -122,9 +122,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
 
 
             ServiceObject worklistItemSO = Helper.CreateServiceObject("WorklistItem", "Exposes functionality for a single worklistitem");
-
-
             worklistItemSO.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ClientWorklist.SerialNumber, SoType.Text, "SerialNumber"));
+            worklistItemSO.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ClientWorklist.FQN, SoType.Text, "Fully Qualified User Name"));
 
             Method releaseWorklistItem = Helper.CreateMethod(Constants.Methods.ClientWorklist.ReleaseWorklistItem, "Release a worklistitem.", MethodType.Execute);
             releaseWorklistItem.InputProperties.Add(Constants.SOProperties.ClientWorklist.SerialNumber);
@@ -132,6 +131,12 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
             worklistItemSO.Methods.Add(releaseWorklistItem);
 
 
+            Method redirectWorklistItem = Helper.CreateMethod(Constants.Methods.ClientWorklist.RedirectWorklistItem, "Redirect a single worklistitem", MethodType.Execute);
+            redirectWorklistItem.InputProperties.Add(Constants.SOProperties.ClientWorklist.SerialNumber);
+            redirectWorklistItem.InputProperties.Add(Constants.SOProperties.ClientWorklist.FQN);
+            redirectWorklistItem.Validation.RequiredProperties.Add(Constants.SOProperties.ClientWorklist.SerialNumber);
+            redirectWorklistItem.Validation.RequiredProperties.Add(Constants.SOProperties.ClientWorklist.FQN);
+            worklistItemSO.Methods.Add(redirectWorklistItem);
 
             return new List<ServiceObject>() { worklistSO, worklistItemSO };
 
@@ -148,6 +153,25 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
                 case Constants.Methods.ClientWorklist.ReleaseWorklistItem:
                     ReleaseWorklistItem();
                     break;
+                case Constants.Methods.ClientWorklist.RedirectWorklistItem:
+                    RedirectWorklistItem();
+                    break;
+            }
+        }
+
+        private void RedirectWorklistItem()
+        {
+            string sn = base.GetStringProperty(Constants.SOProperties.ClientWorklist.SerialNumber, true);
+            string fqn = base.GetStringProperty(Constants.SOProperties.ClientWorklist.FQN, true);
+
+            using (Connection k2Con = new Connection())
+            {
+                k2Con.Open(base.K2ClientConnectionSetup);
+
+                WorklistItem wli = k2Con.OpenWorklistItem(sn);
+                wli.Redirect(fqn);
+
+                k2Con.Close();
             }
         }
 
