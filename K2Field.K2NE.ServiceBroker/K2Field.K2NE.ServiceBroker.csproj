@@ -116,7 +116,9 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if "Debug"=="$(ConfigurationName)" (
+net stop "K2 blackpearl server"
   xcopy /R /Y "$(TargetPath)" "c:\Program Files (x86)\K2 blackpearl\ServiceBroker\"
+net start "K2 blackpearl server"
 )
 
 xcopy /y /r "$(SolutionDir)\Installer\Install.ps1" "$(SolutionDir)\Release\"
