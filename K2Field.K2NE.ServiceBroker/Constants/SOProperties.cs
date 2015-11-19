@@ -124,6 +124,13 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         {
             public const string ActivityName = "ActivityName";
             public const string ProcessInstanceId = "ProcessInstanceId";
+            public const string IncludeStartActivity = "IncludeStartActivity";
+            public const string ActivityDescription = "ActivityDescription";
+            public const string ActivityExpectedDuration = "ActivityExpectedDuration";
+            public const string ActivityID = "ActivityID";
+            public const string IsStartActivity = "IsStartActivity";
+            public const string ActivityMetaData = "ActivityMetaData";
+            public const string ActivityPriority = "ActivityPriority";
         }
 
         public static class ProcessInstanceClient
