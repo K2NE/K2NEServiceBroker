@@ -123,7 +123,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     throw new ApplicationException(String.Format("Sorry, process instance with id {0} not found.", processInstanceId));
                 }
 
-                foreach (Activity actvt in mngServer.GetProcInstActivities(procInsts[0].ID))
+                foreach (Activity actvt in mngServer.GetProcActivities(procInsts[0].ProcID))
                 {
                     if (actvt.IsStart && !includeStartActivity)
                         continue;
