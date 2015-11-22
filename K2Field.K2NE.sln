@@ -11,11 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B11953BF-3383-4D88-98C4-00AFC5D86012}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\packages.config = .nuget\packages.config
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{E9C2E02B-FB7A-49D5-A540-0404B7C69DA9}"
 	ProjectSection(SolutionItems) = preProject
 		Documentation\ChangeLog.adoc = Documentation\ChangeLog.adoc
