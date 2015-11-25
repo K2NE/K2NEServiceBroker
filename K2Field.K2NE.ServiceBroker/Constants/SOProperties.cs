@@ -120,6 +120,20 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string UserCultureNumberFormat = "UserCultureNumberFormat";
         }
 
+
+        public static class CardReader
+        {
+            public const string RfidXMLInput = "RfidXMLIn";
+            public const string RfidXMLOutput = "RfidXMLOut";
+            public const string DonorId = "DonorId";
+            public const string FirstName = "Firstname";
+            public const string LastName = "Lastname";
+            public const string Sex = "Sex";
+            public const string DateOfBirth = "DateOfBirth";
+            public const string City = "City";
+
+        }
+
         public static class ProcessInstanceManagement
         {
             public const string ActivityName = "ActivityName";

@@ -40,6 +40,7 @@ namespace K2Field.K2NE.ServiceBroker
                         {
                             _serviceObjects = new List<ServiceObjectBase>
                             {
+                                new CardReader(this),
                                 new ManagementWorklistSO(this),
                                 new ErrorLogSO(this),
                                 new IdentitySO(this),

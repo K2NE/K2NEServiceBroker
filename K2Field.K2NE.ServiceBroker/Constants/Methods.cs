@@ -5,6 +5,11 @@ namespace K2Field.K2NE.ServiceBroker.Constants
 
     public static class Methods
     {
+        public static class CardReader
+        {
+            public const string GetFromXML = "GetFromXML";
+            public const string UpdateXML = "UpdateXML";
+        }
         public static class ErrorLog
         {
             public const string GetErrors = "GetErrors";
