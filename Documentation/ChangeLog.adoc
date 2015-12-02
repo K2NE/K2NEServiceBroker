@@ -1,5 +1,8 @@
 == ChangeLog
 
+=== v1.6.5
+- Add List Activities method
+
 === v1.6.4
 - Added Redirect to Client API
 
