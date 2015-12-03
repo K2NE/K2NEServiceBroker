@@ -134,25 +134,6 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         }
 
         /// <summary>
-        /// Creates a service object method with the given name, description and Methodtype
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="description"></param>
-        /// <param name="methodType"></param>
-        /// <param name="normalize">If true - adds spaces before capital letters</param>
-        /// <returns></returns>
-        public static Method CreateMethod(string name, string description, MethodType methodType, bool normalize)
-        {
-            string metadataName = normalize ? AddSpaceBeforeCaptialLetter(name) : name;
-            Method m = new Method
-            {
-                Name = name,
-                Type = methodType,
-                MetaData = new MetaData(metadataName, description)
-            };
-            return m;
-        }
-        /// <summary>
         /// Create a service object with a name and description.
         /// </summary>
         /// <param name="name"></param>
@@ -168,24 +149,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             };
             return so;
         }
-        /// <summary>
-        /// Creates a service object with a name and description.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="description"></param>
-        /// <param name="normalize">If true - adds spaces before capital letters</param>
-        /// <returns></returns>
-        public static ServiceObject CreateServiceObject(string name, string description, bool normalize)
-        {
-            string metadataName = normalize ? AddSpaceBeforeCaptialLetter(name) : name; 
-            ServiceObject so = new ServiceObject
-            {
-                Name = name,
-                MetaData = new MetaData(metadataName, description),
-                Active = true
-            };
-            return so;
-        }
+
         /// <summary>
         /// Check if special characters exist in ZoneName
         /// </summary>

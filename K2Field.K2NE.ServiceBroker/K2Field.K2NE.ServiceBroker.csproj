@@ -120,9 +120,9 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>rem if "Debug"=="$(ConfigurationName)" (
-rem   xcopy /R /Y "$(TargetPath)" "c:\Program Files (x86)\K2 blackpearl\ServiceBroker\"
-rem )
+    <PostBuildEvent>if "Debug"=="$(ConfigurationName)" (
+ xcopy /R /Y "$(TargetPath)" "c:\Program Files (x86)\K2 blackpearl\ServiceBroker\"
+)
 
 xcopy /y /r "$(SolutionDir)\Installer\Install.ps1" "$(SolutionDir)\Release\"
 xcopy /y /r "$(SolutionDir)\Documentation\*.adoc" "$(SolutionDir)\Release\"

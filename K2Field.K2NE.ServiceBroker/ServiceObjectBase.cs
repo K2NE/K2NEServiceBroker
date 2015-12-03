@@ -103,19 +103,23 @@ namespace K2Field.K2NE.ServiceBroker
                 if (!string.IsNullOrEmpty(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.ADOQueries] as string))
                 {
                     string queryProperty = (ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.ADOQueries] as string).Trim();
-                    int y = 0;
+                    int unnamedQueryCount = 1;
 
                     foreach (string query in queryProperty.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
                     {
-                        string queryName = "Query " + y.ToString();
+                        string queryName = string.Format("Query {0}",unnamedQueryCount);
                         string queryCommand = query.Trim();
 
-                        if (query.IndexOf('|') > 0)
+                        int delimeter = query.IndexOf("|");
+                        if (delimeter> 0)
                         {
-                            queryName = query.Substring(0, query.IndexOf("|")).Trim();
-                            queryCommand = query.Substring(query.IndexOf("|") + 1).Trim();
+                            queryName = query.Substring(0, delimeter).Trim();
+                            queryCommand = query.Substring(delimeter + 1).Trim();
                         }
-                        y++;
+                        else
+                        {
+                            unnamedQueryCount++;
+                        }
                         queries.Add(queryName, queryCommand);
                     }
                 }

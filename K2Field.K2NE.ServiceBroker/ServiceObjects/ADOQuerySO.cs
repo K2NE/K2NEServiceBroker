@@ -36,41 +36,41 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         {
             List<ServiceObject> sos = new List<ServiceObject>();
 
-            SOConnectionStringBuilder sbConnection = new SOConnectionStringBuilder();
-            sbConnection.Server = "localhost";
-            sbConnection.Port = int.Parse(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.WorkflowClientPort].ToString());
+            
 
             foreach (KeyValuePair<string, string> query in ADOQueries)
             {
-                ServiceObject so = Helper.CreateServiceObject(query.Key, "Description.", false);
+                ServiceObject so = Helper.CreateServiceObject(query.Key, "ADO.NET query.");
 
-                Method runADOQuery = Helper.CreateMethod("List", "Returns result of query.", MethodType.List, false);
-                runADOQuery.MetaData.AddServiceElement("Query", query.Value);
+                Method soMethod = Helper.CreateMethod("List", "Returns result of query.", MethodType.List);
+                soMethod.MetaData.AddServiceElement("Query", query.Value);
 
-                using (SOConnection connection = new SOConnection())
-                using (SOCommand command = new SOCommand(query.Value, connection))
-                using (SODataReader reader = command.ExecuteReader(CommandBehavior.CloseConnection, 0, 1))
-                {
-                    connection.DirectExecution = true;
-                    connection.Open();
-                    reader.Read();
+                using (SOConnection connection = new SOConnection(base.BaseAPIConnectionString)) {
+                    using (SOCommand command = new SOCommand(query.Value, connection)) {
+                        using (SODataReader reader = command.ExecuteReader(CommandBehavior.CloseConnection, 0, 1))
+                        {
+                            connection.DirectExecution = true;
+                            connection.Open();
+                            reader.Read();
 
-                    int z = 0;
-                    while (z < reader.FieldCount)
-                    {
-                        string name = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(reader.GetName(z));
-                        SoType type = MapHelper.GetSoTypeByType(reader.GetFieldType(z));
+                            int fieldCount = 0;
+                            while (fieldCount < reader.FieldCount)
+                            {
+                                string name = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(reader.GetName(fieldCount));
+                                SoType type = MapHelper.GetSoTypeByType(reader.GetFieldType(fieldCount));
 
-                        so.Properties.Add(Helper.CreateProperty(name, type, name, false));
+                                so.Properties.Add(Helper.CreateProperty(name, type, name, false));
 
-                        runADOQuery.InputProperties.Add(Helper.CreateProperty(name, type, name, false));
-                        runADOQuery.ReturnProperties.Add(Helper.CreateProperty(name, type, name, false));
-                        z++;
+                                soMethod.InputProperties.Add(Helper.CreateProperty(name, type, name, false));
+                                soMethod.ReturnProperties.Add(Helper.CreateProperty(name, type, name, false));
+                                fieldCount++;
+                            }
+                        }
                     }
-
+                    connection.Close();
                 }
 
-                so.Methods.Add(runADOQuery);
+                so.Methods.Add(soMethod);
                 sos.Add(so);
             }
 
