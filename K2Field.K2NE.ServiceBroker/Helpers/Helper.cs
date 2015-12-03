@@ -9,7 +9,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
 {
     public class Helper
     {
-   
+
         /// <summary>
         /// Creates a system name from the given name. 
         /// 
@@ -65,6 +65,26 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         {
             return CreateSpecificProperty(name, AddSpaceBeforeCaptialLetter(name), description, type);
         }
+        /// <summary>
+        /// See <see cref="CreateSpecificProperty"/>.
+        /// This method however simply uses AddSpaceBeforeCapitalLetter(name) for it's displayname.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="type"></param>
+        /// <param name="description"></param>
+        /// <param name="normalize">If true - adds spaces before capital letters</param>
+        /// <returns></returns>
+        public static Property CreateProperty(string name, SoType type, string description, bool normalize)
+        {
+            if (normalize)
+            {
+                return CreateSpecificProperty(name, AddSpaceBeforeCaptialLetter(name), description, type);
+            }
+            else
+            {
+                return CreateSpecificProperty(name, name, description, type);
+            }
+        }
 
 
         public static Property CreateProperty(string name, string description, SoType type)
@@ -114,6 +134,25 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         }
 
         /// <summary>
+        /// Creates a service object method with the given name, description and Methodtype
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        /// <param name="methodType"></param>
+        /// <param name="normalize">If true - adds spaces before capital letters</param>
+        /// <returns></returns>
+        public static Method CreateMethod(string name, string description, MethodType methodType, bool normalize)
+        {
+            string metadataName = normalize ? AddSpaceBeforeCaptialLetter(name) : name;
+            Method m = new Method
+            {
+                Name = name,
+                Type = methodType,
+                MetaData = new MetaData(metadataName, description)
+            };
+            return m;
+        }
+        /// <summary>
         /// Create a service object with a name and description.
         /// </summary>
         /// <param name="name"></param>
@@ -130,11 +169,29 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             return so;
         }
         /// <summary>
+        /// Creates a service object with a name and description.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        /// <param name="normalize">If true - adds spaces before capital letters</param>
+        /// <returns></returns>
+        public static ServiceObject CreateServiceObject(string name, string description, bool normalize)
+        {
+            string metadataName = normalize ? AddSpaceBeforeCaptialLetter(name) : name; 
+            ServiceObject so = new ServiceObject
+            {
+                Name = name,
+                MetaData = new MetaData(metadataName, description),
+                Active = true
+            };
+            return so;
+        }
+        /// <summary>
         /// Check if special characters exist in ZoneName
         /// </summary>
         /// <param name="zoneName">Name of a zone</param>
         /// <returns></returns>
-        public static bool SpecialCharactersExist (string zoneName)
+        public static bool SpecialCharactersExist(string zoneName)
         {
             Regex pattern = new Regex(@"^[a-zA-Z0-9]*$");
             return pattern.IsMatch(zoneName);
@@ -144,9 +201,9 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         /// </summary>
         /// <param name="fqn">Fully Qualified Name</param>
         /// <returns></returns>
-        public static string DeleteLabel (string fqn)
+        public static string DeleteLabel(string fqn)
         {
-            char[] delimiterChars = {':'};
+            char[] delimiterChars = { ':' };
             return fqn.Split(delimiterChars)[1];
         }
         public static MethodParameter CreateParameter(string name, SoType soType, bool isRequired, string description)
@@ -174,6 +231,35 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                     properties.Add(key, null);
                 }
             }
+        }
+
+
+
+    }
+    internal static class MetaDataExtensions
+    {
+        public static void AddServiceElement(this MetaData metaData, string elementName, object elementValue)
+        {
+            if (metaData == null)
+                throw new ArgumentNullException("metaData");
+
+            metaData.ServiceProperties.Add(elementName, elementValue);
+        }
+
+        public static T GetServiceElement<T>(this MetaData metaData, string elementName)
+        {
+            if (metaData == null)
+                throw new ArgumentNullException("metaData");
+
+            if (string.IsNullOrEmpty(elementName))
+                return default(T);
+
+            var value = metaData.ServiceProperties[elementName];
+
+            if (!string.IsNullOrEmpty(value.ToString()))
+                return (T)Convert.ChangeType(value, typeof(T));
+
+            return default(T);
         }
 
     }
