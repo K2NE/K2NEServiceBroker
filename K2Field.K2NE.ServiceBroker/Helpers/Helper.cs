@@ -65,27 +65,6 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         {
             return CreateSpecificProperty(name, AddSpaceBeforeCaptialLetter(name), description, type);
         }
-        /// <summary>
-        /// See <see cref="CreateSpecificProperty"/>.
-        /// This method however simply uses AddSpaceBeforeCapitalLetter(name) for it's displayname.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="type"></param>
-        /// <param name="description"></param>
-        /// <param name="normalize">If true - adds spaces before capital letters</param>
-        /// <returns></returns>
-        public static Property CreateProperty(string name, SoType type, string description, bool normalize)
-        {
-            if (normalize)
-            {
-                return CreateSpecificProperty(name, AddSpaceBeforeCaptialLetter(name), description, type);
-            }
-            else
-            {
-                return CreateSpecificProperty(name, name, description, type);
-            }
-        }
-
 
         public static Property CreateProperty(string name, string description, SoType type)
         {

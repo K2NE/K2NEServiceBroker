@@ -373,18 +373,20 @@ namespace K2Field.K2NE.ServiceBroker
 
         #endregion Protected helper methods for property value retrieval
 
+        /*
         /// <summary>
         /// Method creates a SqlExecute object which only needs a SqlQuery and Parameters to be set.
         /// </summary>
         /// <returns></returns>
         protected SqlExecute CreateDirectSqlExecute()
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();//BuildConnectionString();
+            //SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();//BuildConnectionString();
             ServiceBroker.IsSqlExecute = true;
             ServiceBroker.SqlQueryExecute = new SqlExecute();
-            //Two properties below not needed
-            //ServiceBroker.SqlQueryExecute.ServerName = "ServerName";
-            //ServiceBroker.SqlQueryExecute.Provider = "SQLOLEDB";
+            ServiceBroker.SqlQueryExecute.ServerName = string.Empty; //"DLX";
+            ServiceBroker.SqlQueryExecute.Provider = string.Empty; //"SQLOLEDB";
+            ServiceBroker.SqlQueryExecute.UserID = string.Empty;
+            ServiceBroker.SqlQueryExecute.Password = string.Empty;
 
             if (this.ServiceBroker.Service.ServiceConfiguration.ServiceAuthentication.AuthenticationMode == AuthenticationMode.SSO ||
                 this.ServiceBroker.Service.ServiceConfiguration.ServiceAuthentication.AuthenticationMode == AuthenticationMode.Static)
@@ -401,7 +403,7 @@ namespace K2Field.K2NE.ServiceBroker
 
             return ServiceBroker.SqlQueryExecute;
         }
-
+        */
 
         #endregion Protected Methods and properties that are useful for the child class
 
