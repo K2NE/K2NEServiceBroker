@@ -328,6 +328,11 @@ namespace K2Field.K2NE.ServiceBroker
                 return false;
             string val = p.Value as string;
             bool ret;
+            
+            //bool.TryParse() always returns false for these values.
+            if (val.Trim().Equals("1") | val.ToLower().Trim().Equals("yes"))
+                return true;
+
             if (bool.TryParse(val, out ret))
             {
                 return ret;
