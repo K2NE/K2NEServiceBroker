@@ -53,7 +53,7 @@ namespace K2Field.K2NE.ServiceBroker
                                 new WorkingHoursConfigurationSO(this),
                                 new GroupSO(this),
                                 new UserSO(this),
-                                new ADOQuerySO(this)
+                                new ADOSMOQuerySO(this)
                             };
 
                         }
@@ -192,7 +192,7 @@ namespace K2Field.K2NE.ServiceBroker
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.NetbiosNames, false, "Denallix");
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ChangeContainsToStartsWith, true, "true");
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.AdditionalADProps, false, "");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ADOQueries, false, "");
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ADOSMOQueries, false, "");
             return base.GetConfigSection();
         }
         public void Init(IServiceMarshalling serviceMarshalling, IServerMarshaling serverMarshaling)

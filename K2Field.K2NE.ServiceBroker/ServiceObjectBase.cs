@@ -95,14 +95,14 @@ namespace K2Field.K2NE.ServiceBroker
             }
         }
 
-        public Dictionary<string, string> ADOQueries
+        public Dictionary<string, string> ADOSMOQueries
         {
             get
             {
                 Dictionary<string, string> queries = new Dictionary<string, string>();
-                if (!string.IsNullOrEmpty(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.ADOQueries] as string))
+                if (!string.IsNullOrEmpty(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.ADOSMOQueries] as string))
                 {
-                    string queryProperty = (ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.ADOQueries] as string).Trim();
+                    string queryProperty = (ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.ADOSMOQueries] as string).Trim();
                     int unnamedQueryCount = 1;
 
                     foreach (string query in queryProperty.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries))

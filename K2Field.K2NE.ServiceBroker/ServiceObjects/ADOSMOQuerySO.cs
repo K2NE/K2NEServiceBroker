@@ -14,9 +14,9 @@ using System.Text.RegularExpressions;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 {
-    class ADOQuerySO : ServiceObjectBase
+    class ADOSMOQuerySO : ServiceObjectBase
     {
-        public ADOQuerySO(K2NEServiceBroker api) : base(api) { }
+        public ADOSMOQuerySO(K2NEServiceBroker api) : base(api) { }
 
 
         public override void Execute()
@@ -29,7 +29,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         {
             get
             {
-                return "ADOQuery";
+                return "ADOSMOQuery";
             }
         }
 
@@ -37,19 +37,26 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         {
             List<ServiceObject> sos = new List<ServiceObject>();
 
-            foreach (KeyValuePair<string, string> query in ADOQueries)
+            foreach (KeyValuePair<string, string> query in ADOSMOQueries)
             {
-                ServiceObject so = Helper.CreateServiceObject(query.Key, "ADO.NET query.");
+                ServiceObject so = Helper.CreateServiceObject(query.Key, "ADO.NET SMO query.");
 
                 DataTable results = new DataTable();
-                /*To do: parsing properties. Without that queries contains WHERE and @parameters will not work.
+                /* To do: parsing properties. Without that queries contains WHERE and @parameters will not work on initialization level (no properties created).
+                 * The queries like this do not work at the moment:
+                 * SELECT * FROM table WHERE type = @type
+                 * There is no custom error message, only system one, because
+                 * it's impossible to found if there are @parameters used within WHERE clause, because these queries will work:
+                 * SELECT * FROM table WHERE type='Type1' HAVING (id = @id)
+                
                 foreach (Match match in Regex.Matches(query.Value, "\\@\\w+"))
                 {
                 }
                 */
+
                 results = GetData(query.Value, new Properties(), true);
 
-                Method soMethod = Helper.CreateMethod("List", "Returns result of query.", MethodType.List);
+                Method soMethod = Helper.CreateMethod("List", "Returns result of SMO query.", MethodType.List);
                 soMethod.MetaData.AddServiceElement("Query", query.Value);
                 foreach (DataColumn col in results.Columns)
                 {
@@ -93,14 +100,18 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                                 command.Parameters.AddWithValue(prop.Name, prop.Value);
                             }
                         }
-                        
+
                         connection.DirectExecution = true;
                         connection.Open();
-                        
+
                         if (schemaOnly)
+                        {
                             adapter.FillSchema(results, SchemaType.Source);
+                        }
                         else
+                        {
                             adapter.Fill(results);
+                        }
                     }
                 }
                 connection.Close();
