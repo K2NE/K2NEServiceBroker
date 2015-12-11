@@ -8,6 +8,10 @@ Runs ADO queries against smartobjects. Main features:
 === General queries' rules:
 
 * Multiple queries must be delimited with semicolon symbol ';'. E.g. [Query string 1];[Query string 2]
-* Each query string can contain a custom name delimited from query command with pipe symbol '|'. E.g. "Super query|SELECT id, title FROM SmartObject1". Custom name will be used as name for the service object. If no custom name specified, then "Query [n]" will be used, where [n] is the ordinal number of query string
-* To use smartobject's input properties as query conditions(filters), parameters should be specified as [@parName] after HAVING statement. E.g. "SELECT id,title HAVING id=@id"
+* Each query string can contain a custom name delimited from query command with pipe symbol '|'. E.g. "Super query|SELECT id, title FROM SmO1". Custom name will be used as a name for the service object. If no custom name specified, then "Query [n]" will be used, where [n] is the ordinal number of query string
+* To use smartobject's input properties as query conditions(filters), parameters should be specified as [@parName] after HAVING statement. E.g. "SELECT id,title FROM SmO1 HAVING id=@id"
+* Queries with star mask '*' in the fields list are supported: "SELECT * FROM SmO1 HAVING id=@id"
 * Additional information about ADO.Net provider for smartobjects and queries: http://help.k2.com/onlinehelp/k2blackpearl/devref/current/default.htm#ADO_NET_Provider.htm
+
+=== Known issues:
+* Parameters in WHERE clause are not supported. E.g. "SELECT id,title FROM SmO1 WHERE id=@id" will raise an error when intializing service objects. But queries like "SELECT id,title FROM SmO1 WHERE code='code1' HAVING id=@id" will work.
