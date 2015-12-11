@@ -9,7 +9,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
 {
     public class Helper
     {
-   
+
         /// <summary>
         /// Creates a system name from the given name. 
         /// 
@@ -65,7 +65,6 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         {
             return CreateSpecificProperty(name, AddSpaceBeforeCaptialLetter(name), description, type);
         }
-
 
         public static Property CreateProperty(string name, string description, SoType type)
         {
@@ -129,12 +128,13 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             };
             return so;
         }
+
         /// <summary>
         /// Check if special characters exist in ZoneName
         /// </summary>
         /// <param name="zoneName">Name of a zone</param>
         /// <returns></returns>
-        public static bool SpecialCharactersExist (string zoneName)
+        public static bool SpecialCharactersExist(string zoneName)
         {
             Regex pattern = new Regex(@"^[a-zA-Z0-9]*$");
             return pattern.IsMatch(zoneName);
@@ -144,9 +144,9 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         /// </summary>
         /// <param name="fqn">Fully Qualified Name</param>
         /// <returns></returns>
-        public static string DeleteLabel (string fqn)
+        public static string DeleteLabel(string fqn)
         {
-            char[] delimiterChars = {':'};
+            char[] delimiterChars = { ':' };
             return fqn.Split(delimiterChars)[1];
         }
         public static MethodParameter CreateParameter(string name, SoType soType, bool isRequired, string description)
@@ -175,6 +175,5 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                 }
             }
         }
-
     }
 }
