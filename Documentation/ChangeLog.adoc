@@ -1,4 +1,7 @@
 == ChangeLog
+=== v1.6.6
+- Added link:ADOSMOQuery.adoc[ADO SMO Query service object].
+- K2Field.K2NE.ServiceBroker.GetBoolProperty() method allows to use 1/0, Yes/No values as boolean, instead of True/False only.
 
 === v1.6.5
 - Add List Activities method

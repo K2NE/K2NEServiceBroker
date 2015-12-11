@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		Documentation\ChangeLog.adoc = Documentation\ChangeLog.adoc
 		Documentation\ClientAPI.adoc = Documentation\ClientAPI.adoc
 		Documentation\K2NEServiceBroker.adoc = Documentation\K2NEServiceBroker.adoc
+		Documentation\ADOSMOQuery.adoc = Documentation\ADOSMOQuery.adoc
 		Documentation\ManagementAPI.adoc = Documentation\ManagementAPI.adoc
 		URM.adoc = URM.adoc
 	EndProjectSection

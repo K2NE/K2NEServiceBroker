@@ -1,0 +1,13 @@
+== ADO SMO Query
+
+Runs ADO queries against smartobjects. Main features:
+* Supports multiple queries and creates separate service objects for each query
+* Each service object contains properties with name and type returned by query
+* Allows using input parameters and map them to input properties
+  
+=== General queries' rules:
+
+* Multiple queries must be delimited with semicolon symbol ';'. E.g. [Query string 1];[Query string 2]
+* Each query string can contain a custom name delimited from query command with pipe symbol '|'. E.g. "Super query|SELECT id, title FROM SmartObject1". Custom name will be used as name for the service object. If no custom name specified, then "Query [#]" will be used, where [#] is the ordinal number of query string
+* To use smartobject's input properties as query conditions(filters), parameters should be specified as [@parName] after HAVING statement. E.g. "SELECT id,title HAVING id=@id"
+* Additional information about ADO.Net provider for smartobjects and queries: http://help.k2.com/onlinehelp/k2blackpearl/devref/current/default.htm#ADO_NET_Provider.htm

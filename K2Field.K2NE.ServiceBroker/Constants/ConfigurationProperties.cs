@@ -17,7 +17,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         public const string AdMaxResultSize = "AD Maximum Resultsize";
         public const string ChangeContainsToStartsWith = "Change Contains operator to StartsWith for AD";
         public const string AdditionalADProps = "Additional AD properties delimited by ;";
-        public const string ADOSMOQueries = "SMO Data queries delimited by ;";
+        public const string ADOSMOQueries = "SMO data queries delimited by ;";
     }
 
 }
