@@ -56,7 +56,7 @@ namespace K2Field.K2NE.ServiceBroker
         {
             get
             {
-                return this.ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.LDAPPaths].ToString();
+                return this.ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.LDAPPaths].ToStringOrEmpty();
             }
         }
         public bool ChangeContainsToStartWith
@@ -158,7 +158,7 @@ namespace K2Field.K2NE.ServiceBroker
         {
             get
             {
-                return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.Platform].ToString();
+                return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.Platform].ToStringOrEmpty();
             }
         }
 
@@ -167,7 +167,7 @@ namespace K2Field.K2NE.ServiceBroker
             get
             {
 
-                return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.NetbiosNames].ToString();
+                return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.NetbiosNames].ToStringOrEmpty();
             }
         }
 
