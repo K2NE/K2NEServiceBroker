@@ -6,6 +6,11 @@
 === v1.6.5
 - Add List Activities method
 
+
+=== v1.6.next
+- Added Out of Office to Client API
+- Edited post-deployment script for 'Debug' build to stop/start K2 blackpearl during deployment
+
 === v1.6.4
 - Added Redirect to Client API
 

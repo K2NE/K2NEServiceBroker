@@ -9,3 +9,8 @@ This allows us to start processes WITH a datafield.
 
 === Worklist item
 * Release Worklist Item: release a worklist item using its S/N
+
+=== Out Of Office Self-Service Management
+* Get OOF Status for current user
+* Set OOF Status for current user
+* Add OOF Share with another user
