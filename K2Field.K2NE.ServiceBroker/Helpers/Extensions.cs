@@ -9,7 +9,14 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
     {
         public static string ToStringOrEmpty(this Object value)
         {
-            return value == null ? "" : value.ToString();
+            if (value == null)
+            {
+                return String.Empty;
+            }
+            else
+            {
+                return value.ToString(); 
+            }
         }
     }
 }
