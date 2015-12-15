@@ -91,6 +91,7 @@
     <Compile Include="Helpers\FilterItem.cs" />
     <Compile Include="Helpers\LdapHelper.cs" />
     <Compile Include="Helpers\MetaDataExtensions.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="K2NEServiceBroker.cs" />
     <Compile Include="Helpers\Helper.cs" />
     <Compile Include="Logger.cs" />
