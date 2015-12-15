@@ -37,6 +37,10 @@
     <AssemblyOriginatorKeyFile>..\Solution Files\key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="SourceCode.Data.SmartObjectsClient, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\K2 blackpearl\Bin\SourceCode.Data.SmartObjectsClient.dll</HintPath>
+    </Reference>
     <Reference Include="SourceCode.EnvironmentSettings.Client, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\K2 blackpearl\Bin\SourceCode.EnvironmentSettings.Client.dll</HintPath>
@@ -86,6 +90,8 @@
     <Compile Include="Constants\StringFormats.cs" />
     <Compile Include="Helpers\FilterItem.cs" />
     <Compile Include="Helpers\LdapHelper.cs" />
+    <Compile Include="Helpers\MetaDataExtensions.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="K2NEServiceBroker.cs" />
     <Compile Include="Helpers\Helper.cs" />
     <Compile Include="Logger.cs" />
@@ -93,6 +99,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceObjectBase.cs" />
     <Compile Include="ServiceObjects\ActiveDirectorySO.cs" />
+    <Compile Include="ServiceObjects\ADOSMOQuerySO.cs" />
     <Compile Include="ServiceObjects\Client API\ProcessInstanceClientSO.cs" />
     <Compile Include="ServiceObjects\Client API\OutOfOfficeClientSO.cs" />
     <Compile Include="ServiceObjects\Client API\WorklistSO.cs" />
@@ -116,9 +123,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if "Debug"=="$(ConfigurationName)" (
-net stop "K2 blackpearl server"
-  xcopy /R /Y "$(TargetPath)" "c:\Program Files (x86)\K2 blackpearl\ServiceBroker\"
-net start "K2 blackpearl server"
+ xcopy /R /Y "$(TargetPath)" "c:\Program Files (x86)\K2 blackpearl\ServiceBroker\"
 )
 
 xcopy /y /r "$(SolutionDir)\Installer\Install.ps1" "$(SolutionDir)\Release\"

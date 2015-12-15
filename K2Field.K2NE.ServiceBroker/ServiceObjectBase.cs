@@ -9,6 +9,8 @@ using SourceCode.EnvironmentSettings.Client;
 using System.Threading;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using System.Data.SqlClient;
+using K2Field.K2NE.ServiceBroker.Helpers;
 
 namespace K2Field.K2NE.ServiceBroker
 {
@@ -54,7 +56,7 @@ namespace K2Field.K2NE.ServiceBroker
         {
             get
             {
-                return this.ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.LDAPPaths].ToString();
+                return this.ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.LDAPPaths].ToStringOrEmpty();
             }
         }
         public bool ChangeContainsToStartWith
@@ -87,12 +89,43 @@ namespace K2Field.K2NE.ServiceBroker
                 string adProps = ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.AdditionalADProps] as string;
                 if (!string.IsNullOrEmpty(adProps))
                 {
-                    return adProps.Split(new char[] { ';',',' }, StringSplitOptions.RemoveEmptyEntries);
+                    return adProps.Split(new char[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
                 }
                 return new string[0];
             }
         }
 
+        public Dictionary<string, string> ADOSMOQueries
+        {
+            get
+            {
+                Dictionary<string, string> queries = new Dictionary<string, string>();
+                if (!string.IsNullOrEmpty(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.ADOSMOQueries] as string))
+                {
+                    string queryProperty = (ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.ADOSMOQueries] as string).Trim();
+                    int unnamedQueryCount = 1;
+
+                    foreach (string query in queryProperty.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        string queryName = string.Format("Query {0}",unnamedQueryCount);
+                        string queryCommand = query.Trim();
+
+                        int delimeter = query.IndexOf("|");
+                        if (delimeter> 0)
+                        {
+                            queryName = query.Substring(0, delimeter).Trim();
+                            queryCommand = query.Substring(delimeter + 1).Trim();
+                        }
+                        else
+                        {
+                            unnamedQueryCount++;
+                        }
+                        queries.Add(queryName, queryCommand);
+                    }
+                }
+                return queries;
+            }
+        }
 
         /// <summary>
         /// This is the k2 client api connectionSetup object that can be used to create a connection.
@@ -125,7 +158,7 @@ namespace K2Field.K2NE.ServiceBroker
         {
             get
             {
-                return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.Platform].ToString();
+                return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.Platform].ToStringOrEmpty();
             }
         }
 
@@ -134,7 +167,7 @@ namespace K2Field.K2NE.ServiceBroker
             get
             {
 
-                return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.NetbiosNames].ToString();
+                return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.NetbiosNames].ToStringOrEmpty();
             }
         }
 
@@ -295,6 +328,11 @@ namespace K2Field.K2NE.ServiceBroker
                 return false;
             string val = p.Value as string;
             bool ret;
+            
+            //bool.TryParse() always returns false for these values.
+            if (val.Trim().Equals("1") | val.ToLower().Trim().Equals("yes"))
+                return true;
+
             if (bool.TryParse(val, out ret))
             {
                 return ret;
@@ -339,6 +377,38 @@ namespace K2Field.K2NE.ServiceBroker
         }
 
         #endregion Protected helper methods for property value retrieval
+
+        /*
+        /// <summary>
+        /// Method creates a SqlExecute object which only needs a SqlQuery and Parameters to be set.
+        /// </summary>
+        /// <returns></returns>
+        protected SqlExecute CreateDirectSqlExecute()
+        {
+            //SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();//BuildConnectionString();
+            ServiceBroker.IsSqlExecute = true;
+            ServiceBroker.SqlQueryExecute = new SqlExecute();
+            ServiceBroker.SqlQueryExecute.ServerName = string.Empty; //"DLX";
+            ServiceBroker.SqlQueryExecute.Provider = string.Empty; //"SQLOLEDB";
+            ServiceBroker.SqlQueryExecute.UserID = string.Empty;
+            ServiceBroker.SqlQueryExecute.Password = string.Empty;
+
+            if (this.ServiceBroker.Service.ServiceConfiguration.ServiceAuthentication.AuthenticationMode == AuthenticationMode.SSO ||
+                this.ServiceBroker.Service.ServiceConfiguration.ServiceAuthentication.AuthenticationMode == AuthenticationMode.Static)
+            {
+                ServiceBroker.SqlQueryExecute.UserID = this.ServiceBroker.Service.ServiceConfiguration.ServiceAuthentication.UserName;
+                ServiceBroker.SqlQueryExecute.Password = this.ServiceBroker.Service.ServiceConfiguration.ServiceAuthentication.Password;
+            }
+            else
+            {
+                ServiceBroker.SqlQueryExecute.IntegratedSecurity = true.ToString();
+            }
+
+            ServiceBroker.SqlQueryExecute.DifferentSQLServer = false;
+
+            return ServiceBroker.SqlQueryExecute;
+        }
+        */
 
         #endregion Protected Methods and properties that are useful for the child class
 

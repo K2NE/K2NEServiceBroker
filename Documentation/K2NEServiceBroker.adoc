@@ -13,3 +13,5 @@ include::ClientAPI.adoc[]
 include::ManagementAPI.adoc[]
 
 include::URM.adoc[]
+
+include::ADOSMOQuery.adoc[]

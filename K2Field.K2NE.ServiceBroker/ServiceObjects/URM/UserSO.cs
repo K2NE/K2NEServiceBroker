@@ -240,68 +240,75 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
 
         private void RunUMGetUsers(string ldap, string net)
         {
-            Dictionary<string, string> inputProperties = new Dictionary<string, string>()
+            try
             {
-                {Constants.SOProperties.URM.FQN, GetStringProperty(Constants.SOProperties.URM.FQN)},
-                {Constants.SOProperties.URM.Name, GetStringProperty(Constants.SOProperties.URM.Name)},
-                {Constants.SOProperties.URM.Description, GetStringProperty(Constants.SOProperties.URM.Description)},
-                {Constants.SOProperties.URM.Email, GetStringProperty(Constants.SOProperties.URM.Email)},
-                {Constants.SOProperties.URM.DisplayName, GetStringProperty(Constants.SOProperties.URM.DisplayName)},
-                {Constants.SOProperties.URM.Saml, GetStringProperty(Constants.SOProperties.URM.Saml)}
-            };
-            //Adding additional AD properties to inputProperties for filtration
-            foreach (string prop in AdditionalADProps)
-            {
-                inputProperties.Add(prop, GetStringProperty(prop));
-            }
-
-            string securityLabel = GetStringParameter(Constants.SOProperties.URM.Label, true);
-            DirectorySearcher dSearcher = new DirectorySearcher(new DirectoryEntry(ldap));
-
-            if (string.IsNullOrEmpty(securityLabel))
-            {
-                securityLabel = "K2";
-            }
-
-            dSearcher.Filter = LdapHelper.GetLdapQueryString(inputProperties, ServiceBroker.Service.ServiceObjects[0].Methods[0].Filter, IdentityType.User, ChangeContainsToStartWith);
-            dSearcher.SizeLimit = ADMaxResultSize;
-
-            dSearcher.PropertiesToLoad.Add(Constants.Properties.AdProperties.Name);
-            dSearcher.PropertiesToLoad.Add(Constants.Properties.AdProperties.Email);
-            dSearcher.PropertiesToLoad.Add(Constants.Properties.AdProperties.Description);
-            dSearcher.PropertiesToLoad.Add(Constants.Properties.AdProperties.sAMAccountName);
-            dSearcher.PropertiesToLoad.Add(Constants.Properties.AdProperties.DisplayName);
-            dSearcher.PropertiesToLoad.Add(Constants.Properties.AdProperties.ObjectSID);
-            //Adding additional AD Properties to load
-            foreach (string prop in AdditionalADProps)
-            {
-                dSearcher.PropertiesToLoad.Add(prop);
-            }
-
-            SearchResultCollection col = dSearcher.FindAll();
-            DataTable results = ServiceBroker.ServicePackage.ResultTable;
-            foreach (SearchResult res in col)
-            {
-                DataRow dr = results.NewRow();
-                string saml = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, Constants.Properties.AdProperties.sAMAccountName);
-                dr[Constants.SOProperties.URM.FQN] = string.Concat(securityLabel, ":", net, "\\", saml);
-                dr[Constants.SOProperties.URM.Name] = string.Concat(net, "\\", saml);
-                dr[Constants.SOProperties.URM.UserName] = string.Concat(net, "\\", saml);
-                dr[Constants.SOProperties.URM.Description] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, Constants.Properties.AdProperties.Description);
-                dr[Constants.SOProperties.URM.Email] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, Constants.Properties.AdProperties.Email);
-                dr[Constants.SOProperties.URM.DisplayName] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, Constants.Properties.AdProperties.DisplayName);
-                dr[Constants.SOProperties.URM.ObjectSid] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, Constants.Properties.AdProperties.ObjectSID);
-                dr[Constants.SOProperties.URM.Manager] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, Constants.Properties.AdProperties.Manager);
-                dr[Constants.SOProperties.URM.Saml] = saml;
-                //Adding additional AD Properties
+                Dictionary<string, string> inputProperties = new Dictionary<string, string>()
+                {
+                    {Constants.SOProperties.URM.FQN, GetStringProperty(Constants.SOProperties.URM.FQN)},
+                    {Constants.SOProperties.URM.Name, GetStringProperty(Constants.SOProperties.URM.Name)},
+                    {Constants.SOProperties.URM.Description, GetStringProperty(Constants.SOProperties.URM.Description)},
+                    {Constants.SOProperties.URM.Email, GetStringProperty(Constants.SOProperties.URM.Email)},
+                    {Constants.SOProperties.URM.DisplayName, GetStringProperty(Constants.SOProperties.URM.DisplayName)},
+                    {Constants.SOProperties.URM.Saml, GetStringProperty(Constants.SOProperties.URM.Saml)}
+                };
+                //Adding additional AD properties to inputProperties for filtration
                 foreach (string prop in AdditionalADProps)
                 {
-                    dr[prop] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, prop);
+                    inputProperties.Add(prop, GetStringProperty(prop));
                 }
-                lock (ServiceBroker.ServicePackage.ResultTable)
+
+                string securityLabel = GetStringParameter(Constants.SOProperties.URM.Label, true);
+                DirectorySearcher dSearcher = new DirectorySearcher(new DirectoryEntry(ldap));
+
+                if (string.IsNullOrEmpty(securityLabel))
                 {
-                    results.Rows.Add(dr);
+                    securityLabel = "K2";
                 }
+
+                dSearcher.Filter = LdapHelper.GetLdapQueryString(inputProperties, ServiceBroker.Service.ServiceObjects[0].Methods[0].Filter, IdentityType.User, ChangeContainsToStartWith);
+                dSearcher.SizeLimit = ADMaxResultSize;
+
+                dSearcher.PropertiesToLoad.Add(Constants.Properties.AdProperties.Name);
+                dSearcher.PropertiesToLoad.Add(Constants.Properties.AdProperties.Email);
+                dSearcher.PropertiesToLoad.Add(Constants.Properties.AdProperties.Description);
+                dSearcher.PropertiesToLoad.Add(Constants.Properties.AdProperties.sAMAccountName);
+                dSearcher.PropertiesToLoad.Add(Constants.Properties.AdProperties.DisplayName);
+                dSearcher.PropertiesToLoad.Add(Constants.Properties.AdProperties.ObjectSID);
+                //Adding additional AD Properties to load
+                foreach (string prop in AdditionalADProps)
+                {
+                    dSearcher.PropertiesToLoad.Add(prop);
+                }
+
+                SearchResultCollection col = dSearcher.FindAll();
+                DataTable results = ServiceBroker.ServicePackage.ResultTable;
+                foreach (SearchResult res in col)
+                {
+                    DataRow dr = results.NewRow();
+                    string saml = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, Constants.Properties.AdProperties.sAMAccountName);
+                    dr[Constants.SOProperties.URM.FQN] = string.Concat(securityLabel, ":", net, "\\", saml);
+                    dr[Constants.SOProperties.URM.Name] = string.Concat(net, "\\", saml);
+                    dr[Constants.SOProperties.URM.UserName] = string.Concat(net, "\\", saml);
+                    dr[Constants.SOProperties.URM.Description] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, Constants.Properties.AdProperties.Description);
+                    dr[Constants.SOProperties.URM.Email] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, Constants.Properties.AdProperties.Email);
+                    dr[Constants.SOProperties.URM.DisplayName] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, Constants.Properties.AdProperties.DisplayName);
+                    dr[Constants.SOProperties.URM.ObjectSid] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, Constants.Properties.AdProperties.ObjectSID);
+                    dr[Constants.SOProperties.URM.Manager] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, Constants.Properties.AdProperties.Manager);
+                    dr[Constants.SOProperties.URM.Saml] = saml;
+                    //Adding additional AD Properties
+                    foreach (string prop in AdditionalADProps)
+                    {
+                        dr[prop] = LdapHelper.GetSingleStringPropertyCollectionValue(res.Properties, prop);
+                    }
+                    lock (ServiceBroker.ServicePackage.ResultTable)
+                    {
+                        results.Rows.Add(dr);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(string.Format("Caught exception at RunUMGetUsers({0},{1})", ldap, net), ex);
             }
         }
     }
