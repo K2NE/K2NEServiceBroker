@@ -1,5 +1,8 @@
 == ChangeLog
 
+=== v1.6.8
+- Slightly better exception handling in UserSO
+
 === v1.6.7
 - Added Out of Office to Client API
 
