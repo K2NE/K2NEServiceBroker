@@ -1,15 +1,14 @@
 == ChangeLog
+
+=== v1.6.7
+- Added Out of Office to Client API
+
 === v1.6.6
 - Added link:ADOSMOQuery.adoc[ADO SMO Query service object].
 - K2Field.K2NE.ServiceBroker.GetBoolProperty() method allows to use 1/0, Yes/No values as boolean, instead of True/False only.
 
 === v1.6.5
 - Add List Activities method
-
-
-=== v1.6.next
-- Added Out of Office to Client API
-- Edited post-deployment script for 'Debug' build to stop/start K2 blackpearl during deployment
 
 === v1.6.4
 - Added Redirect to Client API
