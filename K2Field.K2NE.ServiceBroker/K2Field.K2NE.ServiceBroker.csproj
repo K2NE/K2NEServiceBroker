@@ -131,6 +131,9 @@ xcopy /y /r "$(SolutionDir)\Documentation\*.adoc" "$(SolutionDir)\Release\"
 xcopy /q /y "$(TargetPath)" "$(SolutionDir)\Release\"
 </PostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>powershell.exe -file "$(SolutionDir)\Solution Files\UpdateBuildNr.ps1"</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
