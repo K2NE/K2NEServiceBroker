@@ -172,27 +172,34 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         #region Public methods
         public static string GetSingleStringPropertyCollectionValue(ResultPropertyCollection props, string name)
         {
-            if (!props.Contains(name))
+            try
             {
-                return string.Empty;
-            }
-            ResultPropertyValueCollection pvc = props[name];
-            if (pvc == null || pvc.Count == 0)
-            {
-                return string.Empty;
-            }
-            if (string.Compare(name, Constants.Properties.AdProperties.ObjectSID) == 0)
-            {
-                byte[] sidInBytes = (byte[])pvc[0];
-                SecurityIdentifier sid = new SecurityIdentifier(sidInBytes, 0);
-                return Convert.ToString(sid);
-            }
-            else
-            {
-                return Convert.ToString(pvc[0]);
+                if (!props.Contains(name))
+                {
+                    return string.Empty;
+                }
+                ResultPropertyValueCollection pvc = props[name];
+                if (pvc == null || pvc.Count == 0)
+                {
+                    return string.Empty;
+                }
+                if (string.Compare(name, Constants.Properties.AdProperties.ObjectSID) == 0)
+                {
+                    byte[] sidInBytes = (byte[])pvc[0];
+                    SecurityIdentifier sid = new SecurityIdentifier(sidInBytes, 0);
+                    return Convert.ToString(sid);
+                }
+                else
+                {
+                    return Convert.ToString(pvc[0]);
 
+                }
             }
-        }
+            catch (Exception ex)
+            {
+                throw new ApplicationException(string.Format("Failed to retrieve property '{0}' from ResultPropertyCollection.", name), ex);
+            }
+         }
         /// <summary>
         /// Converts Input properties and SMO internal filtering to LDAP query filters
         /// </summary>
