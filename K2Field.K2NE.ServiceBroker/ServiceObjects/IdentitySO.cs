@@ -49,6 +49,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.UserCultureLCID, SoType.Text, "User Culture LCID."));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.UserCultureName, SoType.Text, "User Culture Name."));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.UserCultureNumberFormat, SoType.Text, "User Culture Number format."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.K2ImpersonateUser, SoType.Text, "User to impersonate with K2 API."));
 
 
 
@@ -63,6 +64,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             mGetWorkflowClientIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.CallingFQN);
 
             mGetWorkflowClientIdentity.InputProperties.Add(Constants.SOProperties.Identity.UserWindowsImpersonation);
+            mGetWorkflowClientIdentity.InputProperties.Add(Constants.SOProperties.Identity.K2ImpersonateUser);
             so.Methods.Add(mGetWorkflowClientIdentity);
 
             Method mGetThreadIdentity = Helper.CreateMethod(Constants.Methods.Identity.ReadThreadIdentity, "Retrieve who you are for the API Identity", MethodType.Read);
@@ -174,6 +176,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 System.Security.Principal.WindowsIdentity.Impersonate(IntPtr.Zero);
             }
 
+            string k2imp = GetStringProperty(Constants.SOProperties.Identity.K2ImpersonateUser, false);
+
             ServiceObject serviceObject = ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
             DataTable results = ServiceBroker.ServicePackage.ResultTable;
@@ -181,6 +185,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             using (Connection k2Con = new Connection())
             {
                 k2Con.Open(K2ClientConnectionSetup);
+                if (!string.IsNullOrEmpty(k2imp))
+                {
+                    k2Con.ImpersonateUser(k2imp);
+                }
 
                 DataRow dr = results.NewRow();
                 dr[Constants.SOProperties.Identity.FQN] = k2Con.User.FQN;

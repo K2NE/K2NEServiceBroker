@@ -325,13 +325,22 @@ namespace K2Field.K2NE.ServiceBroker
         {
             Property p = ServiceBroker.Service.ServiceObjects[0].Properties[name];
             if (p == null)
+            {
                 return false;
+            }
             string val = p.Value as string;
             bool ret;
+
+            if (string.IsNullOrEmpty(val))
+            {
+                return false;
+            }
             
             //bool.TryParse() always returns false for these values.
-            if (val.Trim().Equals("1") | val.ToLower().Trim().Equals("yes"))
+            if (string.Compare(val.Trim(), "1") == 0 || string.Compare(val.Trim(), "yes") == 0) 
+            {
                 return true;
+            }
 
             if (bool.TryParse(val, out ret))
             {
