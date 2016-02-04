@@ -1,9 +1,9 @@
 == ChangeLog
 === v1.6.7
-- ADO SMO Query:
--- Refactored code
--- Changed logik to pass smartobject properties to query
---  
+==== ADO SMO Query:
+- Refactored code
+- Changed logik to pass smartobject properties to query
+  
 === v1.6.6
 - Added link:ADOSMOQuery.adoc[ADO SMO Query service object].
 - K2Field.K2NE.ServiceBroker.GetBoolProperty() method allows to use 1/0, Yes/No values as boolean, instead of True/False only.
