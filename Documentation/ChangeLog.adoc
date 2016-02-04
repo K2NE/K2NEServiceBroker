@@ -2,7 +2,7 @@
 === v1.6.7
 ==== ADO SMO Query:
 - Refactored code
-- Changed logic to pass smartobject properties to query. Now using HAVING operator is deprecated. See link:ADOSMOQuery.adoc[ADO SMO Query service object] for more information.
+- Changed logic to pass smartobject properties to filter a query. See link:ADOSMOQuery.adoc[ADO SMO Query service object] for more information.
 - Added support to read queries from the xml file.
   
 === v1.6.6

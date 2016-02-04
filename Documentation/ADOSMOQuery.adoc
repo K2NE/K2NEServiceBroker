@@ -4,14 +4,17 @@ Runs ADO queries against smartobjects. Main features:
 * Supports multiple queries and creates separate service objects for each query
 * Each service object contains properties with name and type returned by query
 * Allows using input parameters and map them to input properties
+* Queries can be read from a xml file
   
 === General queries' rules:
-
-* Multiple queries must be delimited with semicolon symbol ';'. E.g. [Query string 1];[Query string 2]
-* Each query string can contain a custom name delimited from query command with pipe symbol '|'. E.g. "Super query|SELECT id, title FROM SmO1". Custom name will be used as a name for the service object. If no custom name specified, then "Query [n]" will be used, where [n] is the ordinal number of query string
-* To use smartobject's input properties as query conditions(filters), parameters should be specified as [@parName] after HAVING statement. E.g. "SELECT id,title FROM SmO1 HAVING id=@id"
-* Queries with star mask '*' in the fields list are supported: "SELECT * FROM SmO1 HAVING id=@id"
+==== Common rules
+* Queries with star mask '*' in the fields list are supported: "SELECT * FROM SmO1"
 * Additional information about ADO.Net provider for smartobjects and queries: http://help.k2.com/onlinehelp/k2blackpearl/devref/current/default.htm#ADO_NET_Provider.htm
 
-=== Known issues:
-* Parameters in WHERE clause are not supported. E.g. "SELECT id,title FROM SmO1 WHERE id=@id" will raise an error when intializing service objects. But queries like "SELECT id,title FROM SmO1 WHERE code='code1' HAVING id=@id" will work.
+==== If using queries specified in the service object settings property ("Data queries delimited by ;"):
+* Multiple queries must be delimited with semicolon symbol ';'. E.g. [Query string 1];[Query string 2]
+* Each query string can contain a custom name delimited from query command with pipe symbol '|'. E.g. "Super query|SELECT id, title FROM SmO1". Custom name will be used as a name for the service object. If no custom name specified, then "Query [n]" will be used, where [n] is the ordinal number of query string
+
+==== If using queries from the xml file:
+* Specify the file path in the "SMO data queries file path" service object property.
+* See sample xml file link:ADOSMOQuery.SampleQueries.xml[ADOSMOQuery.SampleQueries.xml] for more information 

@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- sample query based on http://blog.sqlauthority.com/2007/04/29/sql-server-random-number-generator-script-sql-query/ . To run it only MS SQL server required.-->
+<!--
+Each query should be in the following format:
+<queries>
+  <query name="The name of the query. Not required. Will be used as service\smart object name">
+      <command>
+        a SQL command to be run. Without semicolon in the end. ">" and "<" symbols must be encoded as "&gt;" and "&lt;" without quotes.
+        For example:
+        SELECT 
+          id "Unique ID", 
+          TITLE
+        FROM 
+          TABLE1
+        WHERE
+          (id &dt; 3) AND (SomeField LIKE "somevalue")
+      </command>
+  </query>
+  <query name="Next query...">
+      <command>
+        a command...
+      </command>
+  </query>
+</queries>
+-->
+<queries>
+  <query name="Generate rundom numbers.">
+    <command>
+      SELECT
+       randomNumber,
+       COUNT(1) countOfRandomNumber
+      FROM (
+        SELECT
+          ABS(CAST(NEWID() AS binary(6)) % 1000) + 1 randomNumber
+        FROM sysobjects) sample
+      GROUP BY randomNumber
+      ORDER BY randomNumber
+    </command>
+  </query>
+</queries>
