@@ -42,19 +42,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 ServiceObject so = Helper.CreateServiceObject(query.Key, "ADO.NET SMO query.");
 
                 DataTable results = new DataTable();
-                /* To do: parsing properties. Without that queries contains WHERE and @parameters will not work on initialization level (no properties created).
-                 * The queries like this do not work at the moment:
-                 * SELECT * FROM table WHERE type = @type
-                 * There is no custom error message, only system one, because
-                 * it's impossible to found if there are @parameters used within WHERE clause, because these queries will work:
-                 * SELECT * FROM table WHERE type='Type1' HAVING (id = @id)
-                
-                foreach (Match match in Regex.Matches(query.Value, "\\@\\w+"))
-                {
-                }
-                */
 
-                results = GetData(query.Value, new Properties(), true);
+                results = ADOSMODataHelper.GetSchema(base.BaseAPIConnectionString, query.Value);
 
                 Method soMethod = Helper.CreateMethod("List", "Returns result of SMO query.", MethodType.List);
                 soMethod.MetaData.AddServiceElement("Query", query.Value);
@@ -79,44 +68,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             string query = serviceObject.Methods[0].MetaData.GetServiceElement<string>("Query");
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
-            results.Load(GetData(query, serviceObject.Properties, false).CreateDataReader());
+            results.Load(ADOSMODataHelper.GetData(base.BaseAPIConnectionString, query, serviceObject.Properties));
         }
 
-        private DataTable GetData(string query, Properties props, bool schemaOnly)
-        {
-            DataTable results = new DataTable();
-
-            using (SOConnection connection = new SOConnection(base.BaseAPIConnectionString))
-            {
-                using (SOCommand command = new SOCommand(query, connection))
-                {
-                    using (SODataAdapter adapter = new SODataAdapter(command))
-                    {
-
-                        foreach (Property prop in props)
-                        {
-                            if (prop.Value != null)
-                            {
-                                command.Parameters.AddWithValue(prop.Name, prop.Value);
-                            }
-                        }
-
-                        connection.DirectExecution = true;
-                        connection.Open();
-
-                        if (schemaOnly)
-                        {
-                            adapter.FillSchema(results, SchemaType.Source);
-                        }
-                        else
-                        {
-                            adapter.Fill(results);
-                        }
-                    }
-                }
-                connection.Close();
-            }
-            return results;
-        }
     }
 }

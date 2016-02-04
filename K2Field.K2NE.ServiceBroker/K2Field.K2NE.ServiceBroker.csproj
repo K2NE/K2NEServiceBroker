@@ -88,6 +88,7 @@
     <Compile Include="Constants\Properties.cs" />
     <Compile Include="Constants\SOProperties.cs" />
     <Compile Include="Constants\StringFormats.cs" />
+    <Compile Include="Helpers\ADOSMODataHelper.cs" />
     <Compile Include="Helpers\FilterItem.cs" />
     <Compile Include="Helpers\LdapHelper.cs" />
     <Compile Include="Helpers\MetaDataExtensions.cs" />
