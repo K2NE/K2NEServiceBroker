@@ -17,4 +17,4 @@ Runs ADO queries against smartobjects. Main features:
 
 ==== If using queries from the xml file:
 * Specify the file path in the "SMO data queries file path" service object property.
-* See sample xml file link:ADOSMOQuery.SampleQueries.xml[ADOSMOQuery.SampleQueries.xml] for more information 
+* See sample xml file link:ADOSMOQuery.SampleQueries.xml.adoc[ADOSMOQuery.SampleQueries.xml] for more information 
