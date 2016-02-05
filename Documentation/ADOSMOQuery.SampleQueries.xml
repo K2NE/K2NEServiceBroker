@@ -23,9 +23,19 @@ Each query should be in the following format:
 </queries>
 -->
 <queries>
-  <query name="Display proc inst and activities names.">
+  <query name="Display process instances and activities names.">
     <command>
-      SELECT PI.*,AI.ActivityName FROM Process_Instance AS PI INNER JOIN Activity_Instance AS AI ON PI.ProcessInstanceId = AI.ProcessInstanceId
+      SELECT
+        PI.*,
+        AI.ActivityName
+      FROM
+        Process_Instance AS PI
+        INNER JOIN
+          Activity_Instance AS AI
+        ON
+          PI.ProcessInstanceId = AI.ProcessInstanceId
+      HAVING 
+        PI.ProcessInstanceId = @ProcessInstanceId
     </command>
   </query>
 </queries>
