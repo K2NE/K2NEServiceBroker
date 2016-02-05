@@ -408,6 +408,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 net = netbioses[i];
                 RunUMGetUsers(ldap, net, maxResultSet);
             });
+            //This line of code is needed so that the received items are not filtered again by K2 internal filtering of SMO.
+            ServiceBroker.Service.ServiceObjects[0].Methods[0].Filter = null;
         }
 
         private void RunUMGetUsers(string ldap, string netbios, int maxResultSet)

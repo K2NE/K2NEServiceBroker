@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using K2Field.K2NE.ServiceBroker.Helpers;
 using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using System.Data;
-
-using SourceCode.Workflow.Management.OOF;
 using SourceCode.Workflow.Client;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects
@@ -157,18 +153,34 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
                 WorklistShares wsColl = k2Con.GetCurrentSharingSettings(ShareType.OOF);
 
-                //  Throw error if multiple configurations (WorklistShare objects) detected, as this method cannot support that
+                //  Throw error if multiple configurations (WorklistShare objects) detected, as this method cannot support that 
                 if (wsColl.Count > 1)
                 {
                     throw new ApplicationException(Constants.ErrorMessages.MultipleOOFConfigurations);
                 }
 
-                //  If configuration exist already, add to it
-                if (wsColl.Count == 1)
+
+                //  If configuration exist already, add to it 
+                else if (wsColl.Count == 1)
                 {
 
+
                     WorklistShare worklistshare = wsColl[0];
-                    worklistshare.WorkTypes[0].Destinations.Add(new Destination(destinationUser, DestinationType.User));
+
+                    int capacity = worklistshare.WorkTypes[0].Destinations.Count;
+
+                    string[] existingDestinations = new string[capacity];
+
+                    for (int i = 0; i < capacity; i++)
+                    {
+                        existingDestinations[i] = worklistshare.WorkTypes[0].Destinations[i].Name.ToUpper().Trim();
+                    }
+
+                    if (Array.IndexOf(existingDestinations, destinationUser.ToUpper().Trim()) == -1)
+                    {
+                        worklistshare.WorkTypes[0].Destinations.Add(new Destination(destinationUser, DestinationType.User));
+                    }
+
                     bool result = k2Con.ShareWorkList(worklistshare);
 
                     DataRow dr = results.NewRow();
@@ -177,10 +189,14 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
                     results.Rows.Add(dr); ;
 
+
                 }
-                // New user, create configuration for OOF
+                // New user, create configuration for OOF 
                 else
                 {
+
+
+
                     // ALL Work that remains which does not form part of any "WorkTypeException" Filter 
                     WorklistCriteria worklistcriteria = new WorklistCriteria();
                     worklistcriteria.Platform = "ASP";
@@ -190,7 +206,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     worktypedestinations.Add(new Destination(destinationUser, DestinationType.User));
 
                     // Link the filters and destinations to the Work 
-                    WorkType worktype = new WorkType("MyWork", worklistcriteria, worktypedestinations);
+                    WorkType worktype = new WorkType("MyWork_" + k2Con.User.FQN, worklistcriteria, worktypedestinations);
 
                     WorklistShare worklistshare = new WorklistShare();
                     worklistshare.ShareType = ShareType.OOF;
@@ -204,6 +220,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     dr[Constants.SOProperties.OutOfOffice.DestinationUser] = destinationUser;
 
                     results.Rows.Add(dr);
+
                 }
 
                 k2Con.Close();
