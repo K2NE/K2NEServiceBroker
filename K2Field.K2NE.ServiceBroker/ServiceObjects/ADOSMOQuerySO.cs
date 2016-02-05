@@ -54,9 +54,12 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 Dictionary<string, string> props = new Dictionary<string, string>();
                 foreach (Match match in Regex.Matches(query.Value, "\\@\\w+"))
                 {
-                    props.Add(match.ToString(),"0");
+                    if (!props.ContainsKey(match.ToString()))
+                    {
+                        props.Add(match.ToString(), "0");
+                    }
                 }
-                
+
                 results = ADOSMODataHelper.GetSchema(base.BaseAPIConnectionString, query.Value, props);
 
                 Method soMethod = Helper.CreateMethod("List", "Returns result of SMO query.", MethodType.List);
