@@ -9,6 +9,7 @@ Runs ADO queries against smartobjects. Main features:
 === General queries' rules:
 ==== Common rules
 * Queries with star mask '*' in the fields list are supported: "SELECT * FROM SmO1"
+* To use smartobject's input properties as query filters, parameters should be specified as [@parName] after WHERE\HAVING statement. E.g. "SELECT id,title FROM SmO1 WHERE id=@id". 
 * Additional information about ADO.Net provider for smartobjects and queries: http://help.k2.com/onlinehelp/k2blackpearl/devref/current/default.htm#ADO_NET_Provider.htm
 
 ==== If using queries specified in the service object settings property ("Data queries delimited by ;"):

@@ -1,4 +1,9 @@
 == ChangeLog
+=== v1.6.10
+==== ADO SMO Query:
+- Refactored code
+- Changed logic to pass smartobject properties to filter a query. See link:ADOSMOQuery.adoc[ADO SMO Query service object] for more information.
+- Added support to read queries from the xml file.
 
 === v1.6.8
 - Slightly better exception handling in UserSO

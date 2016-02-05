@@ -43,7 +43,21 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
                 DataTable results = new DataTable();
 
-                results = ADOSMODataHelper.GetSchema(base.BaseAPIConnectionString, query.Value);
+                /* To do: parsing properties. Without that queries contains WHERE and @parameters will not work on initialization level (no properties created).
+                 * The queries like this do not work at the moment:
+                 * SELECT * FROM table WHERE type = @type
+                 * There is no custom error message, only system one, because
+                 * it's impossible to found if there are @parameters used within WHERE clause, because these queries will work:
+                 * SELECT * FROM table WHERE type='Type1' HAVING (id = @id)
+                */
+
+                Dictionary<string, string> props = new Dictionary<string, string>();
+                foreach (Match match in Regex.Matches(query.Value, "\\@\\w+"))
+                {
+                    props.Add(match.ToString(),"0");
+                }
+                
+                results = ADOSMODataHelper.GetSchema(base.BaseAPIConnectionString, query.Value, props);
 
                 Method soMethod = Helper.CreateMethod("List", "Returns result of SMO query.", MethodType.List);
                 soMethod.MetaData.AddServiceElement("Query", query.Value);
