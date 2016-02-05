@@ -193,6 +193,7 @@ namespace K2Field.K2NE.ServiceBroker
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ChangeContainsToStartsWith, true, "true");
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.AdditionalADProps, false, "");
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ADOSMOQueries, false, "");
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ADOSMOQueriesFile, false, "");
             return base.GetConfigSection();
         }
         public void Init(IServiceMarshalling serviceMarshalling, IServerMarshaling serverMarshaling)

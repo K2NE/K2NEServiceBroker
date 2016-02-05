@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- sample query based on http://blog.sqlauthority.com/2007/04/29/sql-server-random-number-generator-script-sql-query/ . To run it only MS SQL server required.-->
 <!--
 Each query should be in the following format:
 <queries>
@@ -24,17 +23,9 @@ Each query should be in the following format:
 </queries>
 -->
 <queries>
-  <query name="Generate rundom numbers.">
+  <query name="Display proc inst and activities names.">
     <command>
-      SELECT
-       randomNumber,
-       COUNT(1) countOfRandomNumber
-      FROM (
-        SELECT
-          ABS(CAST(NEWID() AS binary(6)) % 1000) + 1 randomNumber
-        FROM sysobjects) sample
-      GROUP BY randomNumber
-      ORDER BY randomNumber
+      SELECT PI.*,AI.ActivityName FROM Process_Instance AS PI INNER JOIN Activity_Instance AS AI ON PI.ProcessInstanceId = AI.ProcessInstanceId
     </command>
   </query>
 </queries>
