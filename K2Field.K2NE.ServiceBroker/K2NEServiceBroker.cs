@@ -179,15 +179,15 @@ namespace K2Field.K2NE.ServiceBroker
             catch (Exception ex)
             {
                 StringBuilder error = new StringBuilder();
-                error.AppendFormat("Exception.Message: {0}", ex.Message);
-                error.AppendFormat("Exception.StackTrace: {0}", ex.Message);
+                error.AppendFormat("Exception.Message: {0}\n", ex.Message);
+                error.AppendFormat("Exception.StackTrace: {0}\n", ex.Message);
 
                 Exception innerEx = ex;
                 int i = 0;
                 while (innerEx.InnerException != null)
                 {
-                    error.AppendFormat("{0} InnerException.Message: {1}", i, innerEx.InnerException.Message);
-                    error.AppendFormat("{0} InnerException.StackTrace: {1}", i, innerEx.InnerException.StackTrace);
+                    error.AppendFormat("{0} InnerException.Message: {1}\n", i, innerEx.InnerException.Message);
+                    error.AppendFormat("{0} InnerException.StackTrace: {1}\n", i, innerEx.InnerException.StackTrace);
                     innerEx = innerEx.InnerException;
                     i++;
                 }
