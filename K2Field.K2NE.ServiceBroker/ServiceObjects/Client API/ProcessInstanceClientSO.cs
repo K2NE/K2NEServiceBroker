@@ -16,7 +16,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
         {
             get
             {
-                return "Client API";
+                return Constants.ServiceFolders.ClientAPI;
             }
         }
         public override List<ServiceObject> DescribeServiceObjects()

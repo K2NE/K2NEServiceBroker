@@ -29,7 +29,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         {
             get
             {
-                return "ADOSMOQuery";
+                return Constants.ServiceFolders.ADONETQuery;
             }
         }
 

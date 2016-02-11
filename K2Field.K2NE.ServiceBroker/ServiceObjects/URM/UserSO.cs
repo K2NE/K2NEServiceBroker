@@ -19,7 +19,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
         }
         public override string ServiceFolder
         {
-            get { return "URM"; }
+            get { return Constants.ServiceFolders.URM; }
         }
 
         public override List<ServiceObject> DescribeServiceObjects()
