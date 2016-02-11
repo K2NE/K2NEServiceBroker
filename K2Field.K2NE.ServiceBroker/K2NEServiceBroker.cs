@@ -186,8 +186,8 @@ namespace K2Field.K2NE.ServiceBroker
                 int i = 0;
                 while (innerEx.InnerException != null)
                 {
-                    error.AppendFormat("{0} InnerException.Message: {1}", i, ex.InnerException.Message);
-                    error.AppendFormat("{0} InnerException.StackTrace: {1}", i, ex.InnerException.StackTrace);
+                    error.AppendFormat("{0} InnerException.Message: {1}", i, innerEx.InnerException.Message);
+                    error.AppendFormat("{0} InnerException.StackTrace: {1}", i, innerEx.InnerException.StackTrace);
                     innerEx = innerEx.InnerException;
                     i++;
                 }
