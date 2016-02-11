@@ -82,9 +82,13 @@ namespace K2Field.K2NE.ServiceBroker
                 }
                 lock (serviceObjectToTypeLock)
                 {
-                    if (_serviceObjectToType.Count != 0) return _serviceObjectToType;
+                    if (_serviceObjectToType.Count != 0)
+                    {
+                        return _serviceObjectToType;
+                    }
+
                     _serviceObjectToType = new Dictionary<string, Type>();
-                    foreach (var soBase in ServiceObjects)
+                    foreach (ServiceObjectBase soBase in ServiceObjects)
                     {
                         foreach (ServiceObject so in soBase.DescribeServiceObjects())
                         {

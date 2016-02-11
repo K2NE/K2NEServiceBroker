@@ -97,7 +97,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
             DataTable dtResults = ServiceBroker.ServicePackage.ResultTable;
 
-            var identityFromName = base.ServiceBroker.IdentityService.GetIdentityFromName(base.ServiceBroker.SecurityManager.GetFullyQualifiedName(fqn), IdentityType.Group, (string)null);
+            ICachedIdentity identityFromName = base.ServiceBroker.IdentityService.GetIdentityFromName(base.ServiceBroker.SecurityManager.GetFullyQualifiedName(fqn), IdentityType.Group, (string)null);
             if (identityFromName == null)
             {
                 return;
@@ -154,7 +154,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
 
                 foreach (Dictionary<string, string> filterCollectionValues in urmFilter.GetFilterCollection().Values)
                 {
-                    foreach (var keyValuePair in filterCollectionValues)
+                    foreach (KeyValuePair<string,string> keyValuePair in filterCollectionValues)
                     {
                         switch (keyValuePair.Key)
                         {
@@ -187,7 +187,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                         return;
                     }
 
-                    foreach (var cachedIdentity in identities)
+                    foreach (ICachedIdentity cachedIdentity in identities)
                     {
                         if (cachedIdentity.Type == IdentityType.Group)
                         {
@@ -231,7 +231,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             }
             
             string securityLabel = GetStringParameter(Constants.SOProperties.URM.Label, true);
-            var dSearcher = new DirectorySearcher(new DirectoryEntry(ldap));
+            DirectorySearcher dSearcher = new DirectorySearcher(new DirectoryEntry(ldap));
 
             if (string.IsNullOrEmpty(securityLabel))
             {

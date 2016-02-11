@@ -211,7 +211,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             bool resolveContainers = GetBoolProperty(Constants.SOProperties.Identity.ResolveContainers);
             bool resolveMembers = GetBoolProperty(Constants.SOProperties.Identity.ResolveMembers);
 
-            var fqnName = new FQName(fqn);
+            FQName fqnName = new FQName(fqn);
 
             base.ServiceBroker.IdentityService.ResolveIdentity(fqnName, iType, IdentityResolveOptions.Identity);
 

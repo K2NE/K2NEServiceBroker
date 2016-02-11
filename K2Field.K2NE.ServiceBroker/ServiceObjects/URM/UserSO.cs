@@ -115,9 +115,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                 DataTable dtResults = ServiceBroker.ServicePackage.ResultTable;
                 URMFilter urmFilter = new URMFilter(ServiceBroker.Service.ServiceObjects[0].Methods[0].Filter);
 
-                foreach (var dictionary in urmFilter.GetFilterCollection().Values)
+                foreach (Dictionary<string,string> dictionary in urmFilter.GetFilterCollection().Values)
                 {
-                    foreach (var keyValuePair in dictionary)
+                    foreach (KeyValuePair<string,string> keyValuePair in dictionary)
                     {
                         switch (keyValuePair.Key)
                         {
@@ -192,7 +192,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                     }
                     if (collection != null)
                     {
-                        foreach (var cachedIdentity in collection)
+                        foreach (ICachedIdentity cachedIdentity in collection)
                         {
                             if (cachedIdentity.Type == IdentityType.User)
                             {
