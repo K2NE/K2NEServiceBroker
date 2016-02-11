@@ -1,5 +1,10 @@
 == ChangeLog
 
+=== v1.6.9
+- We now version number every build. this helps with identifying which build a user/customer has.
+- Even better exception handling, we really had a silly bug there
+- We removed all the VAR's and did some code cleanup.
+
 === v1.6.8
 - Slightly better exception handling in UserSO
 
