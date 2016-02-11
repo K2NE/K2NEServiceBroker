@@ -152,7 +152,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                 DataTable dtResults = ServiceBroker.ServicePackage.ResultTable;
                 URMFilter urmFilter = new URMFilter(ServiceBroker.Service.ServiceObjects[0].Methods[0].Filter);
 
-                foreach (var filterCollectionValues in urmFilter.GetFilterCollection().Values)
+                foreach (Dictionary<string, string> filterCollectionValues in urmFilter.GetFilterCollection().Values)
                 {
                     foreach (var keyValuePair in filterCollectionValues)
                     {
@@ -181,7 +181,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                     {
                         dictionary2["Label"] = securityLabel as object;
                     }
-                    var identities = base.ServiceBroker.IdentityService.FindIdentities(dictionary2, IdentitySearchOptions.Groups);
+                    ICollection<ICachedIdentity> identities = base.ServiceBroker.IdentityService.FindIdentities(dictionary2, IdentitySearchOptions.Groups);
                     if (identities == null)
                     {
                         return;

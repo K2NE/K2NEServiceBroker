@@ -21,13 +21,19 @@ namespace K2Field.K2NE.ServiceBroker
         private object syncobject = new object();
         #endregion Private Properties
 
+
+        #region Public properties for ServiceObjectBase's child classes.
         //public Logger Logger { get; private set; }
         public IIdentityService IdentityService { get; private set; }
         public ISecurityManager SecurityManager { get; private set; }
+        #endregion Public properties for ServiceObjectBase's child classes.
 
 
 
         #region Private Methods
+        /// <summary>
+        /// Cache of all service object that we have. We load this into a static object in the hope to re-use it as often as possible.
+        /// </summary>
         private IEnumerable<ServiceObjectBase> ServiceObjects
         {
             get
@@ -62,18 +68,25 @@ namespace K2Field.K2NE.ServiceBroker
                 return _serviceObjects;
             }
         }
+
+        /// <summary>
+        /// helper property to get the type of the service object, to be able to initialize a specific instance of it.
+        /// </summary>
         private Dictionary<string, Type> ServiceObjectToType
         {
             get
             {
-                if (_serviceObjectToType.Count != 0) return _serviceObjectToType;
+                if (_serviceObjectToType.Count != 0)
+                {
+                    return _serviceObjectToType;
+                }
                 lock (serviceObjectToTypeLock)
                 {
                     if (_serviceObjectToType.Count != 0) return _serviceObjectToType;
                     _serviceObjectToType = new Dictionary<string, Type>();
                     foreach (var soBase in ServiceObjects)
                     {
-                        foreach (var so in soBase.DescribeServiceObjects())
+                        foreach (ServiceObject so in soBase.DescribeServiceObjects())
                         {
                             _serviceObjectToType.Add(so.Name, soBase.GetType());
                         }
@@ -128,14 +141,14 @@ namespace K2Field.K2NE.ServiceBroker
                 }
             }
 
-            foreach (var entry in ServiceObjects)
+            foreach (ServiceObjectBase entry in ServiceObjects)
             {
-                foreach (var so in entry.DescribeServiceObjects())
+                foreach (ServiceObject so in entry.DescribeServiceObjects())
                 {
                     Service.ServiceObjects.Add(so);
                     if (requireServiceFolders)
                     {
-                        var sf = InitializeServiceFolder(entry.ServiceFolder, entry.ServiceFolder);
+                        ServiceFolder sf = InitializeServiceFolder(entry.ServiceFolder, entry.ServiceFolder);
                         sf.Add(so);
                     }
                 }
@@ -144,31 +157,33 @@ namespace K2Field.K2NE.ServiceBroker
         }
         public override void Execute()
         {
-            var so = Service.ServiceObjects[0];
+            ServiceObject so = Service.ServiceObjects[0];
             try
             {
                 //TODO: improve performance? http://bloggingabout.net/blogs/vagif/archive/2010/04/02/don-t-use-activator-createinstance-or-constructorinfo-invoke-use-compiled-lambda-expressions.aspx
 
-
                 // This creates an instance of the object responsible to handle the execution.
-                // We can't cache the instance itself, as that gives threading issue because the object can be re-used by the k2 host server for multiple different SMO calls
-                // so we always need to know which ServiceObject we actually want to execute and create an instance first. This is  "late" initalization. We can also not keep a list of 
-                // service objects that have been instanciated around in memory as this would be to resource intensive and slow (as we would constantly initialize all).
-                var soType = ServiceObjectToType[so.Name];
-                var constParams = new object[] { this };
-                var soInstance = Activator.CreateInstance(soType, constParams) as ServiceObjectBase;
+                // We can't cache the instance itself, as that gives threading issue because the 
+                // object can be re-used by the k2 host server for multiple different SMO calls
+                // so we always need to know which ServiceObject we actually want to execute and 
+                // create an instance first. This is  "late" initalization. We can also not keep a list of 
+                // service objects that have been instanciated around in memory as this would be to resource 
+                // intensive and slow (as we would constantly initialize all).
+                Type soType = ServiceObjectToType[so.Name];
+                object[] constParams = new object[] { this };
+                ServiceObjectBase soInstance = Activator.CreateInstance(soType, constParams) as ServiceObjectBase;
 
                 soInstance.Execute();
                 ServicePackage.IsSuccessful = true;
             }
             catch (Exception ex)
             {
-                var error = new StringBuilder();
+                StringBuilder error = new StringBuilder();
                 error.AppendFormat("Exception.Message: {0}", ex.Message);
                 error.AppendFormat("Exception.StackTrace: {0}", ex.Message);
 
-                var innerEx = ex;
-                var i = 0;
+                Exception innerEx = ex;
+                int i = 0;
                 while (innerEx.InnerException != null)
                 {
                     error.AppendFormat("{0} InnerException.Message: {1}", i, ex.InnerException.Message);

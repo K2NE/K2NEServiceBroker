@@ -152,7 +152,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                                 continue;
                         }
                     }
-                    var properties = new Dictionary<string, object>()
+                    Dictionary<string, object> properties = new Dictionary<string, object>()
                     {
                         {Constants.SOProperties.URM.Name, name == String.Empty ? (object) (string) null : (object) name},
                         {
@@ -181,7 +181,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                         properties["RowCount"] = (object)(ADMaxResultSize);
                         properties["PageNumber"] = (object)1;
                     }
-                    var collection = base.ServiceBroker.IdentityService.FindIdentities((IDictionary<string, object>)properties, IdentitySearchOptions.Users);
+                    ICollection<ICachedIdentity> collection = base.ServiceBroker.IdentityService.FindIdentities((IDictionary<string, object>)properties, IdentitySearchOptions.Users);
 
           
                     bool flag = properties.ContainsKey("RowCount");
