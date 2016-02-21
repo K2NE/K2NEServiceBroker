@@ -21,6 +21,7 @@ To install:
 - Open and/or copy the Release folder in the solution directory to the K2 server.
 - Run install.ps1
 
+You will now have a registered service type and can create a new service instance.
 
 ## Disclaimer
 

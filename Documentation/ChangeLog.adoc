@@ -1,5 +1,11 @@
 == ChangeLog
 
+=== v1.6.10
+==== ADO.NET Query updates:
+- Refactored code
+- Changed logic to pass smartobject properties to filter a query. See link:ADOSMOQuery.adoc[ADO SMO Query service object] for more information.
+- Added support to read queries from the xml file.
+
 === v1.6.9
 - We now version number every build. this helps with identifying which build a user/customer has.
 - Even better exception handling, we really had a silly bug there

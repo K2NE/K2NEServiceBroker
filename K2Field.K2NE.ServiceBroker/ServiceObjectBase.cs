@@ -11,6 +11,9 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Data.SqlClient;
 using K2Field.K2NE.ServiceBroker.Helpers;
+using System.Xml;
+using System.Xml.Linq;
+using System.Linq;
 
 namespace K2Field.K2NE.ServiceBroker
 {
@@ -100,18 +103,39 @@ namespace K2Field.K2NE.ServiceBroker
             get
             {
                 Dictionary<string, string> queries = new Dictionary<string, string>();
+                string queryProperty = null;
+
+                if (!string.IsNullOrEmpty(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.ADOSMOQueriesFile] as string))
+                {
+                    // Loading from a file
+                    var xml = XDocument.Load(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.ADOSMOQueriesFile].ToString());
+                    // Query the data and write out a subset of contacts
+                    var query = from f in xml.Root.Elements("query")
+                                select (string.IsNullOrEmpty(f.Attribute("name").Value) ? "" : f.Attribute("name").Value + "|") +
+                                       f.Element("command").Value;
+                    queryProperty = string.Join(";", query);
+                }
+
                 if (!string.IsNullOrEmpty(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.ADOSMOQueries] as string))
                 {
-                    string queryProperty = (ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.ADOSMOQueries] as string).Trim();
+                    if (!string.IsNullOrEmpty(queryProperty))
+                    {
+                        queryProperty += ";";
+                    }
+                    queryProperty += (ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.ADOSMOQueries] as string).Trim();
+                }
+
+                if (!string.IsNullOrEmpty(queryProperty))
+                {
                     int unnamedQueryCount = 1;
 
                     foreach (string query in queryProperty.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
                     {
-                        string queryName = string.Format("Query {0}",unnamedQueryCount);
+                        string queryName = string.Format("Query {0}", unnamedQueryCount);
                         string queryCommand = query.Trim();
 
                         int delimeter = query.IndexOf("|");
-                        if (delimeter> 0)
+                        if (delimeter > 0)
                         {
                             queryName = query.Substring(0, delimeter).Trim();
                             queryCommand = query.Substring(delimeter + 1).Trim();
@@ -330,7 +354,7 @@ namespace K2Field.K2NE.ServiceBroker
             }
             string val = p.Value as string;
             bool ret;
-
+            
             if (string.IsNullOrEmpty(val))
             {
                 return false;
