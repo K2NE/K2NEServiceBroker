@@ -25,6 +25,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.CurrentPrincipalAuthType, SoType.Text, "The current principal's authentication type"));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.CurrentPrincipalName, SoType.Text, "The current principal's authentication identity name."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.CurrentPrincipalIdentityType, SoType.Text, "The current principal identity type"));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.FQN, SoType.Text, "The K2 FQN of the user."));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.ResolveContainers, SoType.YesNo, "If Identity containers should be also resolved."));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.ResolveMembers, SoType.YesNo, "If Identity members should be also resolved."));
@@ -71,6 +72,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             mGetThreadIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.CallingFQN);
             mGetThreadIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.CurrentPrincipalAuthType);
             mGetThreadIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.CurrentPrincipalName);
+            mGetThreadIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.CurrentPrincipalIdentityType);
             mGetThreadIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.WindowsIdentityAuthType);
             mGetThreadIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.WindowsIdentityName);
             mGetThreadIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.ServiceBrokerAuthType);
@@ -153,6 +155,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             dr[Constants.SOProperties.Identity.WindowsIdentityName] = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
             dr[Constants.SOProperties.Identity.WindowsIdentityAuthType] = System.Security.Principal.WindowsIdentity.GetCurrent().AuthenticationType;
             dr[Constants.SOProperties.Identity.CurrentPrincipalName] = System.Threading.Thread.CurrentPrincipal.Identity.Name;
+            dr[Constants.SOProperties.Identity.CurrentPrincipalIdentityType] = System.Threading.Thread.CurrentPrincipal.Identity.GetType().ToString();
             dr[Constants.SOProperties.Identity.CurrentPrincipalAuthType] = System.Threading.Thread.CurrentPrincipal.Identity.AuthenticationType;
             dr[Constants.SOProperties.Identity.ServiceBrokerUserName] = ServiceBroker.Service.ServiceConfiguration.ServiceAuthentication.UserName;
             dr[Constants.SOProperties.Identity.ServiceBrokerPassword] = ServiceBroker.Service.ServiceConfiguration.ServiceAuthentication.Password;
