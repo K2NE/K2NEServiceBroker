@@ -120,6 +120,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string UserCultureLCID = "UserCultureLCID";
             public const string UserCultureNumberFormat = "UserCultureNumberFormat";
             public const string K2ImpersonateUser = "K2ImpersonateUser";
+            public const string UseCache = "UseCache";
         }
 
         public static class ProcessInstanceManagement

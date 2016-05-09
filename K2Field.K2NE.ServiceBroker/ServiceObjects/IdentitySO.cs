@@ -89,6 +89,14 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             mGetThreadIdentity.InputProperties.Add(Constants.SOProperties.Identity.UserWindowsImpersonation);
             so.Methods.Add(mGetThreadIdentity);
 
+            Method mGetIdentities = Helper.CreateMethod(Constants.Methods.Identity.GetIdentities, "Retrieve the email addresses for identities from K2", MethodType.List);
+            mGetIdentities.InputProperties.Add(Constants.SOProperties.Identity.FQN);
+            mGetIdentities.Validation.RequiredProperties.Add(Constants.SOProperties.Identity.FQN);
+            mGetIdentities.ReturnProperties.Add(Constants.SOProperties.Identity.FQN);
+            mGetIdentities.ReturnProperties.Add(Constants.SOProperties.Identity.UserEmail);
+            mGetIdentities.ReturnProperties.Add(Constants.SOProperties.Identity.IdentityDisplayName);
+            so.Methods.Add(mGetIdentities);
+
             Method mResolveUser = Helper.CreateMethod(Constants.Methods.Identity.ResolveUserIdentity, "Resolve User Identity", MethodType.Execute);
             mResolveUser.InputProperties.Add(Constants.SOProperties.Identity.FQN);
             mResolveUser.InputProperties.Add(Constants.SOProperties.Identity.ResolveContainers);
@@ -135,6 +143,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
                 case Constants.Methods.Identity.ResolveRoleIdentity:
                     ResolveIdentity(IdentityType.Role);
+                    break;
+                case Constants.Methods.Identity.GetIdentities:
+                    GetIdentities();
                     break;
             }
 
@@ -208,6 +219,72 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         }
 
 
+        public void GetIdentities()
+        {
+            string fqn = GetStringProperty(Constants.SOProperties.Identity.FQN, true);
+           
+
+
+            Dictionary<string, object> properties = new Dictionary<string, object>();
+            properties.Add("FQN", fqn);
+
+            IdentitySearchOptions options = IdentitySearchOptions.None;
+            options |= IdentitySearchOptions.CachedOnly;
+            if (!fqn.Contains(":"))
+            {
+                options |= IdentitySearchOptions.Roles;
+            }
+            else
+            {
+                options |= IdentitySearchOptions.Groups;
+                options |= IdentitySearchOptions.Users;
+            }
+
+            ICollection<ICachedIdentity> identities = base.ServiceBroker.IdentityService.FindIdentities(properties, options);
+
+
+
+            ServiceObject serviceObject = ServiceBroker.Service.ServiceObjects[0];
+            serviceObject.Properties.InitResultTable();
+            DataTable results = ServiceBroker.ServicePackage.ResultTable;
+
+            foreach (ICachedIdentity identity in identities)
+            {
+                if (identity.Type != IdentityType.User)
+                {
+                    IdentitySearchOptions identityMemberOptions = IdentitySearchOptions.None;
+                    identityMemberOptions |= IdentitySearchOptions.Recursive;
+                    identityMemberOptions |= IdentitySearchOptions.Users;
+                    identityMemberOptions |= IdentitySearchOptions.Groups;
+                    ICollection<ICachedIdentity> identityMembers = base.ServiceBroker.IdentityService.GetIdentityMembers(identity, identityMemberOptions);
+                    foreach (ICachedIdentity identityMember in identityMembers)
+                    {
+                        AddIdentity(results, identityMember);
+                    }
+                }
+                else
+                {
+                    AddIdentity(results, identity);
+                }
+            }
+        }
+
+        private static void AddIdentity(DataTable results, ICachedIdentity identityMember)
+        {
+            DataRow dr = results.NewRow();
+            dr[Constants.SOProperties.Identity.FQN] = identityMember.FullyQualifiedName.FQN;
+            if (identityMember.Properties.ContainsKey("Email"))
+            {
+                dr[Constants.SOProperties.Identity.UserEmail] = identityMember.Properties["Email"] as string;
+            }
+            if (identityMember.Properties.ContainsKey("DisplayName"))
+            {
+                dr[Constants.SOProperties.Identity.IdentityDisplayName] = identityMember.Properties["DisplayName"] as string;
+            }
+            results.Rows.Add(dr);
+        }
+
+
         public void ResolveIdentity(IdentityType iType)
         {
             string fqn = GetStringProperty(Constants.SOProperties.Identity.FQN, true);
@@ -216,7 +293,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
             FQName fqnName = new FQName(fqn);
 
-            base.ServiceBroker.IdentityService.ResolveIdentity(fqnName, iType, IdentityResolveOptions.Identity);
 
             if (resolveMembers)
             {

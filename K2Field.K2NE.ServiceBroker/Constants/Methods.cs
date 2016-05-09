@@ -33,6 +33,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string ResolveUserIdentity = "ResolveUserIdentity";
             public const string ResolveGroupIdentity = "ResolveGroupIdentity";
             public const string ResolveRoleIdentity = "ResolveRoleIdentity";
+            public const string GetIdentities = "GetEmailFromIdentity";
         }
 
         public static class ProcessInstanceManagement
