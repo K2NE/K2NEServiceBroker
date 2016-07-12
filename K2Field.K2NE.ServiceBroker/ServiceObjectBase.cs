@@ -59,6 +59,11 @@ namespace K2Field.K2NE.ServiceBroker
         {
             get
             {
+                if (! ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.LDAPPaths))
+                {
+                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.LDAPPaths));
+                }
+
                 return this.ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.LDAPPaths].ToStringOrEmpty();
             }
         }
@@ -66,6 +71,10 @@ namespace K2Field.K2NE.ServiceBroker
         {
             get
             {
+                if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.ChangeContainsToStartsWith))
+                {
+                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.ChangeContainsToStartsWith));
+                }
                 return bool.Parse(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.ChangeContainsToStartsWith].ToString());
             }
         }
@@ -74,6 +83,10 @@ namespace K2Field.K2NE.ServiceBroker
         {
             get
             {
+                if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.AdMaxResultSize))
+                {
+                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.AdMaxResultSize));
+                }
                 return int.Parse(this.ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.AdMaxResultSize].ToString());
 
             }
@@ -167,6 +180,45 @@ namespace K2Field.K2NE.ServiceBroker
             }
         }
 
+        protected string EnvironmentToUseConfiguration
+        {
+            get
+            {
+                if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.EnvironmentToUse))
+                {
+                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.EnvironmentToUse));
+                }
+                return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.EnvironmentToUse] as string;
+            }
+        }
+
+
+        protected uint WorkflowClientPort
+        {
+            get
+            {
+                if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.WorkflowClientPort))
+                {
+                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.WorkflowClientPort));
+                }
+                return uint.Parse(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.WorkflowClientPort].ToString());
+            }
+        }
+
+        protected uint WorkflowManagementPort
+        {
+            get
+            {
+                if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.WorkflowManagmentPort))
+                {
+                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.WorkflowManagmentPort));
+                }
+
+                return uint.Parse(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.WorkflowManagmentPort].ToString());
+            }
+        }
+
+
         /// <summary>
         /// The default culture to use.
         /// </summary>
@@ -174,6 +226,10 @@ namespace K2Field.K2NE.ServiceBroker
         {
             get
             {
+                if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.DefaultCulture))
+                {
+                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.DefaultCulture));
+                }
                 return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.DefaultCulture].ToString();
             }
         }
@@ -182,6 +238,10 @@ namespace K2Field.K2NE.ServiceBroker
         {
             get
             {
+                if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.Platform))
+                {
+                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.Platform));
+                }
                 return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.Platform].ToStringOrEmpty();
             }
         }
@@ -190,7 +250,10 @@ namespace K2Field.K2NE.ServiceBroker
         {
             get
             {
-
+                if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.NetbiosNames))
+                {
+                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.NetbiosNames));
+                }
                 return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.NetbiosNames].ToStringOrEmpty();
             }
         }
@@ -354,14 +417,14 @@ namespace K2Field.K2NE.ServiceBroker
             }
             string val = p.Value as string;
             bool ret;
-            
+
             if (string.IsNullOrEmpty(val))
             {
                 return false;
             }
-            
+
             //bool.TryParse() always returns false for these values.
-            if (string.Compare(val.Trim(), "1") == 0 || string.Compare(val.Trim(), "yes") == 0) 
+            if (string.Compare(val.Trim(), "1") == 0 || string.Compare(val.Trim(), "yes") == 0)
             {
                 return true;
             }
@@ -444,35 +507,6 @@ namespace K2Field.K2NE.ServiceBroker
         */
 
         #endregion Protected Methods and properties that are useful for the child class
-
-        #region Private properties
-
-        private string EnvironmentToUseConfiguration
-        {
-            get
-            {
-                return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.EnvironmentToUse] as string;
-            }
-        }
-
-
-        private uint WorkflowClientPort
-        {
-            get
-            {
-                return uint.Parse(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.WorkflowClientPort].ToString());
-            }
-        }
-
-        private uint WorkflowManagementPort
-        {
-            get
-            {
-                return uint.Parse(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.WorkflowManagmentPort].ToString());
-            }
-        }
-
-        #endregion Private properties
 
         #region Private helper methods
 

@@ -201,18 +201,18 @@ namespace K2Field.K2NE.ServiceBroker
         }
         public override string GetConfigSection()
         {
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.WorkflowManagmentPort, true, "5555");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.WorkflowClientPort, true, "5252");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.EnvironmentToUse, false, "");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.DefaultCulture, true, "EN-us");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.Platform, false, "ASP");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.AdMaxResultSize, false, "1000");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.LDAPPaths, false, "LDAP://DC=denallix,DC=COM");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.NetbiosNames, false, "Denallix");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ChangeContainsToStartsWith, true, "true");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.AdditionalADProps, false, "");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ADOSMOQueries, false, "");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ADOSMOQueriesFile, false, "");
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.WorkflowManagmentPort, true, "5555"); // checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.WorkflowClientPort, true, "5252"); // checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.EnvironmentToUse, false, ""); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.DefaultCulture, true, "EN-us"); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.Platform, false, "ASP"); //Checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.AdMaxResultSize, false, "1000"); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.LDAPPaths, false, "LDAP://DC=denallix,DC=COM"); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.NetbiosNames, false, "Denallix"); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ChangeContainsToStartsWith, true, "true"); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.AdditionalADProps, false, ""); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ADOSMOQueries, false, ""); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ADOSMOQueriesFile, false, ""); //checked
             return base.GetConfigSection();
         }
         public void Init(IServiceMarshalling serviceMarshalling, IServerMarshaling serverMarshaling)
