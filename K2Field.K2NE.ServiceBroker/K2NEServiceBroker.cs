@@ -173,6 +173,14 @@ namespace K2Field.K2NE.ServiceBroker
                 // create an instance first. This is  "late" initalization. We can also not keep a list of 
                 // service objects that have been instanciated around in memory as this would be to resource 
                 // intensive and slow (as we would constantly initialize all).
+                if (so == null || string.IsNullOrEmpty(so.Name))
+                {
+                    throw new ApplicationException("ServiceObject is not set.");
+                }
+                if (! ServiceObjectToType.ContainsKey(so.Name))
+                {
+                    throw new ApplicationException(string.Format("{0} is not a valid service object in the ServiceObjectType collection.", so.Name));
+                }
                 Type soType = ServiceObjectToType[so.Name];
                 object[] constParams = new object[] { this };
                 ServiceObjectBase soInstance = Activator.CreateInstance(soType, constParams) as ServiceObjectBase;
@@ -184,7 +192,7 @@ namespace K2Field.K2NE.ServiceBroker
             {
                 StringBuilder error = new StringBuilder();
                 error.AppendFormat("Exception.Message: {0}\n", ex.Message);
-                error.AppendFormat("Exception.StackTrace: {0}\n", ex.Message);
+                error.AppendFormat("Exception.StackTrace: {0}\n", ex.StackTrace);
 
                 Exception innerEx = ex;
                 int i = 0;
