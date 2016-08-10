@@ -46,6 +46,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         {
             public const string StartProcessInstance = "StartProcessInstance";
             public const string StartProcess = "Start";
+            public const string SetFolio = "SetFolio";
         }
 
         public static class Role
