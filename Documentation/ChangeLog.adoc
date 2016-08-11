@@ -1,4 +1,8 @@
 == ChangeLog
+=== vNEXT
+- Added StackTrace, TypeDescription and ExecutingProcId to ErrorLog.GetErrors method. This should provide some more detail than what K2 workspace currently provides.
+
+
 === v1.6.11
 - Improved Error handling and corrected mistake in error messages.
 - Added code to make sure that if a service instance property is not set, we still handle this correctly with either an exception or a expected default.

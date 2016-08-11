@@ -19,6 +19,9 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string ErrorId = "ErrorId";
             public const string ErrorDate = "ErrorDate";
             public const string TryNewVersion = "TryNewVersion";
+            public const string TypeDescription = "TypeDescription";
+            public const string StackTrace = "StackTrace";
+            public const string ExecutingProcId = "ExecutingProcId";
         }
 
         public static class ManagementWorklist
