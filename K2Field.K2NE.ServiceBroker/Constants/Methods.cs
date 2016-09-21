@@ -24,6 +24,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string GetWorklist = "GetWorklist";
             public const string ReleaseWorklistItem = "ReleaseWorklistItem";
             public const string RedirectWorklistItem = "RedirectWorklistItem";
+            public const string ActionWorklistItem = "ActionWorklistItem";
         }
 
         public static class Identity

@@ -1,6 +1,7 @@
 == ChangeLog
 === vNEXT
 - Added StackTrace, TypeDescription and ExecutingProcId to ErrorLog.GetErrors method. This should provide some more detail than what K2 workspace currently provides.
+- Added new WorklistItem Action method to allow easier execution of an action based on process id and activity name. This is useful for assigning a task to a service account and 'pinging' the K2 process to continue.
 
 
 === v1.6.11

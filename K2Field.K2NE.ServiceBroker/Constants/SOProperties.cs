@@ -81,6 +81,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string IncludeShared = "IncludeShared";
             public const string ExcludeAllocated = "ExcludeAllocated";
             public const string FQN = "FQN";
+            public const string ActionName = "ActionName";
         }
 
         public static class Role

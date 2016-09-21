@@ -4,6 +4,7 @@ using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.Workflow.Client;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using System.Data;
+using System;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
 {
@@ -55,6 +56,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ClientWorklist.SerialNumber, SoType.Text, "SerialNumber"));
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ClientWorklist.IncludeShared, SoType.YesNo, "Include Shared Tasks"));
             worklistSO.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ClientWorklist.ExcludeAllocated, SoType.YesNo, "Exclude Allocated Tasks"));
+
 
             Method getWorkload = Helper.CreateMethod(Constants.Methods.ClientWorklist.GetWorklist, "Provides a client's view of the user workload.", MethodType.List);
             // Input properties, will be used for an excact match in search, combined with 'AND'. Please note that the list is NOT the same as the ReturnProperties because not every field is filterable via API.
@@ -124,11 +126,24 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
             ServiceObject worklistItemSO = Helper.CreateServiceObject("WorklistItem", "Exposes functionality for a single worklistitem");
             worklistItemSO.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ClientWorklist.SerialNumber, SoType.Text, "SerialNumber"));
             worklistItemSO.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ClientWorklist.FQN, SoType.Text, "Fully Qualified User Name"));
+            worklistItemSO.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ClientWorklist.ActionName, SoType.Text, "The name of the action"));
+            worklistItemSO.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ClientWorklist.ProcessId, SoType.Number, "The unique id of the process instance."));
+            worklistItemSO.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ClientWorklist.ActivityName, SoType.Text, "The name of the activity."));
 
             Method releaseWorklistItem = Helper.CreateMethod(Constants.Methods.ClientWorklist.ReleaseWorklistItem, "Release a worklistitem.", MethodType.Execute);
             releaseWorklistItem.InputProperties.Add(Constants.SOProperties.ClientWorklist.SerialNumber);
             releaseWorklistItem.Validation.RequiredProperties.Add(Constants.SOProperties.ClientWorklist.SerialNumber);
             worklistItemSO.Methods.Add(releaseWorklistItem);
+
+            Method actionWorklistItem = Helper.CreateMethod(Constants.Methods.ClientWorklist.ActionWorklistItem, "Action a worklistitem", MethodType.Execute);
+            actionWorklistItem.InputProperties.Add(Constants.SOProperties.ClientWorklist.ProcessId);
+            actionWorklistItem.InputProperties.Add(Constants.SOProperties.ClientWorklist.ActivityName);
+            actionWorklistItem.InputProperties.Add(Constants.SOProperties.ClientWorklist.ActionName);
+            actionWorklistItem.Validation.RequiredProperties.Add(Constants.SOProperties.ClientWorklist.ProcessId);
+            actionWorklistItem.Validation.RequiredProperties.Add(Constants.SOProperties.ClientWorklist.ActivityName);
+            actionWorklistItem.Validation.RequiredProperties.Add(Constants.SOProperties.ClientWorklist.ActionName);
+            worklistItemSO.Methods.Add(actionWorklistItem);
+
 
 
             Method redirectWorklistItem = Helper.CreateMethod(Constants.Methods.ClientWorklist.RedirectWorklistItem, "Redirect a single worklistitem", MethodType.Execute);
@@ -156,6 +171,52 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
                 case Constants.Methods.ClientWorklist.RedirectWorklistItem:
                     RedirectWorklistItem();
                     break;
+                case Constants.Methods.ClientWorklist.ActionWorklistItem:
+                    ActionWorklistitem();
+                    break;
+            }
+        }
+
+        private void ActionWorklistitem()
+        {
+            string processInstanceId = base.GetStringProperty(Constants.SOProperties.ClientWorklist.ProcessId, true);
+            string activityName = base.GetStringProperty(Constants.SOProperties.ClientWorklist.ActivityName, true);
+            string actionName = base.GetStringProperty(Constants.SOProperties.ClientWorklist.ActionName, true);
+
+
+            using (Connection k2Con = new Connection())
+            {
+                k2Con.Open(base.K2ClientConnectionSetup);
+
+                WorklistCriteria wc = new WorklistCriteria();
+                wc.Platform = base.Platform;
+                wc.AddFilterField(WCField.ProcessID, WCCompare.Equal, processInstanceId);
+                wc.AddFilterField(WCLogical.And, WCField.ActivityName, WCCompare.Equal, activityName);
+                Worklist wl = k2Con.OpenWorklist(wc);
+
+                if (wl.TotalCount == 0)
+                {
+                    throw new ApplicationException("No worklist item found with those criteria.");
+                }
+
+                if (wl.TotalCount > 1)
+                {
+                    throw new ApplicationException("More than one worklist item found with those criteria.");
+                }
+
+                
+                foreach (SourceCode.Workflow.Client.Action a in wl[0].Actions)
+                {
+                    if (string.Compare(a.Name, actionName, true) == 0)
+                    {
+                        a.Execute();
+                        k2Con.Close();
+                        return;
+                    }
+                }
+                k2Con.Close();
+
+                throw new ApplicationException("Failed to find the action specified. Worklist item was found.");
             }
         }
 
