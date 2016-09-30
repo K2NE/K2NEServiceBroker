@@ -46,34 +46,42 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
             so.Methods.Add(setFolio);
 
             //Adding a separate StartWF method for each workflow, exposing DataFields as Parameters
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
-            using (mngServer.CreateConnection())
+            try
             {
-                mngServer.Open(BaseAPIConnectionString);
-
-                ProcessSets pSets = mngServer.GetProcSets();
-                foreach (ProcessSet pSet in pSets)
+                WorkflowManagementServer mngServer = new WorkflowManagementServer();
+                using (mngServer.CreateConnection())
                 {
-                    string displayName = Constants.Methods.ProcessInstanceClient.StartProcess + "_" + pSet.FullName;
-                    string description = "Starts " + pSet.FullName;
-                    Method m = new Method
-                    {
-                        Name = pSet.FullName,
-                        Type = MethodType.Create,
-                        MetaData = new MetaData(displayName, description)
-                    };
-                    m.InputProperties.Add(Constants.SOProperties.ProcessInstanceClient.ProcessFolio);
-                    m.InputProperties.Add(Constants.SOProperties.ProcessInstanceClient.StartSync);
-                    m.InputProperties.Add(Constants.SOProperties.ProcessInstanceClient.ProcessVersion);
-                    m.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceClient.ProcessInstanceId);
-                    m.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceClient.ProcessFolio);
+                    mngServer.Open(BaseAPIConnectionString);
 
-                    foreach (ProcessDataField pDataField in mngServer.GetProcessDataFields(pSet.ProcID))
+                    ProcessSets pSets = mngServer.GetProcSets();
+                    foreach (ProcessSet pSet in pSets)
                     {
-                        m.MethodParameters.Create(Helper.CreateParameter(pDataField.Name, GetDataFieldType(pDataField.Type), false, pDataField.Name));
+                        string displayName = Constants.Methods.ProcessInstanceClient.StartProcess + "_" + pSet.FullName;
+                        string description = "Starts " + pSet.FullName;
+                        Method m = new Method
+                        {
+                            Name = pSet.FullName,
+                            Type = MethodType.Create,
+                            MetaData = new MetaData(displayName, description)
+                        };
+                        m.InputProperties.Add(Constants.SOProperties.ProcessInstanceClient.ProcessFolio);
+                        m.InputProperties.Add(Constants.SOProperties.ProcessInstanceClient.StartSync);
+                        m.InputProperties.Add(Constants.SOProperties.ProcessInstanceClient.ProcessVersion);
+                        m.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceClient.ProcessInstanceId);
+                        m.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceClient.ProcessFolio);
+
+                        foreach (ProcessDataField pDataField in mngServer.GetProcessDataFields(pSet.ProcID))
+                        {
+                            m.MethodParameters.Add(Helper.CreateParameter(pDataField.Name, GetDataFieldType(pDataField.Type), false, pDataField.Name));
+                        }
+                        so.Methods.Add(m);
                     }
-                    so.Methods.Add(m);
                 }
+            }
+            catch (Exception ex)
+            {
+                base.ServiceBroker.HostServiceLogger.LogError("Failed to retrieve processes for ProcessInstanceClient Service Object.");
+                base.ServiceBroker.HostServiceLogger.LogException(ex);
             }
             return new List<ServiceObject>() { so };
         }
