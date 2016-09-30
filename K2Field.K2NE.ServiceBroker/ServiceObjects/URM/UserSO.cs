@@ -62,7 +62,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                 getUsers.InputProperties.Add(prop);
                 getUsers.ReturnProperties.Add(prop);
             }
-            getUsers.MethodParameters.Add(Helper.CreateParameter(Constants.SOProperties.URM.Label, SoType.Text, true, "The label to use"));
+            getUsers.MethodParameters.Create(Helper.CreateParameter(Constants.SOProperties.URM.Label, SoType.Text, true, "The label to use"));
             soGroup.Methods.Add(getUsers);
 
             return new List<ServiceObject>() { soGroup };

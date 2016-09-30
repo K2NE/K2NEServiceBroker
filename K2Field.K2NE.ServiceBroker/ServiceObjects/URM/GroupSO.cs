@@ -65,7 +65,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             getGroups.InputProperties.Add(Constants.SOProperties.URM.Name);
             getGroups.InputProperties.Add(Constants.SOProperties.URM.Description);
             getGroups.InputProperties.Add(Constants.SOProperties.URM.Saml);
-            getGroups.MethodParameters.Add(Helper.CreateParameter(Constants.SOProperties.URM.Label, SoType.Text, true, "Label"));
+            getGroups.MethodParameters.Create(Helper.CreateParameter(Constants.SOProperties.URM.Label, SoType.Text, true, "Label"));
             foreach (string prop in AdditionalADProps)
             {
                 getGroups.InputProperties.Add(prop);

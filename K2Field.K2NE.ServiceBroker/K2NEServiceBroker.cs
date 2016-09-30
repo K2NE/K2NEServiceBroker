@@ -114,7 +114,7 @@ namespace K2Field.K2NE.ServiceBroker
                 }
             }
             ServiceFolder newSf = new ServiceFolder(folderName, new MetaData(folderName, description));
-            Service.ServiceFolders.Add(newSf);
+            Service.ServiceFolders.Create(newSf);
             return newSf;
         }
         #endregion
@@ -149,7 +149,7 @@ namespace K2Field.K2NE.ServiceBroker
             {
                 foreach (ServiceObject so in entry.DescribeServiceObjects())
                 {
-                    Service.ServiceObjects.Add(so);
+                    Service.ServiceObjects.Create(so);
                     if (requireServiceFolders)
                     {
                         ServiceFolder sf = InitializeServiceFolder(entry.ServiceFolder, entry.ServiceFolder);

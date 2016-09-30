@@ -30,7 +30,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
             soRoleItem.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Role.RoleName, SoType.Text, "The name of the role to manage."));
             soRoleItem.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Role.RoleItemType, SoType.Text, "The type of role item (Group, User, SmartObject)."));
-            soRoleItem.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Role.RoleExclude, SoType.YesNo, "Excluded role item."));
             soRoleItem.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Role.RoleItem, SoType.Text, "The FQN name of the role item."));
             soRoleItem.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Role.RoleDescription, SoType.Text, "A short description of the role."));
             soRoleItem.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Role.RoleItem, SoType.Text, "The FQN name of the role item."));
@@ -39,7 +38,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             Method addRoleItem = Helper.CreateMethod(Constants.Methods.Role.AddRoleItem, "Add a RoleItem to a role" ,MethodType.Create);
             addRoleItem.InputProperties.Add(Constants.SOProperties.Role.RoleName);
             addRoleItem.InputProperties.Add(Constants.SOProperties.Role.RoleItem);
-            addRoleItem.InputProperties.Add(Constants.SOProperties.Role.RoleExclude);
             addRoleItem.InputProperties.Add(Constants.SOProperties.Role.RoleItemType);
             addRoleItem.Validation.RequiredProperties.Add(Constants.SOProperties.Role.RoleName);
             addRoleItem.Validation.RequiredProperties.Add(Constants.SOProperties.Role.RoleItem);
@@ -57,7 +55,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             Method listRoleItems = Helper.CreateMethod(Constants.Methods.Role.ListRoleItem, "List the RoleItems in a role", MethodType.List);
             listRoleItems.InputProperties.Add(Constants.SOProperties.Role.RoleName);
             listRoleItems.ReturnProperties.Add(Constants.SOProperties.Role.RoleItem);
-            listRoleItems.ReturnProperties.Add(Constants.SOProperties.Role.RoleExclude);
             listRoleItems.ReturnProperties.Add(Constants.SOProperties.Role.RoleItemType);
             soRoleItem.Methods.Add(listRoleItems);
 
@@ -137,28 +134,17 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
                 string roleItemName = base.GetStringProperty(Constants.SOProperties.Role.RoleItem, true);
                 RoleItem remItem = null;
-                foreach (RoleItem ri in role.Include)
+
+                foreach (RoleItem ri in role.RoleItems)
                 {
                     if (string.Compare(ri.Name, roleItemName, true) == 0)
+                    {
                         remItem = ri;
+                    }
                 }
                 if (remItem != null)
                 {
-                    role.Include.Remove(remItem);
-                }
-                else
-                {
-                    foreach (RoleItem ri in role.Exclude)
-                    {
-                        if (string.Compare(ri.Name, roleItemName, true) == 0)
-                        {
-                            remItem = ri;
-                        }
-                    }
-                    if (remItem != null)
-                    {
-                        role.Exclude.Remove(remItem);
-                    }
+                    role.RoleItems.Remove(remItem);
                 }
                 urmServer.UpdateRole(role);
             }
@@ -180,27 +166,21 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 }
                 string roleItemName = base.GetStringProperty(Constants.SOProperties.Role.RoleItem, true);
                 string roleItemType = base.GetStringProperty(Constants.SOProperties.Role.RoleItemType, true);
-                bool exclude = base.GetBoolProperty(Constants.SOProperties.Role.RoleExclude);
+                RoleItem ri;
                 switch (roleItemType.ToUpper())
                 {
                     case "GROUP":
-                        GroupItem gi = new GroupItem(roleItemName);
-                        if (exclude)
-                            role.Exclude.Add(gi);
-                        else
-                            role.Include.Add(gi);
+                        ri = new GroupItem(roleItemName);
                         break;
                     case "USER":
-                        UserItem ui = new UserItem(roleItemName);
-                        if (exclude)
-                            role.Exclude.Add(ui);
-                        else
-                            role.Include.Add(ui);
+                        ri = new UserItem(roleItemName);
                         break;
                     default:
                         throw new ApplicationException(string.Format(Constants.ErrorMessages.RoleTypeNotSupported, roleItemType));
                     //break;
                 }
+                role.RoleItems.Add(ri);
+
                 urmServer.UpdateRole(role);
             }
         }
@@ -217,24 +197,16 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 {
                     throw new ApplicationException(Constants.ErrorMessages.RoleNotExists);
                 }
-                RoleItemCollection<Role, RoleItem> items = role.Include;
-                foreach (RoleItem ri in items)
+                foreach (RoleItem ri in role.RoleItems)
                 {
                     DataRow row = results.NewRow();
-                    results.Rows.Add(FillRoleItemRow(row, ri, false));
-                }
-                items = role.Exclude;
-                foreach (RoleItem ri in items)
-                {
-                    DataRow row = results.NewRow();
-                    results.Rows.Add(FillRoleItemRow(row, ri, true));
+                    results.Rows.Add(FillRoleItemRow(row, ri));
                 }
             }
         }
-        private static DataRow FillRoleItemRow(DataRow row, RoleItem ri, bool exclude)
+        private static DataRow FillRoleItemRow(DataRow row, RoleItem ri)
         {
             row[Constants.SOProperties.Role.RoleItem] = ri.Name;
-            row[Constants.SOProperties.Role.RoleExclude] = exclude;
             if (ri is GroupItem)
             {
                 row[Constants.SOProperties.Role.RoleItemType] = "Group";
@@ -292,20 +264,20 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 // At least one roleItem has to be created with the new group
                 string roleItemName = base.GetStringProperty(Constants.SOProperties.Role.RoleItem, true);
                 string roleItemType = base.GetStringProperty(Constants.SOProperties.Role.RoleItemType, true);
+                RoleItem ri;
                 switch (roleItemType.ToUpper())
                 {
                     case "GROUP":
-                        GroupItem gi = new GroupItem(roleItemName);
-                        role.Include.Add(gi);
+                        ri = new GroupItem(roleItemName);
                         break;
                     case "USER":
-                        UserItem ui = new UserItem(roleItemName);
-                        role.Include.Add(ui);
+                        ri = new UserItem(roleItemName);
                         break;
                     default:
                         throw new ApplicationException(string.Format(Constants.ErrorMessages.RoleTypeNotSupported, roleItemType));
                     //break;
                 }
+                role.RoleItems.Add(ri);
                 urmServer.CreateRole(role);
                 urmServer.Connection.Close();
             }
