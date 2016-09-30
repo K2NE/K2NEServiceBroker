@@ -23,7 +23,7 @@ namespace K2Field.K2NE.ServiceBroker
 
 
         #region Public properties for ServiceObjectBase's child classes.
-        //public Logger Logger { get; private set; }
+        public Logger HostServiceLogger { get; private set; }
         public IIdentityService IdentityService { get; private set; }
         public ISecurityManager SecurityManager { get; private set; }
         #endregion Public properties for ServiceObjectBase's child classes.
@@ -34,7 +34,7 @@ namespace K2Field.K2NE.ServiceBroker
         /// <summary>
         /// Cache of all service object that we have. We load this into a static object in the hope to re-use it as often as possible.
         /// </summary>
-        private IEnumerable<ServiceObjectBase> ServiceObjects
+        private IEnumerable<ServiceObjectBase> ServiceObjectClasses
         {
             get
             {
@@ -88,9 +88,10 @@ namespace K2Field.K2NE.ServiceBroker
                     }
 
                     _serviceObjectToType = new Dictionary<string, Type>();
-                    foreach (ServiceObjectBase soBase in ServiceObjects)
+                    foreach (ServiceObjectBase soBase in ServiceObjectClasses)
                     {
-                        foreach (ServiceObject so in soBase.DescribeServiceObjects())
+                        List<ServiceObject> serviceObjs = soBase.DescribeServiceObjects();
+                        foreach (ServiceObject so in serviceObjs)
                         {
                             _serviceObjectToType.Add(so.Name, soBase.GetType());
                         }
@@ -137,7 +138,7 @@ namespace K2Field.K2NE.ServiceBroker
             Service.MetaData.Description = "A Service Broker that provides various functional service objects that aid the implementation of a K2 project.";
 
             bool requireServiceFolders = false;
-            foreach (ServiceObjectBase entry in ServiceObjects)
+            foreach (ServiceObjectBase entry in ServiceObjectClasses)
             {
                 if (!string.IsNullOrEmpty(entry.ServiceFolder))
                 {
@@ -145,7 +146,7 @@ namespace K2Field.K2NE.ServiceBroker
                 }
             }
 
-            foreach (ServiceObjectBase entry in ServiceObjects)
+            foreach (ServiceObjectBase entry in ServiceObjectClasses)
             {
                 foreach (ServiceObject so in entry.DescribeServiceObjects())
                 {
@@ -164,6 +165,11 @@ namespace K2Field.K2NE.ServiceBroker
             ServiceObject so = Service.ServiceObjects[0];
             try
             {
+                if (base.Service.ServiceConfiguration.ServiceAuthentication.AuthenticationMode == AuthenticationMode.ServiceAccount)
+                {
+                    System.Security.Principal.WindowsIdentity.Impersonate(IntPtr.Zero);
+                }
+
                 //TODO: improve performance? http://bloggingabout.net/blogs/vagif/archive/2010/04/02/don-t-use-activator-createinstance-or-constructorinfo-invoke-use-compiled-lambda-expressions.aspx
 
                 // This creates an instance of the object responsible to handle the execution.
@@ -227,11 +233,11 @@ namespace K2Field.K2NE.ServiceBroker
         {
             lock (syncobject)
             {
-                //if (Logger == null)
-                //{
-                //    Logger = new Logger(serviceMarshalling.GetHostedService(typeof(SourceCode.Logging.ILogger)) as SourceCode.Logging.ILogger);
-                //    Logger.LogDebug("Logger loaded from ServiceMarshalling");
-                //}
+                if (HostServiceLogger == null)
+                {
+                    HostServiceLogger = new Logger(serviceMarshalling.GetHostedService(typeof(SourceCode.Logging.ILogger)) as SourceCode.Logging.ILogger);
+                    HostServiceLogger.LogDebug("Logger loaded from ServiceMarshalling");
+                }
 
                 if (IdentityService == null)
                 {
@@ -249,7 +255,7 @@ namespace K2Field.K2NE.ServiceBroker
         public override void Extend() { }
         public void Unload()
         {
-            //Logger.Dispose();
+            HostServiceLogger.Dispose();
         }
         #endregion Public overrides for ServiceAssemblyBase
 
