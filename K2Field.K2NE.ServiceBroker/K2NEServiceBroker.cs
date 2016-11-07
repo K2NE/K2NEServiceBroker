@@ -90,7 +90,8 @@ namespace K2Field.K2NE.ServiceBroker
                     _serviceObjectToType = new Dictionary<string, Type>();
                     foreach (ServiceObjectBase soBase in ServiceObjects)
                     {
-                        foreach (ServiceObject so in soBase.DescribeServiceObjects())
+                        List<ServiceObject> serviceObjects = soBase.DescribeServiceObjects();
+                        foreach (ServiceObject so in serviceObjects)
                         {
                             _serviceObjectToType.Add(so.Name, soBase.GetType());
                         }
@@ -147,7 +148,8 @@ namespace K2Field.K2NE.ServiceBroker
 
             foreach (ServiceObjectBase entry in ServiceObjects)
             {
-                foreach (ServiceObject so in entry.DescribeServiceObjects())
+                List<ServiceObject> serviceObjects = entry.DescribeServiceObjects();
+                foreach (ServiceObject so in serviceObjects)
                 {
                     Service.ServiceObjects.Create(so);
                     if (requireServiceFolders)
