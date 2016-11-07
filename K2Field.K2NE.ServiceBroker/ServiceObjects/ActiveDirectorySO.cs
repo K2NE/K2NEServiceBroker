@@ -130,7 +130,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             methParm.SoType = SoType.Text;
             methParm.Type = MapHelper.GetTypeBySoType(methParm.SoType);
 
-            mUMGetUsers.MethodParameters.Add(methParm);
+            mUMGetUsers.MethodParameters.Create(methParm);
             soUser.Methods.Add(mUMGetUsers);
 
             return new List<ServiceObject>() { soUser };
