@@ -1,0 +1,9 @@
+C:\K2 Work\K2NEServiceBroker-master (1)\K2NEServiceBroker-master\K2Field.K2NE.ServiceBroker\bin\Debug\K2Field.K2NE.ServiceBroker.dll
+C:\K2 Work\K2NEServiceBroker-master (1)\K2NEServiceBroker-master\K2Field.K2NE.ServiceBroker\bin\Debug\K2Field.K2NE.ServiceBroker.pdb
+C:\K2 Work\K2NEServiceBroker-master (1)\K2NEServiceBroker-master\K2Field.K2NE.ServiceBroker\bin\Debug\SourceCode.HostClientAPI.dll
+C:\K2 Work\K2NEServiceBroker-master (1)\K2NEServiceBroker-master\K2Field.K2NE.ServiceBroker\bin\Debug\SourceCode.HostServerInterfaces.dll
+C:\K2 Work\K2NEServiceBroker-master (1)\K2NEServiceBroker-master\K2Field.K2NE.ServiceBroker\bin\Debug\SourceCode.Logging.dll
+C:\K2 Work\K2NEServiceBroker-master (1)\K2NEServiceBroker-master\K2Field.K2NE.ServiceBroker\bin\Debug\SourceCode.SmartObjects.Services.ServiceSDK.dll
+C:\K2 Work\K2NEServiceBroker-master (1)\K2NEServiceBroker-master\K2Field.K2NE.ServiceBroker\bin\Debug\SourceCode.Workflow.Client.dll
+C:\K2 Work\K2NEServiceBroker-master (1)\K2NEServiceBroker-master\K2Field.K2NE.ServiceBroker\obj\Debug\K2Field.K2NE.ServiceBroker.dll
+C:\K2 Work\K2NEServiceBroker-master (1)\K2NEServiceBroker-master\K2Field.K2NE.ServiceBroker\obj\Debug\K2Field.K2NE.ServiceBroker.pdb

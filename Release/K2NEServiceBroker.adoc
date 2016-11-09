@@ -1,0 +1,17 @@
+== K2NE Service Broker
+The K2NE Service Broker is a Service Broker that contains a number of useful and commonly used functionality.
+This functionality is not provided by K2 out of the box, but commonly appears in projects to resolve additional user requirements.
+
+Any functionality that will be used from within the platform, will eventually be deprecated and removed from the code.
+
+
+
+= Service Objects
+
+include::ClientAPI.adoc[]
+
+include::ManagementAPI.adoc[]
+
+include::URM.adoc[]
+
+include::ADOSMOQuery.adoc[]

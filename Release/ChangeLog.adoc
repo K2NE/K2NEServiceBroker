@@ -1,0 +1,107 @@
+== ChangeLog
+=== v1.6.12
+- New version number.
+- Changed handling of Roles in service broker due to 4.7 release. No 'exclude' flag is available anymore.
+- Added StackTrace, TypeDescription and ExecutingProcId to ErrorLog.GetErrors method. This should provide some more detail than what K2 workspace currently provides.
+- Added new WorklistItem Action method to allow easier execution of an action based on process id and activity name. This is useful for assigning a task to a service account and 'pinging' the K2 process to continue.
+- Enabled Logging again. We had a memory leak with this before, so be warned.
+- Fixed issue where the servictObjectToType property was not loaded when the service instance is in impersonation mode and the user who is executing the SMO does NOT have permissions to retrieve all the procesSets.
+  We now just log a error message when that happens, as at that moment it actually doesn't matter much what the DescribeServiceObjects returns, as long as the ServiceObject classes are there, we know enough. The rest of the execute code uses
+  the ServiceObject provided after the instance of the ServiceObjectClass is created.
+
+=== v1.6.11
+- Improved Error handling and corrected mistake in error messages.
+- Added code to make sure that if a service instance property is not set, we still handle this correctly with either an exception or a expected default.
+- The above two fixes are implemented to avoid a 'KeyNotFound' exception that isn't 100% confirmed to be resolved yet.
+- Added functionality to set the process instance folio in the ProcessInstanceClient. This requires admin premissions on the process.
+
+=== v1.6.10
+==== ADO.NET Query updates:
+- Refactored code
+- Changed logic to pass smartobject properties to filter a query. See link:ADOSMOQuery.adoc[ADO SMO Query service object] for more information.
+- Added support to read queries from the xml file.
+
+=== v1.6.9
+- We now version number every build. this helps with identifying which build a user/customer has.
+- Even better exception handling, we really had a silly bug there
+- We removed all the VAR's and did some code cleanup.
+
+=== v1.6.8
+- Slightly better exception handling in UserSO
+
+=== v1.6.7
+- Added Out of Office to Client API
+
+=== v1.6.6
+- Added link:ADOSMOQuery.adoc[ADO SMO Query service object].
+- K2Field.K2NE.ServiceBroker.GetBoolProperty() method allows to use 1/0, Yes/No values as boolean, instead of True/False only.
+
+=== v1.6.5
+- Add List Activities method
+
+=== v1.6.4
+- Added Redirect to Client API
+
+=== v1.6.3
+- Added powershell installer.
+- Removed choco installer
+- Created release folder after build.
+
+=== v1.6.2
+- Better exception handling within the AD parallel methods to report on which AD is causing the error.
+- Added custom properties to Active Directory options.
+
+=== v1.6.1
+- Added ListShares/ListUserShares to get all the delegates from the OOF
+- Refactored a lot of the out of office code, removed the callStatus property, which would break SMO's if you used that flag.
+
+=== v1.6.0
+- Added Process Instance Client
+- Ability to specify custom properties for URM User Service Object.
+
+=== v1.5.0
+- Memory leak fixed. Removed logging, still commented for future reference.
+
+=== v1.4.1
+- Restructure of files
+- Backwards compatibility (.Create() vs .Add())
+
+=== v1.4
+- Added URM service objects
+
+=== v1.3.1
+- Fix a silly copy/paste mistake
+
+=== v1.3
+- Added a UM Get Users Service Object. This can be used to replace the UMUser GetUsers method, which speeds up a number of things because this filters directly on the backend.
+  It also shows that we can convert a SQL query to a AD query. it's a bit tricky with all the properties to match, this could be done easier. But we'll see where this functionality goes.
+- Added functionality to define MULTIPLE LDAP's. Querying is done in Parallel.For-loop to not wait sequentually.
+
+=== v1.2
+- Added Out of office service object
+- Added Culture information to identity object.
+- Added DefaultClientCredentials to identity object.
+- Added WorkingHour configuration Service Object.
+
+=== v1.1.5
+- Fixed issue with mutex, not completely resolved but should not run into the issue anymore.s
+
+=== v1.1.4
+- Worklist SO - Added 'ExcludeAllocated' flag which will all you to remove the allocated tasks. This is useful if a task is assigned to a group of people and has multiple slots, as at that point the task will show up multiple times (the allocated and opened item).
+
+=== v1.1.3
+- Worklist SO - Remove ActivityOverdue column in the WorklistSO as it was not filled and this calculation can be done on the UI side.
+- Worklist SO - Fill the Originaldestination column with the Allocated User field.
+- Worklist SO - Include option to retrieve shared Worklist items, these are the out of office worklist items for other users. Must be provided as input property.
+
+=== v1.1.2
+- Changed 'ProcesInstanceId' to an Number, it was a Text property. This made linking with application data difficult.
+
+=== v1.1.1
+- Changed Active Directory SearchUser method to a 'StartWith' type of search, not a contains.
+
+=== v1.1
+- Added Active Directory Service Object which includes functionality to get Details, get Users and SearchUsers. Main reason for this SMO is the SearchUsers.
+
+=== V1.0
+- First version
