@@ -11,6 +11,12 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string RetryProcess = "RetryProcessInstance";
         }
 
+        public static class ExportToExcel
+        {
+            public const string ExcelFromADOQuery = "ExcelFromADOQuery";
+        }
+
+
         public static class ManagementWorklist
         {
             public const string GetWorklist = "GetWorklist";
