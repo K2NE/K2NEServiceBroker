@@ -15,22 +15,8 @@ using System.Xml.XPath;
 
 namespace K2Field.K2NE.ServiceBroker.Helpers
 {
-    [Serializable]
-    public class CreateExcel : MarshalByRefObject
+    public class CreateExcel
     {
-        private string cStr = string.Empty;
-        private UInt32Value _numberStyleId;
-        private UInt32Value _doubleStyleId;
-        private UInt32Value _dateStyleId;
-
-        public string ConnectionString
-        {
-            get { return cStr; }
-            set { cStr = value; }
-        }
-
-
-
         public CreateExcel()
         {
         }
@@ -54,10 +40,10 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                     fileName += ".xlsx";
                 }
 
-                
-                byte[] objByte = ExportToExcel(results);
 
-                return new FileObject(fileName, Convert.ToBase64String(objByte, 0, objByte.Count(), Base64FormattingOptions.None)).ToString();
+                byte[] objByte = ExportToExcel(results);
+                string content = Convert.ToBase64String(objByte, 0, objByte.Count(), Base64FormattingOptions.None);
+                return string.Format("<file><name>{0}</name><content>{1}</content></file>", fileName, content);
             }
             catch (Exception ex)
             {
@@ -94,7 +80,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         private byte[] ExportToExcel(DataTable datatable)
         {
             MemoryStream mem = new MemoryStream();
-            
+
             using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Create(mem, SpreadsheetDocumentType.Workbook))
             {
                 // Initialize an instance of WorkbookPart
@@ -263,8 +249,9 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             switch (col)
             {
                 //Celltype date corrupts the excel so keeping its datatype as string
+                ///TODO: Add support for date/time. Uncommenting the below results in a corrupt Excel file.
                 //case "System.DateTime":
-                //return DocumentFormat.OpenXml.Spreadsheet.CellValues.Date;
+                //    return DocumentFormat.OpenXml.Spreadsheet.CellValues.Date;
                 case "System.Decimal":
                 case "System.Double":
                 case "System.Int64":
@@ -277,193 +264,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         }
 
 
-        private UInt32Value GetCellStyle(DataColumn col)
-        {
-            switch (col.DataType.FullName.ToString())
-            {
-                case "System.DateTime":
-                    return _dateStyleId;
-                case " System.Decimal":
-                case "System.Int64":
-                case "System.Int32":
-                    return _numberStyleId;
-                case "System.Double":
-                    return _doubleStyleId;
-                default:
-                    return null;
-            }
-        }
 
-        /// <summary>
-        /// Generates content of sharedStringTablePart
-        /// </summary>
-        /// <param name="sharedStringTablePart">SharedStringTablePart Object</param>
-        /// <param name="table">DataTable Object</param>
-        private void CreateSharedStringTablePart(SharedStringTablePart sharedStringTablePart, DataTable table)
-        {
-            UInt32Value stringCount = Convert.ToUInt32(table.Rows.Count) + Convert.ToUInt32(table.Columns.Count);
-
-            // Initialize an instance of SharedString Table
-            SharedStringTable sharedStringTable = new SharedStringTable()
-            {
-                Count = stringCount,
-                UniqueCount = stringCount
-            };
-
-            // Add columns of DataTable to sharedString iteam
-            for (int columnIndex = 0; columnIndex < table.Columns.Count; columnIndex++)
-            {
-                SharedStringItem sharedStringItem = new SharedStringItem();
-                Text text = new Text();
-                text.Text = table.Columns[columnIndex].ColumnName;
-                sharedStringItem.Append(text);
-
-                // Add sharedstring item to sharedstring Table
-                sharedStringTable.Append(sharedStringItem);
-            }
-
-            // Add rows of DataTable to sharedString iteam
-            for (int rowIndex = 0; rowIndex < table.Rows.Count; rowIndex++)
-            {
-                SharedStringItem sharedStringItem = new SharedStringItem();
-                Text text = new Text();
-                text.Text = table.Rows[rowIndex][0].ToString();
-                sharedStringItem.Append(text);
-                sharedStringTable.Append(sharedStringItem);
-            }
-
-            sharedStringTablePart.SharedStringTable = sharedStringTable;
-        }
-
-        private UInt32Value GetHeaderStylesheet(Stylesheet styleSheet)
-        {
-
-            //build the formatted header style
-            UInt32Value headerFontIndex =
-                createFont(
-                    styleSheet,
-                    "Calibri",
-                    14,
-                    true,
-                    System.Drawing.Color.Black);
-            //set the background color style
-            UInt32Value headerFillIndex =
-                createFill(
-                    styleSheet,
-                    System.Drawing.Color.White);
-            //create the cell style by combining font/background
-            UInt32Value headerStyleIndex =
-                createCellFormat(
-                    styleSheet,
-                    headerFontIndex,
-                    headerFillIndex,
-                    null);
-
-            return headerStyleIndex;
-        }
-
-
-        /// <summary>
-        /// Creates a new font and appends it to the workbook's stylesheet
-        /// </summary>
-        /// <param name="styleSheet">The stylesheet for the current WorkBook</param>
-        /// <param name="fontName">The font name.</param>
-        /// <param name="fontSize">The font size.</param>
-        /// <param name="isBold">Set to true for bold font.</param>
-        /// <param name="foreColor">The font color.</param>
-        /// <returns>The index of the font.</returns>
-        private UInt32Value createFont(
-            Stylesheet styleSheet,
-            string fontName,
-            Nullable<double> fontSize,
-            bool isBold,
-            System.Drawing.Color foreColor)
-        {
-
-            Font font = new Font();
-
-            if (!string.IsNullOrEmpty(fontName))
-            {
-                FontName name = new FontName()
-                {
-                    Val = fontName
-                };
-                font.Append(name);
-            }
-
-            if (fontSize.HasValue)
-            {
-                FontSize size = new FontSize()
-                {
-                    Val = fontSize.Value
-                };
-                font.Append(size);
-            }
-
-            if (isBold == true)
-            {
-                Bold bold = new Bold();
-                font.Append(bold);
-            }
-
-            if (foreColor != null)
-            {
-                Color color = new Color()
-                {
-                    Rgb = new HexBinaryValue()
-                    {
-                        Value =
-                            System.Drawing.ColorTranslator.ToHtml(
-                                System.Drawing.Color.FromArgb(
-                                    foreColor.A,
-                                    foreColor.R,
-                                    foreColor.G,
-                                    foreColor.B)).Replace("#", "")
-                    }
-                };
-                font.Append(color);
-            }
-            styleSheet.Fonts.Append(font);
-            UInt32Value result = styleSheet.Fonts.Count;
-            styleSheet.Fonts.Count++;
-            return result;
-        }
-
-        /// <summary>
-        /// Creates a new Fill object and appends it to the WorkBook's stylesheet.
-        /// </summary>
-        /// <param name="styleSheet">The stylesheet for the current WorkBook.</param>
-        /// <param name="fillColor">The background color for the fill.</param>
-        /// <returns></returns>
-        private UInt32Value createFill(
-            Stylesheet styleSheet,
-            System.Drawing.Color fillColor)
-        {
-            Fill fill = new Fill(
-                new PatternFill(
-                    new ForegroundColor()
-                    {
-                        Rgb = new HexBinaryValue()
-                        {
-                            Value =
-                            System.Drawing.ColorTranslator.ToHtml(
-                                System.Drawing.Color.FromArgb(
-                                    fillColor.A,
-                                    fillColor.R,
-                                    fillColor.G,
-                                    fillColor.B)).Replace("#", "")
-                        }
-                    })
-                {
-                    PatternType = PatternValues.Solid
-                }
-            );
-            styleSheet.Fills.Append(fill);
-
-            UInt32Value result = styleSheet.Fills.Count;
-            styleSheet.Fills.Count++;
-            return result;
-        }
 
         private UInt32Value createCellFormat(
             Stylesheet styleSheet,
@@ -494,106 +295,6 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         }
 
 
-        /// <summary>
-        /// Generates content of workbookStylesPart
-        /// </summary>
-        /// <param name="workbookStylesPart">WorkbookStylesPart Object</param>
-        private void CreateWorkBookStylesPart(WorkbookStylesPart workbookStylesPart)
-        {
-            var StyleSheet = new Stylesheet();
-
-            // Create "fonts" node.
-            var Fonts = new Fonts();
-            Fonts.Append(new DocumentFormat.OpenXml.Spreadsheet.Font()
-            {
-                FontName = new FontName() { Val = "Calibri" },
-                FontSize = new FontSize() { Val = 14 },
-                FontFamilyNumbering = new FontFamilyNumbering() { Val = 2 },
-            });
-
-            Fonts.Count = (uint)Fonts.ChildElements.Count;
-
-            // Create "fills" node.
-            var Fills = new Fills();
-            Fills.Append(new Fill()
-            {
-                PatternFill = new PatternFill() { PatternType = PatternValues.None }
-            });
-            Fills.Append(new Fill()
-            {
-                PatternFill = new PatternFill() { PatternType = PatternValues.Gray125 }
-            });
-
-            Fills.Count = (uint)Fills.ChildElements.Count;
-
-            // Create "borders" node.
-            var Borders = new Borders();
-            Borders.Append(new Border()
-            {
-                LeftBorder = new LeftBorder(),
-                RightBorder = new RightBorder(),
-                TopBorder = new TopBorder(),
-                BottomBorder = new BottomBorder(),
-                DiagonalBorder = new DiagonalBorder()
-            });
-
-            Borders.Count = (uint)Borders.ChildElements.Count;
-
-            // Create "cellStyleXfs" node.
-            var CellStyleFormats = new CellStyleFormats();
-            CellStyleFormats.Append(new CellFormat()
-            {
-                NumberFormatId = 0,
-                FontId = 0,
-                FillId = 0,
-                BorderId = 0
-            });
-
-            CellStyleFormats.Count = (uint)CellStyleFormats.ChildElements.Count;
-
-            // Create "cellXfs" node.
-            var CellFormats = new CellFormats();
-            CellFormats.Append(new CellFormat()
-            {
-                BorderId = 0,
-                FillId = 0,
-                FontId = 0,
-                FormatId = 0,
-                NumberFormatId = 0,
-                //ApplyNumberFormat = true
-            });
-
-            CellFormats.Count = (uint)CellFormats.ChildElements.Count;
-
-
-
-            // Create "cellStyles" node.
-            var CellStyles = new CellStyles();
-            CellStyles.Append(new CellStyle()
-            {
-                Name = "Normal",
-                FormatId = 0,
-                BuiltinId = 0
-            });
-            CellStyles.Count = (uint)CellStyles.ChildElements.Count;
-
-            //// Append all nodes in order.
-            StyleSheet.Append(Fonts);
-            StyleSheet.Append(Fills);
-            StyleSheet.Append(Borders);
-            StyleSheet.Append(CellStyleFormats);
-            StyleSheet.Append(CellFormats);
-            StyleSheet.Append(CellStyles);
-
-            //_headerStyleId = GetHeaderStylesheet(StyleSheet);
-            _dateStyleId = createCellFormat(StyleSheet, null, null, UInt32Value.FromUInt32(14));
-            _numberStyleId = createCellFormat(StyleSheet, null, null, UInt32Value.FromUInt32(3));
-            _doubleStyleId = createCellFormat(StyleSheet, null, null, UInt32Value.FromUInt32(4));
-
-            // Set the style of workbook
-            workbookStylesPart.Stylesheet = StyleSheet;
-        }
-
         public string GetExcelColumnName(int colNum)
         {
             String res = "";
@@ -608,204 +309,5 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             }
             return res;
         }
-
     }
-
-    public class CreateExcelWrapper : IDisposable
-    {
-        private CreateExcel _createExcelFile = null;
-        private AppDomain _app;
-        private string _currentAssemblyPath;
-
-        /// <summary>  
-        /// Constructor.  
-        /// </summary>  
-        /// <param name="zipFilename">A name of new zip-file.  
-        public CreateExcel GetCreateExcelByNewDomain(string connectionString)
-        {
-            _currentAssemblyPath = Assembly.GetExecutingAssembly().CodeBase;
-
-            var appDomainSetup = new AppDomainSetup
-            {
-                ApplicationBase = AppDomain.CurrentDomain.BaseDirectory
-            };
-
-            Evidence evidence = new Evidence(AppDomain.CurrentDomain.Evidence);
-            evidence.AddHost(new Zone(SecurityZone.MyComputer));
-
-            _app = AppDomain.CreateDomain("Processor AppDomain", evidence, appDomainSetup);
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-
-            _createExcelFile =
-                (CreateExcel)
-                    _app.CreateInstanceFromAndUnwrap(_currentAssemblyPath, typeof(CreateExcel).FullName);
-            _createExcelFile.ConnectionString = connectionString;
-
-            return _createExcelFile;
-        }
-
-        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            return Assembly.LoadFrom(_currentAssemblyPath);
-        }
-
-        public void Dispose()
-        {
-            AppDomain.Unload(_app);
-        }
-    }
-
-    public class FileObject : NamedObject
-    {
-
-        #region Constructors (2)
-
-        public FileObject(string name, string value)
-            : base(name, value)
-        {
-        }
-
-        public FileObject(string inputValue)
-            : base(inputValue)
-        {
-        }
-
-        #endregion Constructors
-
-        #region Methods (2)
-
-        // Public Methods (2) 
-        public override void FromValue(string inputValue)
-        {
-            if (!string.IsNullOrEmpty(inputValue))
-            {
-                using (StringReader reader = new StringReader(inputValue))
-                {
-                    XPathDocument xDoc = new XPathDocument(reader);
-                    XPathNavigator xNav = xDoc.CreateNavigator();
-                    string fileNameValue = xNav.SelectSingleNode("file/name").InnerXml;
-                    string contentValue = xNav.SelectSingleNode("file/content").InnerXml;
-                    if (fileNameValue == SCNULL)
-                        this.Name = string.Empty;
-                    else
-                        this.Name = fileNameValue;
-                    if (contentValue == SCNULL)
-                        this.Value = string.Empty;
-                    else
-                        this.Value = contentValue;
-                }
-            }
-            else
-            {
-                this.Value = string.Empty;
-                this.Name = string.Empty;
-            }
-        }
-
-        public override string ToValue()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("<file>");
-            if (this.Name == null)
-            {
-                sb.Append("<name/>");
-            }
-            else
-            {
-                sb.Append("<name>");
-                sb.Append(this.Name);
-                sb.Append("</name>");
-            }
-            if (this.Value == null)
-            {
-                sb.Append("<content/>");
-            }
-            else
-            {
-                sb.Append("<content>");
-                sb.Append(this.Value);
-                sb.Append("</content>");
-            }
-            sb.Append("</file>");
-            return sb.ToString();
-        }
-
-        #endregion Methods
-
-    }
-
-    #region Object Classes
-
-    public abstract class NamedObject
-    {
-
-        #region Fields (3)
-
-        private string _name;
-        private string _value;
-        protected const string SCNULL = "scnull";
-
-        #endregion Fields
-
-        #region Constructors (2)
-
-        public NamedObject(string name, string value)
-        {
-            _name = name;
-            _value = value;
-        }
-
-        public NamedObject(string inputValue)
-        {
-            this.FromValue(inputValue);
-        }
-
-        #endregion Constructors
-
-        #region Properties (2)
-
-        public string Name
-        {
-            get
-            {
-                return _name;
-            }
-            set
-            {
-                _name = value;
-            }
-        }
-
-        public string Value
-        {
-            get
-            {
-                return _value;
-            }
-            set
-            {
-                _value = value;
-            }
-        }
-
-        #endregion Properties
-
-        #region Methods (3)
-
-        // Public Methods (3) 
-
-        public abstract void FromValue(string inputValue);
-
-        public override string ToString()
-        {
-            return ToValue();
-        }
-
-        public abstract string ToValue();
-
-        #endregion Methods
-
-    }
-
-    #endregion
 }
