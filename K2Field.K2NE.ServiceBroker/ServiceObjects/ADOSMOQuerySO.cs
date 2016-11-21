@@ -36,17 +36,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             foreach (KeyValuePair<string, string> query in ADOSMOQueries)
             {
                 ServiceObject so = Helper.CreateServiceObject(query.Key, "ADO.NET SMO query.");
-
                 so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ExportToExcel.FileName, SoType.Text, "The name of generated file"));
-
-                //so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ExportToExcel.ExcelFile, SoType.File, "The name of generated file"));
-
-                FileProperty fpropData = new FileProperty(Constants.SOProperties.ExportToExcel.ExcelFile, new MetaData(), String.Empty, String.Empty);
-                fpropData.MetaData.DisplayName = Constants.SOProperties.ExportToExcel.ExcelFile;
-                fpropData.MetaData.Description = "The name of generated file";
-                so.Properties.Add(fpropData);
-
-                DataTable results = new DataTable();
+                so.Properties.Add(Helper.CreateFileProperty(Constants.SOProperties.ExportToExcel.ExcelFile, "The excel file that will be generated"));
 
                 /* To do: parsing properties. Without that queries contains WHERE and @parameters will not work on initialization level (no properties created).
                  * The queries like this do not work at the moment:
@@ -54,7 +45,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                  * There is no custom error message, only system one, because
                  * it's impossible to found if there are @parameters used within WHERE clause, because these queries will work:
                  * SELECT * FROM table WHERE type='Type1' HAVING (id = @id)
-                */
+                 */
+
+                
 
                 Dictionary<string, string> props = new Dictionary<string, string>();
                 foreach (Match match in Regex.Matches(query.Value, "\\@\\w+"))
@@ -65,7 +58,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     }
                 }
 
-                results = GetSchema(query.Value, props);
+                DataTable results = GetSchema(query.Value, props);
 
                 Method soMethod = Helper.CreateMethod(Constants.Methods.ADOSMOQuery.ListQueryData, "Returns result of SMO query.", MethodType.List);
                 soMethod.MetaData.AddServiceElement("Query", query.Value);
@@ -140,35 +133,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 connection.Close();
             }
         }
-        //private DataTableReader GetData()
-        //{
-        //    ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
-        //    string query = serviceObject.Methods[0].MetaData.GetServiceElement<string>("Query");
-        //    serviceObject.Properties.InitResultTable();
-        //    DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-        //    using (SOConnection connection = new SOConnection(base.BaseAPIConnectionString))
-        //    {
-        //        using (SOCommand command = new SOCommand(query, connection))
-        //        {
-        //            using (SODataAdapter adapter = new SODataAdapter(command))
-        //            {
-        //                foreach (Property prop in serviceObject.Properties)
-        //                {
-        //                    if (prop.Value != null)
-        //                    {
-        //                        command.Parameters.AddWithValue(prop.Name, prop.Value);
-        //                    }
-        //                }
-        //                connection.DirectExecution = true;
-        //                connection.Open();
-        //                adapter.Fill(results);
-        //            }
-        //        }
-        //        connection.Close();
-        //    }
-        //    return results.CreateDataReader();
-        //}
+        
         private DataTable GetSchema(string query, Dictionary<string, string> props)
         {
             DataTable results = new DataTable();
@@ -199,8 +165,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
         private void ExportToExcel()
         {
-
-
             ServiceObject serviceObject = ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
             DataTable results = ServiceBroker.ServicePackage.ResultTable;
@@ -219,7 +183,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             DataRow dr = results.NewRow();
             //Calling the helper method with dataresult and expecting a File in return.
             CreateExcel excel = new CreateExcel();
-            dr[Constants.SOProperties.ExportToExcel.ExcelFile] = excel.GetExcelFromADOQuery(SOQueryResult, fileName).ToString();
+            dr[Constants.SOProperties.ExportToExcel.ExcelFile] = excel.ConvertDataTable2Excelfile(SOQueryResult, fileName).ToString();
 
             results.Rows.Add(dr);
 

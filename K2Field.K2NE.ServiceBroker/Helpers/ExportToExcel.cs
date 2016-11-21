@@ -22,7 +22,6 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         private UInt32Value _numberStyleId;
         private UInt32Value _doubleStyleId;
         private UInt32Value _dateStyleId;
-        private UInt32Value _headerStyleId;
 
         public string ConnectionString
         {
@@ -30,7 +29,6 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             set { cStr = value; }
         }
 
-        private List<string> cellHeaders = null;
 
 
         public CreateExcel()
@@ -41,34 +39,40 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         /// Method to create a filename and provide a file as an ouput string.
         /// </summary>
         /// <param name="results"></param>
-        /// <param name="fname"></param>
+        /// <param name="fileName"></param>
         /// <returns></returns>
-        public string GetExcelFromADOQuery(DataTable results, string fname)
+        public string ConvertDataTable2Excelfile(DataTable results, string fileName)
         {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                throw new ArgumentException("FileName is required.");
+            }
             try
             {
-                fname = TrimFileName(fname);
-
-                // Save the exported file to the temporary file folder
-                string filename = string.IsNullOrEmpty(fname) ? Guid.NewGuid().ToString() : fname;
-                filename += ".xlsx";
-
-                cellHeaders = new List<string>();
-                for (int i = 0; i < results.Columns.Count; i++)
+                if (!fileName.EndsWith(".xlsx"))
                 {
-                    cellHeaders.Add(GetExcelColumnName(i + 1));
+                    fileName += ".xlsx";
                 }
 
-                byte[] objByte = ExportToExcel(results, cellHeaders);
+                
+                byte[] objByte = ExportToExcel(results);
 
-                string tmpFile = new FileObject(filename, Convert.ToBase64String(objByte, 0, objByte.Count(), Base64FormattingOptions.None)).ToString();
-
-                return tmpFile;
+                return new FileObject(fileName, Convert.ToBase64String(objByte, 0, objByte.Count(), Base64FormattingOptions.None)).ToString();
             }
             catch (Exception ex)
             {
-                throw new Exception("Error in Excel creation -  Msg : " + ex.Message);
+                throw new Exception("Error creating excel file.", ex);
             }
+        }
+
+        private List<string> GetCellHeaders(DataTable results)
+        {
+            List<string> cellHeaders = new List<string>();
+            for (int i = 0; i < results.Columns.Count; i++)
+            {
+                cellHeaders.Add(GetExcelColumnName(i + 1));
+            }
+            return cellHeaders;
         }
 
         /// <summary>
@@ -87,38 +91,27 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         /// </summary>
         /// <param name="datatable">DataTable object</param>
         /// <param name="filepath">The Path of exported excel file</param>
-        public byte[] ExportToExcel(DataTable datatable, List<string> cellheaders)
+        private byte[] ExportToExcel(DataTable datatable)
         {
-            cellHeaders = cellheaders;
             MemoryStream mem = new MemoryStream();
-            // Initialize an instance of  SpreadSheet Document 
+            
             using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Create(mem, SpreadsheetDocumentType.Workbook))
             {
-                CreateExcelFile(spreadsheetDocument, datatable);
+                // Initialize an instance of WorkbookPart
+                WorkbookPart workBookPart = spreadsheetDocument.AddWorkbookPart();
+
+                // Create WorkBook 
+                CreateWorkBookPart(workBookPart);
+
+                // Add WorkSheetPart into WorkBook
+                WorksheetPart worksheetPart1 = workBookPart.AddNewPart<WorksheetPart>("rId1");
+                CreateWorkSheetPart(worksheetPart1, datatable);
+
+                // Save workbook
+                workBookPart.Workbook.Save();
             }
 
             return mem.ToArray();
-        }
-
-        /// <summary>
-        ///  Create SpreadSheet Document and Fill datas
-        /// </summary>
-        /// <param name="spreadsheetdoc">SpreadSheet Document</param>
-        /// <param name="table">DataTable Object</param>
-        private void CreateExcelFile(SpreadsheetDocument spreadsheetdoc, DataTable table)
-        {
-            // Initialize an instance of WorkbookPart
-            WorkbookPart workBookPart = spreadsheetdoc.AddWorkbookPart();
-
-            // Create WorkBook 
-            CreateWorkBookPart(workBookPart);
-
-            // Add WorkSheetPart into WorkBook
-            WorksheetPart worksheetPart1 = workBookPart.AddNewPart<WorksheetPart>("rId1");
-            CreateWorkSheetPart(worksheetPart1, table);
-
-            // Save workbook
-            workBookPart.Workbook.Save();
         }
 
         /// <summary>
@@ -134,7 +127,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             Sheet sheet1 = new Sheet()
             {
                 Name = "Sheet1",
-                SheetId = Convert.ToUInt32(1),
+                SheetId = 1,
                 Id = "rId1"
             };
 
@@ -203,12 +196,14 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             };
 
 
-            ;            // Add columns in DataTable to columns collection of SpreadSheet Document 
+            List<string> cellHeaders = GetCellHeaders(table);
+
+            // Add columns in DataTable to columns collection of SpreadSheet Document 
             for (int columnindex = 0; columnindex < table.Columns.Count; columnindex++)
             {
                 Cell cell = new Cell()
                 {
-                    CellReference = new CreateExcel().Get(columnindex, (Convert.ToInt32((UInt32)rowIndex) - 2), this.cellHeaders),
+                    CellReference = Get(columnindex, (Convert.ToInt32((UInt32)rowIndex) - 2), cellHeaders),
                     //StyleIndex = _headerStyleId,
                     DataType = GetCellType(table.Columns[columnindex].ColumnName.GetType().ToString())
 
@@ -239,10 +234,8 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                 {
                     Cell cell = new Cell()
                     {
-                        CellReference = new CreateExcel().Get(cIndex, (Convert.ToInt32((UInt32)rowIndex) - 2), this.cellHeaders),
-                        //StyleIndex = GetCellStyle(table.Columns[cIndex]),
+                        CellReference = Get(cIndex, (Convert.ToInt32((UInt32)rowIndex) - 2), cellHeaders),
                         DataType = GetCellType(table.Rows[rIndex][cIndex].GetType().ToString())
-
                     };
 
                     CellValue cellValue = new CellValue();
@@ -501,56 +494,6 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         }
 
 
-        ///// <summary>
-        ///// Generates content of workbookStylesPart
-        ///// </summary>
-        ///// <param name="workbookStylesPart">WorkbookStylesPart Object</param>
-        //private void CreateWorkBookStylesPart(WorkbookStylesPart workbookStylesPart)
-        //{
-        //    // Define Style of Sheet in workbook
-        //    Stylesheet stylesheet1 = new Stylesheet() { MCAttributes = new MarkupCompatibilityAttributes() { Ignorable = "x14ac" } };
-        //    stylesheet1.AddNamespaceDeclaration("mc", "http://schemas.openxmlformats.org/markup-compatibility/2006");
-        //    stylesheet1.AddNamespaceDeclaration("x14ac", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac");
-
-        //    // Initialize  an instance of fonts
-        //    Fonts fonts = new Fonts() { Count = (UInt32Value)2U, KnownFonts = true };
-
-        //    // Initialize  an instance of font,fontsize,color
-        //    Font font = new Font();
-        //    FontSize fontSize = new FontSize() { Val = 14D };
-        //    Color color = new Color() { Theme = (UInt32Value)1U };
-        //    FontName fontName = new FontName() { Val = "Calibri" };
-        //    FontFamilyNumbering fontFamilyNumbering = new FontFamilyNumbering() { Val = 2 };
-        //    FontScheme fontScheme = new FontScheme() { Val = FontSchemeValues.Minor };
-
-        //    // Add elements to font
-        //    font.Append(fontSize);
-        //    font.Append(color);
-        //    font.Append(fontName);
-        //    font.Append(fontFamilyNumbering);
-        //    font.Append(fontScheme);
-
-        //    fonts.Append(font);
-
-        //    // Define the StylesheetExtensionList Class. When the object is serialized out as xml, its qualified name is x:extLst
-        //    StylesheetExtensionList stylesheetExtensionList1 = new StylesheetExtensionList();
-
-        //    // Define the StylesheetExtension Class
-        //    StylesheetExtension stylesheetExtension1 = new StylesheetExtension() { Uri = "{EB79DEF2-80B8-43e5-95BD-54CBDDF9020C}" };
-        //    stylesheetExtension1.AddNamespaceDeclaration("x14", "http://schemas.microsoft.com/office/spreadsheetml/2009/9/main");
-        //    DocumentFormat.OpenXml.Office2010.Excel.SlicerStyles slicerStyles1 = new DocumentFormat.OpenXml.Office2010.Excel.SlicerStyles() { DefaultSlicerStyle = "SlicerStyleLight1" };
-
-        //    stylesheetExtension1.Append(slicerStyles1);
-        //    stylesheetExtensionList1.Append(stylesheetExtension1);
-
-        //    // Add elements to stylesheet
-        //    stylesheet1.Append(fonts);
-        //    stylesheet1.Append(stylesheetExtensionList1);
-
-        //    // Set the style of workbook
-        //    workbookStylesPart.Stylesheet = stylesheet1;
-        //}
-
         /// <summary>
         /// Generates content of workbookStylesPart
         /// </summary>
@@ -663,23 +606,9 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                 quot = quot / 26;
                 res = (char)(rem + 97) + res;
             }
-            return res.ToUpper();
+            return res;
         }
 
-        private string TrimFileName(string fileName)
-        {
-            if (fileName.EndsWith(".xls"))
-            {
-                return fileName.Substring(0, fileName.Length - ".xls".Length);
-            }
-
-            if (fileName.EndsWith(".xlsx"))
-            {
-                return fileName.Substring(0, fileName.Length - ".xlsx".Length);
-            }
-
-            return fileName;
-        }
     }
 
     public class CreateExcelWrapper : IDisposable
