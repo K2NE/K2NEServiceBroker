@@ -11,6 +11,17 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string RetryProcess = "RetryProcessInstance";
         }
 
+        public static class ExportToExcel
+        {
+            public const string ExcelFromADOQuery = "ExcelFromADOQuery";
+        }
+
+
+        public static class ADOQuery
+        {
+            public const string ListQueryData = "List";
+        }
+
         public static class ManagementWorklist
         {
             public const string GetWorklist = "GetWorklist";
@@ -39,8 +50,8 @@ namespace K2Field.K2NE.ServiceBroker.Constants
 
         public static class ProcessInstanceManagement
         {
-                public const string GotoActivity = "GotoActivity";
-                public const string ListActivities = "ListActivities";
+            public const string GotoActivity = "GotoActivity";
+            public const string ListActivities = "ListActivities";
         }
 
         public static class ProcessInstanceClient
@@ -85,7 +96,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string UserGetZone = "UserGetZone";
             public const string UserDeleteZone = "UserDeleteZone";
             public const string UserCalculateEvent = "UserCalculateEvent";
-            
+
             //TODO: Later if needed
             public const string ListZoneWorkingHours = "ListZoneWorkingHours";
             public const string ListZoneAvailabilityDates = "ListZoneAvailabilityDates";
