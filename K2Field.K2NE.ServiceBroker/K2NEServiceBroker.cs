@@ -1,6 +1,6 @@
 ﻿//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//   K2NEServiceBroker provides you functionality to integrate custom functionality with K2.
-//   Copyright (C) 2016  K2nE GmbH
+//   K2NEServiceBroker provides additional functionality to K2 using a Custom Service Broker.
+//   Copyright (C) 2016  K2NE GmbH.
 
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
