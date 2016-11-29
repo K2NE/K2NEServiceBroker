@@ -1,4 +1,8 @@
 == ChangeLog
+=== vNext
+- Added license!
+
+
 === v1.6.12
 - New version number.
 - Changed handling of Roles in service broker due to 4.7 release. No 'exclude' flag is available anymore.
