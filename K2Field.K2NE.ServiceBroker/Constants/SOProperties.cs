@@ -24,14 +24,6 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string ExecutingProcId = "ExecutingProcId";
         }
 
-
-        public static class ExportToExcel
-        {
-            public const string ADOQuery = "ADOQuery";
-            public const string FileName = "FileName";
-            public const string ExcelFile = "ExcelFile";
-        }
-
         public static class ManagementWorklist
         {
             public const string ActivityId = "ActivityId";
