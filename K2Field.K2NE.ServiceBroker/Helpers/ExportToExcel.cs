@@ -17,6 +17,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
 {
     public class CreateExcel
     {
+        private UInt32Value _dateStyleId;
         public CreateExcel()
         {
         }
@@ -67,7 +68,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         /// <param name="rowIndex">Index of the row.</param>
         /// <param name="columnIndex">Index of the column.</param>
         /// <returns></returns>
-        private string Get(int columnIndex, int rowIndex, List<string> cHeaders)
+        private string GetCellReference(int columnIndex, int rowIndex, List<string> cHeaders)
         {
             return cHeaders.ElementAt(columnIndex) + (rowIndex + 1).ToString();
         }
@@ -89,6 +90,10 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                 // Create WorkBook 
                 CreateWorkBookPart(workBookPart);
 
+                // Add styling that we need.
+                WorkbookStylesPart workbookStylesPart = workBookPart.AddNewPart<WorkbookStylesPart>("rId3");
+                CreateWorkBookStylesPart(workbookStylesPart);
+
                 // Add WorkSheetPart into WorkBook
                 WorksheetPart worksheetPart1 = workBookPart.AddNewPart<WorksheetPart>("rId1");
                 CreateWorkSheetPart(worksheetPart1, datatable);
@@ -98,6 +103,90 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             }
 
             return mem.ToArray();
+        }
+        private void CreateWorkBookStylesPart(WorkbookStylesPart workbookStylesPart)
+        {
+            Stylesheet styleSheet = new Stylesheet();
+
+            Fonts fonts = new Fonts();
+            fonts.Append(new DocumentFormat.OpenXml.Spreadsheet.Font()
+            {
+                FontName = new FontName() { Val = "Calibri" },
+                FontSize = new FontSize() { Val = 11 },
+                FontFamilyNumbering = new FontFamilyNumbering() { Val = 2 },
+            });
+            fonts.Count = (uint)fonts.ChildElements.Count;
+
+            Fills fills = new Fills();
+            fills.Append(new Fill()
+            {
+                PatternFill = new PatternFill() { PatternType = PatternValues.None }
+            });
+
+            fills.Count = (uint)fills.ChildElements.Count;
+
+            // Create "borders" node.
+            Borders borders = new Borders();
+            borders.Append(new Border()
+            {
+                LeftBorder = new LeftBorder(),
+                RightBorder = new RightBorder(),
+                TopBorder = new TopBorder(),
+                BottomBorder = new BottomBorder(),
+                DiagonalBorder = new DiagonalBorder()
+            });
+
+            borders.Count = (uint)borders.ChildElements.Count;
+
+            // Create "cellStyleXfs" node.
+            var CellStyleFormats = new CellStyleFormats();
+            CellStyleFormats.Append(new CellFormat()
+            {
+                NumberFormatId = 0,
+                FontId = 0,
+                FillId = 0,
+                BorderId = 0
+            });
+            CellStyleFormats.Count = (uint)CellStyleFormats.ChildElements.Count;
+
+            // Create "cellXfs" node.
+            var CellFormats = new CellFormats();
+            CellFormats.Append(new CellFormat()
+            {
+                BorderId = 0,
+                FillId = 0,
+                FontId = 0,
+                FormatId = 0,
+                NumberFormatId = 0,
+                //ApplyNumberFormat = true
+            });
+
+            CellFormats.Count = (uint)CellFormats.ChildElements.Count;
+
+
+
+            // Create "cellStyles" node.
+            var CellStyles = new CellStyles();
+            CellStyles.Append(new CellStyle()
+            {
+                Name = "Normal",
+                FormatId = 0,
+                BuiltinId = 0
+            });
+            CellStyles.Count = (uint)CellStyles.ChildElements.Count;
+
+            //// Append all nodes in order.
+            styleSheet.Append(fonts);
+            styleSheet.Append(fills);
+            styleSheet.Append(borders);
+            styleSheet.Append(CellStyleFormats);
+            styleSheet.Append(CellFormats);
+            styleSheet.Append(CellStyles);
+
+            _dateStyleId = CreateCellFormat(styleSheet, null, null, UInt32Value.FromUInt32(22));
+
+            // Set the style of workbook
+            workbookStylesPart.Stylesheet = styleSheet;
         }
 
         /// <summary>
@@ -174,7 +263,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                 Footer = 0.3D
             };
 
-            Row row1 = new Row()
+            Row headerRow = new Row()
             {
                 RowIndex = rowIndex++,
                 Spans = new ListValue<StringValue>() { InnerText = "1:3" },
@@ -189,10 +278,8 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             {
                 Cell cell = new Cell()
                 {
-                    CellReference = Get(columnindex, (Convert.ToInt32((UInt32)rowIndex) - 2), cellHeaders),
-                    //StyleIndex = _headerStyleId,
+                    CellReference = GetCellReference(columnindex, (Convert.ToInt32((UInt32)rowIndex) - 2), cellHeaders),
                     DataType = GetCellType(table.Columns[columnindex].ColumnName.GetType().ToString())
-
                 };
 
                 // Get Value of DataTable and append the value to cell of spreadsheet document
@@ -200,38 +287,46 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                 cellValue.Text = table.Columns[columnindex].ColumnName.ToString();
                 cell.Append(cellValue);
 
-                row1.Append(cell);
+                headerRow.Append(cell);
             }
 
             // Add row to sheet
-            sheetData1.Append(row1);
+            sheetData1.Append(headerRow);
 
             // Add rows in DataTable to rows collection of SpreadSheet Document 
             for (int rIndex = 0; rIndex < table.Rows.Count; rIndex++)
             {
-                Row row = new Row()
+                Row dataRow = new Row()
                 {
                     RowIndex = rowIndex++,
                     Spans = new ListValue<StringValue>() { InnerText = "1:3" },
                     DyDescent = 0.25D
                 };
 
+
                 for (int cIndex = 0; cIndex < table.Columns.Count; cIndex++)
                 {
-                    Cell cell = new Cell()
-                    {
-                        CellReference = Get(cIndex, (Convert.ToInt32((UInt32)rowIndex) - 2), cellHeaders),
-                        DataType = GetCellType(table.Rows[rIndex][cIndex].GetType().ToString())
-                    };
+                    Cell cell = new Cell();
+                    cell.CellReference = GetCellReference(cIndex, (Convert.ToInt32((UInt32)rowIndex) - 2), cellHeaders);
+                    cell.DataType = GetCellType(table.Rows[rIndex][cIndex].GetType().ToString());
+                    cell.CellValue = new CellValue();
 
-                    CellValue cellValue = new CellValue();
-                    cellValue.Text = table.Rows[rIndex][cIndex].ToString();
-                    cell.Append(cellValue);
-                    row.Append(cell);
+                    if (table.Rows[rIndex][cIndex].GetType().ToString() == "System.DateTime")
+                    {
+                        cell.CellValue.Text = Convert.ToDateTime(table.Rows[rIndex][cIndex].ToString()).ToOADate().ToString();
+                        cell.StyleIndex = _dateStyleId;
+                    }
+
+                    else
+                    {
+                        cell.CellValue.Text = table.Rows[rIndex][cIndex].ToString();
+                    }
+
+                    dataRow.Append(cell);
                 }
 
                 // Add row to Sheet Data
-                sheetData1.Append(row);
+                sheetData1.Append(dataRow);
             }
 
             // Add elements to worksheet
@@ -248,10 +343,8 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         {
             switch (col)
             {
-                //Celltype date corrupts the excel so keeping its datatype as string
-                ///TODO: Add support for date/time. Uncommenting the below results in a corrupt Excel file.
-                //case "System.DateTime":
-                //    return DocumentFormat.OpenXml.Spreadsheet.CellValues.Date;
+                case "System.DateTime":
+                    return DocumentFormat.OpenXml.Spreadsheet.CellValues.Number;
                 case "System.Decimal":
                 case "System.Double":
                 case "System.Int64":
@@ -266,19 +359,19 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
 
 
 
-        private UInt32Value createCellFormat(
-            Stylesheet styleSheet,
-            UInt32Value fontIndex,
-            UInt32Value fillIndex,
-            UInt32Value numberFormatId)
+        private UInt32Value CreateCellFormat(Stylesheet styleSheet, UInt32Value fontIndex, UInt32Value fillIndex, UInt32Value numberFormatId)
         {
             CellFormat cellFormat = new CellFormat();
 
             if (fontIndex != null)
+            {
                 cellFormat.FontId = fontIndex;
+            }
 
             if (fillIndex != null)
+            {
                 cellFormat.FillId = fillIndex;
+            }
 
             if (numberFormatId != null)
             {
