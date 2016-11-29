@@ -131,6 +131,7 @@
 
 xcopy /y /r "$(SolutionDir)\Installer\Install.ps1" "$(SolutionDir)\Release\"
 xcopy /y /r "$(SolutionDir)\Documentation\*.adoc" "$(SolutionDir)\Release\"
+xcopy /y /r "$(SolutionDir)\Documentation\*.txt" "$(SolutionDir)\Release\"
 xcopy /q /y "$(TargetPath)" "$(SolutionDir)\Release\"
 </PostBuildEvent>
   </PropertyGroup>

@@ -19,6 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		Documentation\ChangeLog.adoc = Documentation\ChangeLog.adoc
 		Documentation\ClientAPI.adoc = Documentation\ClientAPI.adoc
 		Documentation\K2NEServiceBroker.adoc = Documentation\K2NEServiceBroker.adoc
+		LICENSE.txt = LICENSE.txt
 		Documentation\ManagementAPI.adoc = Documentation\ManagementAPI.adoc
 		URM.adoc = URM.adoc
 	EndProjectSection
@@ -26,11 +27,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer", "Installer", "{08DF0BF4-1924-40FE-B909-7B3A985F3C12}"
 	ProjectSection(SolutionItems) = preProject
 		Installer\Install.ps1 = Installer\Install.ps1
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{28BA4109-81DE-4A19-8A25-D0363B8BFBFA}"
-	ProjectSection(SolutionItems) = preProject
-		LICENSE.txt = LICENSE.txt
 	EndProjectSection
 EndProject
 Global
