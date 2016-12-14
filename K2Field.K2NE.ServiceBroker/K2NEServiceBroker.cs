@@ -94,10 +94,6 @@ namespace K2Field.K2NE.ServiceBroker
         {
             get
             {
-                if (_serviceObjectToType.Count != 0)
-                {
-                    return _serviceObjectToType;
-                }
                 lock (serviceObjectToTypeLock)
                 {
                     if (_serviceObjectToType.Count != 0)
