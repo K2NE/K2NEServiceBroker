@@ -1,7 +1,7 @@
 == ChangeLog
 === vNext
 - Added license!
-
+- Bugfix to maybe return a list of objects which is not fully initialized.
 
 === v1.6.12
 - New version number.
