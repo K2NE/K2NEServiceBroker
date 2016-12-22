@@ -242,6 +242,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string Variables = "Variables";
             public const string ScriptOutput = "ScriptOutput";
             public const string MetaDataScriptPath = "MetaDataScriptPath";
+            public const string MetaDataPSFunctionName = "MetaDataPSFunctionName";
         }
     }
 }

@@ -7,6 +7,7 @@ using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using K2Field.K2NE.ServiceBroker.Helpers;
 using System.Data;
+using System.Management.Automation.Language;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
 {
@@ -54,6 +55,44 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
 
                         so.Methods.Add(mRunScript);
 
+                        //parsing internal functions
+                        List<FunctionDefinitionAst> internalFunctions = PowerShellHelper.GetInternalFunctionsFromScriptByPath(scriptFile.Value);
+                        
+                        foreach(FunctionDefinitionAst internalFunction in internalFunctions)
+                        {
+                            if (String.Compare(internalFunction.Name, "RunScript") != 0)
+                            {
+                                //register function parameters as ServiceObject properties 
+                                if (internalFunction.Parameters != null)
+                                {
+                                    foreach (ParameterAst parameter in internalFunction.Parameters)
+                                    {
+                                        so.Properties.Add(Helper.CreateProperty(parameter.Name.ToString(), SoType.Memo, "Function parameter"));
+                                    }
+                                }
+
+                                //register new method based on powershell function
+                                Method mFunction = Helper.CreateMethod(internalFunction.Name, "Internal function", MethodType.Read);
+
+                                //register method input parameters
+                                if (internalFunction.Parameters != null)
+                                {
+                                    foreach (ParameterAst parameter in internalFunction.Parameters)
+                                    {
+                                        mFunction.InputProperties.Add(parameter.Name.ToString());
+                                    }
+                                }
+                                //add function object like a metadata
+                                mFunction.MetaData.AddServiceElement(Constants.SOProperties.DynamicPowerShell.MetaDataPSFunctionName, internalFunction.Name);
+                                //add path to full powershell script file
+                                mFunction.MetaData.AddServiceElement(Constants.SOProperties.DynamicPowerShell.MetaDataScriptPath, scriptFile.Value);
+                                
+                                mFunction.ReturnProperties.Add(Constants.SOProperties.DynamicPowerShell.ScriptOutput);
+
+                                so.Methods.Add(mFunction);
+                            }
+                        }
+
                         serviceObjects.Add(so);
                     }
                 }
@@ -69,7 +108,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
                 case Constants.Methods.DynamicPowerShell.RunScript:
                     RunScript();
                     break;
-
+                default:
+                    RunFunction();
+                    break;
             }
         }
 
@@ -107,6 +148,54 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
             {
                 dr[Constants.SOProperties.DynamicPowerShell.Variables] = String.Empty;
             }
+
+            results.Rows.Add(dr);
+        }
+
+        private void RunFunction()
+        {
+            ServiceObject serviceObject = ServiceBroker.Service.ServiceObjects[0];
+            serviceObject.Properties.InitResultTable();
+            DataTable results = ServiceBroker.ServicePackage.ResultTable;
+
+            //get function metadata
+            string metaDataPSFunctionName = serviceObject.Methods[0].MetaData.GetServiceElement<string>(Constants.SOProperties.DynamicPowerShell.MetaDataPSFunctionName);
+
+            //get script path
+            string metaDataScriptPath = serviceObject.Methods[0].MetaData.GetServiceElement<string>(Constants.SOProperties.DynamicPowerShell.MetaDataScriptPath);
+
+            //get list of functions from powershell script and get current function by name
+            List<FunctionDefinitionAst> powerShellInternalFunctions = PowerShellHelper.GetInternalFunctionsFromScriptByPath(metaDataScriptPath);
+            FunctionDefinitionAst currentFunctionMetaData = powerShellInternalFunctions.Where(s => String.Compare(s.Name, metaDataPSFunctionName) == 0).FirstOrDefault();
+
+            //getting input parameters
+            Dictionary<string, string> functionInputParameters = new Dictionary<string, string>();
+                
+            if (currentFunctionMetaData.Parameters != null)
+            {
+                foreach (ParameterAst parameter in currentFunctionMetaData.Parameters)
+                {
+                    string parameterValue = GetStringProperty(parameter.Name.ToString(), false);
+
+                    if (!String.IsNullOrEmpty(parameterValue))
+                    {
+                        functionInputParameters.Add(parameter.Name.ToString(), parameterValue);
+                    }
+                    else
+                    {
+                        functionInputParameters.Add(parameter.Name.ToString(), String.Empty);
+                    }
+                }
+            }
+
+            //script based on functions
+            string scriptBasedOnFunctions = PowerShellHelper.BuildScriptBasedOnFunctions(powerShellInternalFunctions);
+
+            //run script
+            string scriptOutput = PowerShellHelper.RunFunction(currentFunctionMetaData, functionInputParameters, scriptBasedOnFunctions);
+
+            DataRow dr = results.NewRow();
+            dr[Constants.SOProperties.DynamicPowerShell.ScriptOutput] = scriptOutput;
 
             results.Rows.Add(dr);
         }
