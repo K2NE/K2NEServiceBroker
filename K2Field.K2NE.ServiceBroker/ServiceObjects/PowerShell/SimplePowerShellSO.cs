@@ -37,6 +37,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.SimplePowerShell.PowerShellScript, SoType.Memo, "The PowerShell script to execute. This is a string containing the script. Not a file location."));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.SimplePowerShell.Variables, SoType.Memo, "A JSON serialized array of PowerShell variables."));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.SimplePowerShell.ScriptOutput, SoType.Memo, "The full output of the script, as if it was executed on the console."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.SimplePowerShell.PowerShellFilePath, SoType.Memo, "The path to PowerShell script file."));
 
             //RunScript
             Method mRunScript = Helper.CreateMethod(Constants.Methods.SimplePowerShell.RunScript, "Runs the bit of PowerShell script provided in PowerShellScript. Returns the ScriptOutput and adds the variables that are needed.", MethodType.Read);
@@ -49,6 +50,17 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
 
             so.Methods.Add(mRunScript);
 
+            //RunScriptByFilePath
+            Method mRunScriptByFilePath = Helper.CreateMethod(Constants.Methods.SimplePowerShell.RunScriptByFilePath, "Runs the bit of PowerShell script provided from file by path. Returns the ScriptOutput and adds the variables that are needed.", MethodType.Read);
+            mRunScriptByFilePath.InputProperties.Add(Constants.SOProperties.SimplePowerShell.PowerShellFilePath);
+            mRunScriptByFilePath.Validation.RequiredProperties.Add(Constants.SOProperties.SimplePowerShell.PowerShellFilePath);
+            mRunScriptByFilePath.InputProperties.Add(Constants.SOProperties.SimplePowerShell.Variables);
+            
+            mRunScriptByFilePath.ReturnProperties.Add(Constants.SOProperties.SimplePowerShell.ScriptOutput);
+            mRunScriptByFilePath.ReturnProperties.Add(Constants.SOProperties.SimplePowerShell.Variables);
+
+            so.Methods.Add(mRunScriptByFilePath);
+
             return new List<ServiceObject> { so };
         }
 
@@ -59,7 +71,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
                 case Constants.Methods.SimplePowerShell.RunScript:
                     RunScript();
                     break;
-               
+                case Constants.Methods.SimplePowerShell.RunScriptByFilePath:
+                    RunScriptByFilePath();
+                    break; 
             }
         }
 
@@ -80,10 +94,46 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
             }
             else
             {
-                new List<PowerShellVariablesDC>();
+                variablesList = new List<PowerShellVariablesDC>();
             }
             //run script
             string scriptOutput = PowerShellHelper.RunScript(powerShellScript, variablesList);
+
+            DataRow dr = results.NewRow();
+            dr[Constants.SOProperties.SimplePowerShell.ScriptOutput] = scriptOutput;
+            if (variablesList.Count != 0)
+            {
+                dr[Constants.SOProperties.SimplePowerShell.Variables] = PowerShellSerializationHelper.SerializeList(variablesList);
+            }
+            else
+            {
+                dr[Constants.SOProperties.SimplePowerShell.Variables] = String.Empty;
+            }
+
+            results.Rows.Add(dr);
+        }
+
+        private void RunScriptByFilePath()
+        {
+            string powerShellFilePath = GetStringProperty(Constants.SOProperties.SimplePowerShell.PowerShellFilePath, true);
+            string serializedVariables = GetStringProperty(Constants.SOProperties.SimplePowerShell.Variables, false);
+
+            ServiceObject serviceObject = ServiceBroker.Service.ServiceObjects[0];
+            serviceObject.Properties.InitResultTable();
+            DataTable results = ServiceBroker.ServicePackage.ResultTable;
+
+            //deserialize variables
+            List<PowerShellVariablesDC> variablesList = null;
+            if (!String.IsNullOrEmpty(serializedVariables))
+            {
+                variablesList = PowerShellSerializationHelper.DeserializeArrayToList(serializedVariables);
+            }
+            else
+            {
+                variablesList = new List<PowerShellVariablesDC>();
+            }
+            //run script from file
+            string scriptOutput = PowerShellHelper.RunScript(PowerShellHelper.LoadScriptByPath(powerShellFilePath), variablesList);
 
             DataRow dr = results.NewRow();
             dr[Constants.SOProperties.SimplePowerShell.ScriptOutput] = scriptOutput;

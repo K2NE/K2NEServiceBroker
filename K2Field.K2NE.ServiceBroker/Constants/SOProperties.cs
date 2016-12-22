@@ -234,6 +234,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string PowerShellScript = "PowerShellScript";
             public const string Variables = "Variables";
             public const string ScriptOutput = "ScriptOutput";
+            public const string PowerShellFilePath = "PowerShellFilePath";
         }
 
         public static class DynamicPowerShell
