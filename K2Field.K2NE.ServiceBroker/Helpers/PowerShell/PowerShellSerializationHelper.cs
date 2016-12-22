@@ -17,15 +17,29 @@ namespace K2Field.K2NE.ServiceBroker.Helpers.PowerShell
         {
             PowerShellVariablesDC powerShellVariable = new PowerShellVariablesDC(name, value);
 
-            MemoryStream stream = new MemoryStream();
-            DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(PowerShellVariablesDC));
+            try
+            {
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(PowerShellVariablesDC));
 
-            jsonSerializer.WriteObject(stream, powerShellVariable);
+                    jsonSerializer.WriteObject(stream, powerShellVariable);
 
-            stream.Position = 0;
-            StreamReader streamReader = new StreamReader(stream);
-
-            return streamReader.ReadToEnd();
+                    stream.Position = 0;
+                    using (StreamReader streamReader = new StreamReader(stream))
+                    {
+                        return streamReader.ReadToEnd();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.AppendLine("Property serialization went wrong: ");
+                stringBuilder.AppendLine(e.Message);
+                stringBuilder.AppendLine("\n");
+                throw new Exception(stringBuilder.ToString(), e);
+            }
         }
 
         public static string SerializeItemToArray(string name, string value)
@@ -64,15 +78,29 @@ namespace K2Field.K2NE.ServiceBroker.Helpers.PowerShell
 
         public static string SerializeList(List<PowerShellVariablesDC> list)
         {
-            MemoryStream stream = new MemoryStream();
-            DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(list.GetType());
+            try
+            {
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(list.GetType());
 
-            jsonSerializer.WriteObject(stream, list);
+                    jsonSerializer.WriteObject(stream, list);
 
-            stream.Position = 0;
-            StreamReader streamReader = new StreamReader(stream);
-
-            return streamReader.ReadToEnd();
+                    stream.Position = 0;
+                    using (StreamReader streamReader = new StreamReader(stream))
+                    {
+                        return streamReader.ReadToEnd();
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.AppendLine("Array serialization went wrong: ");
+                stringBuilder.AppendLine(e.Message);
+                stringBuilder.AppendLine("\n");
+                throw new Exception(stringBuilder.ToString(), e);
+            }
         }
 
         #endregion
@@ -81,29 +109,68 @@ namespace K2Field.K2NE.ServiceBroker.Helpers.PowerShell
 
         public static PowerShellVariablesDC Deserialize(string serializeItem)
         {
-            MemoryStream stream = new MemoryStream(Encoding.Unicode.GetBytes(serializeItem));
-            DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(PowerShellVariablesDC));
+            try
+            {
+                using (MemoryStream stream = new MemoryStream(Encoding.Unicode.GetBytes(serializeItem)))
+                {
+                    DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(PowerShellVariablesDC));
 
-            stream.Position = 0;
-            return (PowerShellVariablesDC)jsonSerializer.ReadObject(stream);
+                    stream.Position = 0;
+                    return (PowerShellVariablesDC)jsonSerializer.ReadObject(stream);
+                }
+            }
+            catch(Exception e)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.AppendLine("Item deserialization went wrong: ");
+                stringBuilder.AppendLine(e.Message);
+                stringBuilder.AppendLine("\n");
+                throw new Exception(stringBuilder.ToString(), e);
+            }
         }
 
         public static PowerShellVariablesDC DeserializeItemFromArray(string serializedArray, string name)
         {
-            MemoryStream stream = new MemoryStream(Encoding.Unicode.GetBytes(serializedArray));
-            DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(List<PowerShellVariablesDC>));
+            try
+            {
+                using (MemoryStream stream = new MemoryStream(Encoding.Unicode.GetBytes(serializedArray)))
+                {
+                    DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(List<PowerShellVariablesDC>));
 
-            stream.Position = 0;
-            return (((List<PowerShellVariablesDC>)jsonSerializer.ReadObject(stream)).Where(x => x.Name == name)).First();
+                    stream.Position = 0;
+                    return (((List<PowerShellVariablesDC>)jsonSerializer.ReadObject(stream)).Where(x => x.Name == name)).First();
+                }
+            }
+            catch(Exception e)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.AppendLine("Item from array deserialization went wrong: ");
+                stringBuilder.AppendLine(e.Message);
+                stringBuilder.AppendLine("\n");
+                throw new Exception(stringBuilder.ToString(), e);
+            }
         }
 
         public static List<PowerShellVariablesDC> DeserializeArrayToList(string serializedArray)
         {
-            MemoryStream stream = new MemoryStream(Encoding.Unicode.GetBytes(serializedArray));
-            DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(List<PowerShellVariablesDC>));
+            try
+            {
+                using (MemoryStream stream = new MemoryStream(Encoding.Unicode.GetBytes(serializedArray)))
+                {
+                    DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(List<PowerShellVariablesDC>));
 
-            stream.Position = 0;
-            return (List<PowerShellVariablesDC>)jsonSerializer.ReadObject(stream);
+                    stream.Position = 0;
+                    return (List<PowerShellVariablesDC>)jsonSerializer.ReadObject(stream);
+                }
+            }
+            catch(Exception e)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.AppendLine("Array deserialization went wrong: ");
+                stringBuilder.AppendLine(e.Message);
+                stringBuilder.AppendLine("\n");
+                throw new Exception(stringBuilder.ToString(), e);
+            }
         }
 
         #endregion
