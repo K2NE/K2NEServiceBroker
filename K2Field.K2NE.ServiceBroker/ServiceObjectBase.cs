@@ -309,7 +309,37 @@ namespace K2Field.K2NE.ServiceBroker
             }
         }
 
+        public string PowerShellSubdirectories
+        {
+            get
+            {
+                if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.PowerShellSubdirectories))
+                {
+                    return String.Empty;
+                }
+                return Convert.ToString(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.PowerShellSubdirectories]);
+            }
+        }
 
+        public bool AllowPowershellScript
+        {
+            get
+            {
+                if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.AllowPowershellScript))
+                {
+                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.AllowPowershellScript));
+                }
+
+                bool allowPowershellScript;
+
+                if (!Boolean.TryParse(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.AllowPowershellScript].ToString(), out allowPowershellScript))
+                {
+                    allowPowershellScript = false;
+                }
+
+                return allowPowershellScript;
+            }
+        }
 
         #region Protected helper methods for property value retrieval
         /// <summary>

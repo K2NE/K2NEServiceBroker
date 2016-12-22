@@ -24,19 +24,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
                 return Constants.ServiceFolders.PowerShell;
             }
         }
-
-        public string PowerShellSubdirectories
-        {
-            get
-            {
-                if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.PowerShellSubdirectories))
-                {
-                    return String.Empty;
-                }
-                return Convert.ToString(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.PowerShellSubdirectories]);
-            }
-        }
-
+        
         public override List<SourceCode.SmartObjects.Services.ServiceSDK.Objects.ServiceObject> DescribeServiceObjects()
         {
             List<ServiceObject> serviceObjects = new List<ServiceObject>();
@@ -49,7 +37,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
                 foreach (var scriptFile in scriptFiles)
                 {
                     //exclude files with default powershell service object names
-                    if (scriptFile.Key != "SimplePowershell" && scriptFile.Key != "PowershellVariables")
+                    if (String.Compare(scriptFile.Key, "SimplePowershell") != 0 && String.Compare(scriptFile.Key, "PowershellVariables") != 0)
                     {
                         ServiceObject so = Helper.CreateServiceObject(scriptFile.Key, "ServiceObject for call script by \"" + scriptFile.Value + "\" path.");
 
@@ -97,14 +85,28 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
             string metaDataScriptPath = serviceObject.Methods[0].MetaData.GetServiceElement<string>(Constants.SOProperties.DynamicPowerShell.MetaDataScriptPath);
 
             //deserialize variables
-            List<PowerShellVariablesDC> variablesList = !String.IsNullOrEmpty(serializedVariables)? PowerShellSerializationHelper.DeserializeArrayToList(serializedVariables):
-                new List<PowerShellVariablesDC>();
+            List<PowerShellVariablesDC> variablesList = null;
+            if (!String.IsNullOrEmpty(serializedVariables))
+            {
+                variablesList = PowerShellSerializationHelper.DeserializeArrayToList(serializedVariables);
+            }
+            else 
+            {
+                variablesList = new List<PowerShellVariablesDC>();
+            }
             //run script from file
             string scriptOutput = PowerShellHelper.RunScript(PowerShellHelper.LoadScriptByPath(metaDataScriptPath), variablesList);
 
             DataRow dr = results.NewRow();
             dr[Constants.SOProperties.DynamicPowerShell.ScriptOutput] = scriptOutput;
-            dr[Constants.SOProperties.DynamicPowerShell.Variables] = variablesList.Count != 0 ? PowerShellSerializationHelper.SerializeList(variablesList) : String.Empty;
+            if (variablesList.Count != 0)
+            {
+                dr[Constants.SOProperties.DynamicPowerShell.Variables] = PowerShellSerializationHelper.SerializeList(variablesList);
+            }
+            else
+            {
+                dr[Constants.SOProperties.DynamicPowerShell.Variables] = String.Empty;
+            }
 
             results.Rows.Add(dr);
         }

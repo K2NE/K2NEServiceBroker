@@ -24,22 +24,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
                 return Constants.ServiceFolders.PowerShell;
             }
         }
-
-        public string AllowPowershellScript
-        {
-            get
-            {
-                if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.AllowPowershellScript))
-                {
-                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.AllowPowershellScript));
-                }
-                return Convert.ToString(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.AllowPowershellScript]);                
-            }
-        }
-
+        
         public override List<ServiceObject> DescribeServiceObjects()
         {
-            if (AllowPowershellScript != "true")
+            if (!AllowPowershellScript)
             {
                 return new List<ServiceObject> { };
             }
@@ -85,14 +73,28 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
             DataTable results = ServiceBroker.ServicePackage.ResultTable;
 
             //deserialize variables
-            List<PowerShellVariablesDC> variablesList = !String.IsNullOrEmpty(serializedVariables)? PowerShellSerializationHelper.DeserializeArrayToList(serializedVariables) : 
+            List<PowerShellVariablesDC> variablesList = null;
+            if (!String.IsNullOrEmpty(serializedVariables))
+            {
+                variablesList = PowerShellSerializationHelper.DeserializeArrayToList(serializedVariables);
+            }
+            else
+            {
                 new List<PowerShellVariablesDC>();
+            }
             //run script
             string scriptOutput = PowerShellHelper.RunScript(powerShellScript, variablesList);
 
             DataRow dr = results.NewRow();
             dr[Constants.SOProperties.SimplePowerShell.ScriptOutput] = scriptOutput;
-            dr[Constants.SOProperties.SimplePowerShell.Variables] = variablesList.Count != 0 ? PowerShellSerializationHelper.SerializeList(variablesList) : String.Empty;
+            if (variablesList.Count != 0)
+            {
+                dr[Constants.SOProperties.SimplePowerShell.Variables] = PowerShellSerializationHelper.SerializeList(variablesList);
+            }
+            else
+            {
+                dr[Constants.SOProperties.SimplePowerShell.Variables] = String.Empty;
+            }
 
             results.Rows.Add(dr);
         }

@@ -247,7 +247,7 @@ namespace K2Field.K2NE.ServiceBroker
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ADOSMOQueries, false, ""); //checked
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ADOSMOQueriesFile, false, ""); //checked
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.AllowPowershellScript, true, "true"); //checked
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.PowerShellSubdirectories, false, ""); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.PowerShellSubdirectories, false, "PowerShellScripts"); //checked
             return base.GetConfigSection();
         }
         public void Init(IServiceMarshalling serviceMarshalling, IServerMarshaling serverMarshaling)
