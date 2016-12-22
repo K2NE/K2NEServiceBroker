@@ -26,6 +26,7 @@ using SourceCode.SmartObjects.Services.ServiceSDK;
 using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using SourceCode.Hosting.Server.Interfaces;
+using K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell;
 
 namespace K2Field.K2NE.ServiceBroker
 {
@@ -77,7 +78,10 @@ namespace K2Field.K2NE.ServiceBroker
                                 new WorkingHoursConfigurationSO(this),
                                 new GroupSO(this),
                                 new UserSO(this),
-                                new ADOSMOQuerySO(this)
+                                new ADOSMOQuerySO(this),
+                                new PowerShellVariablesSO(this),
+                                new SimplePowerShellSO(this),
+                                new DynamicPowerShellSO(this)
                             };
 
                         }
@@ -242,6 +246,8 @@ namespace K2Field.K2NE.ServiceBroker
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.AdditionalADProps, false, ""); //checked
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ADOSMOQueries, false, ""); //checked
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ADOSMOQueriesFile, false, ""); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.AllowPowershellScript, true, "true"); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.PowerShellSubdirectories, false, ""); //checked
             return base.GetConfigSection();
         }
         public void Init(IServiceMarshalling serviceMarshalling, IServerMarshaling serverMarshaling)

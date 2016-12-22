@@ -74,6 +74,11 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\WindowsPowerShell\3.0\System.Management.Automation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -93,6 +98,9 @@
     <Compile Include="Helpers\LdapHelper.cs" />
     <Compile Include="Helpers\MetaDataExtensions.cs" />
     <Compile Include="Helpers\Extensions.cs" />
+    <Compile Include="Helpers\PowerShell\PowerShellHelper.cs" />
+    <Compile Include="Helpers\PowerShell\PowerShellSerializationHelper.cs" />
+    <Compile Include="Helpers\PowerShell\PowerShellVariablesDC.cs" />
     <Compile Include="K2NEServiceBroker.cs" />
     <Compile Include="Helpers\Helper.cs" />
     <Compile Include="Logger.cs" />
@@ -110,6 +118,9 @@
     <Compile Include="ServiceObjects\Management API\OutOfOfficeSO.cs" />
     <Compile Include="ServiceObjects\Management API\ProcessInstanceManagementSO.cs" />
     <Compile Include="ServiceObjects\Management API\RoleSO.cs" />
+    <Compile Include="ServiceObjects\PowerShell\DynamicPowerShellSO.cs" />
+    <Compile Include="ServiceObjects\PowerShell\PowershellVariablesSO.cs" />
+    <Compile Include="ServiceObjects\PowerShell\SimplePowerShellSO.cs" />
     <Compile Include="ServiceObjects\URM\GroupSO.cs" />
     <Compile Include="ServiceObjects\URM\URMFilter.cs" />
     <Compile Include="ServiceObjects\URM\UserSO.cs" />

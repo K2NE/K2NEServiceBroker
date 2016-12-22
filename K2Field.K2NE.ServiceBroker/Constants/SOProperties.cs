@@ -220,5 +220,27 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string SipAccount = "SipAccount";
             public const string ObjectSid = "ObjectSID";
         }
+
+        public static class PowershellVariables
+        {
+            public const string Name = "Name";
+            public const string Value = "Value";
+            public const string SerializedItem = "SerializedItem";
+            public const string SerializedArray = "SerializedArray";
+        }
+
+        public static class SimplePowerShell
+        {
+            public const string PowerShellScript = "PowerShellScript";
+            public const string Variables = "Variables";
+            public const string ScriptOutput = "ScriptOutput";
+        }
+
+        public static class DynamicPowerShell
+        {
+            public const string Variables = "Variables";
+            public const string ScriptOutput = "ScriptOutput";
+            public const string MetaDataScriptPath = "MetaDataScriptPath";
+        }
     }
 }

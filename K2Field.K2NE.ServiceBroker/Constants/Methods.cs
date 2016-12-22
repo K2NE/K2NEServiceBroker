@@ -120,5 +120,26 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         {
             public const string GetUsers = "UMRGetUsers";
         }
+
+        public static class PowershellVariables
+        {
+            public const string SerializeItem = "SerializeItem";
+            public const string SerializeItemToArray = "SerializeItemToArray";
+            public const string AddSerializedItemToArray = "AddSerializedItemToArray";
+            public const string SerializeAddItemToArray = "SerializeAddItemToArray";
+            public const string Deserialize = "Deserialize";
+            public const string DeserializeItemFromArray = "DeserializeItemFromArray";
+            public const string DeserializeArrayToList = "DeserializeArrayToList";
+        }
+
+        public static class SimplePowerShell
+        {
+            public const string RunScript = "RunScript";
+        }
+
+        public static class DynamicPowerShell
+        {
+            public const string RunScript = "RunScript";
+        }
     }
 }
