@@ -78,9 +78,11 @@ namespace K2Field.K2NE.ServiceBroker.Helpers.PowerShell
             catch (Exception e)
             {
                 // Let the user know what went wrong. 
-                string errorText = "The file could not be read:";
-                errorText += e.Message + "\n";
-                throw new Exception(errorText);
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.AppendLine("The file could not be read:");
+                stringBuilder.AppendLine(e.Message);
+                stringBuilder.AppendLine("\n");
+                throw new Exception(stringBuilder.ToString(), e);
             }
         }
 
@@ -97,8 +99,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers.PowerShell
 
                 if (Directory.Exists(fullFolderPath))
                 {
-                    string[] scriptFilePaths = Directory.GetFiles(fullFolderPath)
-                                .Where(s => Path.GetExtension(s).Equals(".ps1")).ToArray();
+                    string[] scriptFilePaths = Directory.GetFiles(fullFolderPath, "*.ps1");
 
                     foreach (string scriptFilePath in scriptFilePaths)
                     {
@@ -108,7 +109,21 @@ namespace K2Field.K2NE.ServiceBroker.Helpers.PowerShell
                 }
                 else
                 {
-                    Directory.CreateDirectory(fullFolderPath);
+                    try
+                    {
+                        Directory.CreateDirectory(fullFolderPath);
+                    }
+                    catch (Exception e)
+                    {
+                        // Let the user know what went wrong. 
+                        StringBuilder stringBuilder = new StringBuilder();
+                        stringBuilder.AppendLine("The powershell directory \"");
+                        stringBuilder.AppendLine(fullFolderPath);
+                        stringBuilder.AppendLine("\" could not be created: ");
+                        stringBuilder.AppendLine(e.Message);
+                        stringBuilder.AppendLine("\n");
+                        throw new Exception(stringBuilder.ToString(), e);
+                    }
                 }
             }
 
