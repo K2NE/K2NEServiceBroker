@@ -11,33 +11,26 @@ namespace K2Field.K2NE.ServiceBroker.Helpers.PowerShell
     {
         public static string RunScript(string powerShellScript, List<PowerShellVariablesDC> variablesList)
         {
-            try
+            using (System.Management.Automation.PowerShell powerShellInstance = System.Management.Automation.PowerShell.Create())
             {
-                using (System.Management.Automation.PowerShell powerShellInstance = System.Management.Automation.PowerShell.Create())
+                //set input variables
+                foreach (PowerShellVariablesDC variable in variablesList)
                 {
-                    //set input variables
-                    foreach (PowerShellVariablesDC variable in variablesList)
-                    {
-                        powerShellInstance.Runspace.SessionStateProxy.SetVariable(variable.Name, variable.Value);
-                    }                    
+                    powerShellInstance.Runspace.SessionStateProxy.SetVariable(variable.Name, variable.Value);
+                }                    
 
-                    powerShellInstance.AddScript(powerShellScript);
+                powerShellInstance.AddScript(powerShellScript);
                     
-                    // begin invoke execution on the pipeline
-                    Collection<System.Management.Automation.PSObject> returnValue = powerShellInstance.Invoke();
+                // begin invoke execution on the pipeline
+                Collection<System.Management.Automation.PSObject> returnValue = powerShellInstance.Invoke();
 
-                    //get input variables
-                    foreach (PowerShellVariablesDC variable in variablesList)
-                    {
-                        variable.Value = powerShellInstance.Runspace.SessionStateProxy.GetVariable(variable.Name);
-                    }
-
-                    return GetScriptOutput(returnValue);
+                //get input variables
+                foreach (PowerShellVariablesDC variable in variablesList)
+                {
+                    variable.Value = powerShellInstance.Runspace.SessionStateProxy.GetVariable(variable.Name);
                 }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+
+                return GetScriptOutput(returnValue);
             }
         }
 
