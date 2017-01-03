@@ -1,5 +1,6 @@
 == ChangeLog
-=== vNext
+=== v1.6.13
+- Added PowerShell Service object. See [PowerShell] section in the documentation.(Documentation/PowerShell.adoc)
 - Added license!
 - Bugfix to maybe return a list of objects which is not fully initialized.
 
