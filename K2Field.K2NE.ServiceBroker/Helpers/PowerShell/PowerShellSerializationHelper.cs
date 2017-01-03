@@ -65,7 +65,11 @@ namespace K2Field.K2NE.ServiceBroker.Helpers.PowerShell
         {
             PowerShellVariablesDC powerShellVariable = new PowerShellVariablesDC(name, value);
 
-            List<PowerShellVariablesDC> powerShellVariableList = DeserializeArrayToList(serializedArray);
+            List<PowerShellVariablesDC> powerShellVariableList = new List<PowerShellVariablesDC>();
+            if (!string.IsNullOrEmpty(serializedArray))
+            {
+                powerShellVariableList = DeserializeArrayToList(serializedArray);
+            }
 
             powerShellVariableList.Add(powerShellVariable);
 

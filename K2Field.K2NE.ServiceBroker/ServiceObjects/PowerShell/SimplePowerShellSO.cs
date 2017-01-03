@@ -83,17 +83,14 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
             DataTable results = ServiceBroker.ServicePackage.ResultTable;
 
             //deserialize variables
-            List<PowerShellVariablesDC> variablesList = null;
+            List<PowerShellVariablesDC> variablesList = new List<PowerShellVariablesDC>();
             if (!String.IsNullOrEmpty(serializedVariables))
             {
                 variablesList = PowerShellSerializationHelper.DeserializeArrayToList(serializedVariables);
             }
-            else
-            {
-                variablesList = new List<PowerShellVariablesDC>();
-            }
+  
             //run script
-            string scriptOutput = PowerShellHelper.RunScript(powerShellScript, variablesList);
+            string scriptOutput = PowerShellHelper.RunScriptCode(powerShellScript, variablesList);
 
             DataRow dr = results.NewRow();
             dr[Constants.SOProperties.SimplePowerShell.ScriptOutput] = scriptOutput;
@@ -119,17 +116,14 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
             DataTable results = ServiceBroker.ServicePackage.ResultTable;
 
             //deserialize variables
-            List<PowerShellVariablesDC> variablesList = null;
+            List<PowerShellVariablesDC> variablesList = new List<PowerShellVariablesDC>();
             if (!String.IsNullOrEmpty(serializedVariables))
             {
                 variablesList = PowerShellSerializationHelper.DeserializeArrayToList(serializedVariables);
             }
-            else
-            {
-                variablesList = new List<PowerShellVariablesDC>();
-            }
+      
             //run script from file
-            string scriptOutput = PowerShellHelper.RunScript(PowerShellHelper.LoadScriptByPath(powerShellFilePath), variablesList);
+            string scriptOutput = PowerShellHelper.RunScriptFile(powerShellFilePath, variablesList);
 
             DataRow dr = results.NewRow();
             dr[Constants.SOProperties.SimplePowerShell.ScriptOutput] = scriptOutput;

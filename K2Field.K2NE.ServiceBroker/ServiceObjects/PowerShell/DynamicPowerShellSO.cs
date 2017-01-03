@@ -25,76 +25,82 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
                 return Constants.ServiceFolders.PowerShell;
             }
         }
-        
+
         public override List<SourceCode.SmartObjects.Services.ServiceSDK.Objects.ServiceObject> DescribeServiceObjects()
         {
             List<ServiceObject> serviceObjects = new List<ServiceObject>();
 
-            if(!String.IsNullOrEmpty(PowerShellSubdirectories))
+            if (!String.IsNullOrEmpty(PowerShellSubdirectories))
             {
                 //get all files from powershell directories 
-                Dictionary<string, string> scriptFiles = PowerShellHelper.GetFilePathsFromDirectories(PowerShellSubdirectories);
 
-                foreach (var scriptFile in scriptFiles)
+                Dictionary<string, string> scriptFiles;
+                try
                 {
-                    //exclude files with default powershell service object names
-                    if (String.Compare(scriptFile.Key, "SimplePowershell") != 0 && String.Compare(scriptFile.Key, "PowershellVariables") != 0)
+                    scriptFiles = PowerShellHelper.GetFilePathsFromDirectories(PowerShellSubdirectories);
+                }
+                catch (Exception ex)
+                {
+                    base.ServiceBroker.HostServiceLogger.LogError("Failed to retrieve PowerShell files.");
+                    base.ServiceBroker.HostServiceLogger.LogException(ex);
+                    return serviceObjects;
+                }
+
+                foreach (KeyValuePair<string, string> scriptFile in scriptFiles)
+                {
+
+                    if (String.Compare(scriptFile.Key, "SimplePowershell", true) == 0 || String.Compare(scriptFile.Key, "PowershellVariables", true) == 0)
                     {
-                        ServiceObject so = Helper.CreateServiceObject(scriptFile.Key, "ServiceObject for call script by \"" + scriptFile.Value + "\" path.");
+                        base.ServiceBroker.HostServiceLogger.LogError(string.Format("Not creating service object for PowerShell script '{0}'. This is a system service object already.", scriptFile.Key));
+                        continue;
+                    }
 
-                        so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.DynamicPowerShell.Variables, SoType.Memo, "A JSON serialized array of PowerShell variables."));
-                        so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.DynamicPowerShell.ScriptOutput, SoType.Memo, "The full output of the script, as if it was executed on the console."));
 
-                        //RunScript
-                        Method mRunScript = Helper.CreateMethod(Constants.Methods.DynamicPowerShell.RunScript, "Runs the bit of PowerShell script provided in file. Returns the ScriptOutput and adds the variables that are needed.", MethodType.Read);
-                        mRunScript.InputProperties.Add(Constants.SOProperties.DynamicPowerShell.Variables);
-                        mRunScript.MetaData.AddServiceElement(Constants.SOProperties.DynamicPowerShell.MetaDataScriptPath, scriptFile.Value);
+                    ServiceObject so = Helper.CreateServiceObject(scriptFile.Key, string.Format("ServiceObject for call script '{0}'", scriptFile.Value));
 
-                        mRunScript.ReturnProperties.Add(Constants.SOProperties.DynamicPowerShell.ScriptOutput);
-                        mRunScript.ReturnProperties.Add(Constants.SOProperties.DynamicPowerShell.Variables);
+                    so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.DynamicPowerShell.Variables, SoType.Memo, "A JSON serialized array of PowerShell variables."));
+                    so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.DynamicPowerShell.ScriptOutput, SoType.Memo, "The full output of the script, as if it was executed on the console."));
 
-                        so.Methods.Add(mRunScript);
+                    //RunScript
+                    Method mRunScript = Helper.CreateMethod(Constants.Methods.DynamicPowerShell.RunScript, "Runs the bit of PowerShell script provided in file. Returns the ScriptOutput and adds the variables that are needed.", MethodType.Read);
+                    mRunScript.InputProperties.Add(Constants.SOProperties.DynamicPowerShell.Variables);
+                    mRunScript.MetaData.AddServiceElement(Constants.SOProperties.DynamicPowerShell.MetaDataScriptPath, scriptFile.Value);
+                    mRunScript.ReturnProperties.Add(Constants.SOProperties.DynamicPowerShell.ScriptOutput);
+                    mRunScript.ReturnProperties.Add(Constants.SOProperties.DynamicPowerShell.Variables);
+                    so.Methods.Add(mRunScript);
 
-                        //parsing internal functions
-                        List<FunctionDefinitionAst> internalFunctions = PowerShellHelper.GetInternalFunctionsFromScriptByPath(scriptFile.Value);
-                        
-                        foreach(FunctionDefinitionAst internalFunction in internalFunctions)
+                    //parsing internal functions
+                    List<FunctionDefinitionAst> internalFunctions = PowerShellHelper.GetInternalFunctionsFromScriptByPath(scriptFile.Value);
+
+                    foreach (FunctionDefinitionAst internalFunction in internalFunctions)
+                    {
+                        if (string.Compare(internalFunction.Name, "RunScript", true) == 0)
                         {
-                            if (String.Compare(internalFunction.Name, "RunScript") != 0)
+                            base.ServiceBroker.HostServiceLogger.LogError(string.Format("Not creating Service Object Method for PowerShell function '{0}' in script '{1}'. This is a system method.", internalFunction.Name, scriptFile.Key));
+                            continue;
+                        }
+
+                        Method mFunction = Helper.CreateMethod(internalFunction.Name, "Internal function", MethodType.Read);
+
+
+                        if (internalFunction.Parameters != null)
+                        {
+                            foreach (ParameterAst parameter in internalFunction.Parameters)
                             {
-                                //register function parameters as ServiceObject properties 
-                                if (internalFunction.Parameters != null)
-                                {
-                                    foreach (ParameterAst parameter in internalFunction.Parameters)
-                                    {
-                                        so.Properties.Add(Helper.CreateProperty(parameter.Name.ToString(), SoType.Memo, "Function parameter"));
-                                    }
-                                }
-
-                                //register new method based on powershell function
-                                Method mFunction = Helper.CreateMethod(internalFunction.Name, "Internal function", MethodType.Read);
-
-                                //register method input parameters
-                                if (internalFunction.Parameters != null)
-                                {
-                                    foreach (ParameterAst parameter in internalFunction.Parameters)
-                                    {
-                                        mFunction.InputProperties.Add(parameter.Name.ToString());
-                                    }
-                                }
-                                //add function object like a metadata
-                                mFunction.MetaData.AddServiceElement(Constants.SOProperties.DynamicPowerShell.MetaDataPSFunctionName, internalFunction.Name);
-                                //add path to full powershell script file
-                                mFunction.MetaData.AddServiceElement(Constants.SOProperties.DynamicPowerShell.MetaDataScriptPath, scriptFile.Value);
-                                
-                                mFunction.ReturnProperties.Add(Constants.SOProperties.DynamicPowerShell.ScriptOutput);
-
-                                so.Methods.Add(mFunction);
+                                so.Properties.Add(Helper.CreateProperty(parameter.Name.ToString(), SoType.Memo, "Function parameter"));
+                                mFunction.InputProperties.Add(parameter.Name.ToString());
                             }
                         }
 
-                        serviceObjects.Add(so);
+
+                        mFunction.MetaData.AddServiceElement(Constants.SOProperties.DynamicPowerShell.MetaDataPSFunctionName, internalFunction.Name);
+                        mFunction.MetaData.AddServiceElement(Constants.SOProperties.DynamicPowerShell.MetaDataScriptPath, scriptFile.Value);
+                        mFunction.ReturnProperties.Add(Constants.SOProperties.DynamicPowerShell.ScriptOutput);
+                        so.Methods.Add(mFunction);
                     }
+
+                    serviceObjects.Add(so);
+
                 }
             }
 
@@ -126,17 +132,14 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
             string metaDataScriptPath = serviceObject.Methods[0].MetaData.GetServiceElement<string>(Constants.SOProperties.DynamicPowerShell.MetaDataScriptPath);
 
             //deserialize variables
-            List<PowerShellVariablesDC> variablesList = null;
+            List<PowerShellVariablesDC> variablesList = new List<PowerShellVariablesDC>();
             if (!String.IsNullOrEmpty(serializedVariables))
             {
                 variablesList = PowerShellSerializationHelper.DeserializeArrayToList(serializedVariables);
             }
-            else 
-            {
-                variablesList = new List<PowerShellVariablesDC>();
-            }
+    
             //run script from file
-            string scriptOutput = PowerShellHelper.RunScript(PowerShellHelper.LoadScriptByPath(metaDataScriptPath), variablesList);
+            string scriptOutput = PowerShellHelper.RunScriptFile(metaDataScriptPath, variablesList);
 
             DataRow dr = results.NewRow();
             dr[Constants.SOProperties.DynamicPowerShell.ScriptOutput] = scriptOutput;
@@ -158,10 +161,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
             serviceObject.Properties.InitResultTable();
             DataTable results = ServiceBroker.ServicePackage.ResultTable;
 
-            //get function metadata
-            string metaDataPSFunctionName = serviceObject.Methods[0].MetaData.GetServiceElement<string>(Constants.SOProperties.DynamicPowerShell.MetaDataPSFunctionName);
 
-            //get script path
+            string metaDataPSFunctionName = serviceObject.Methods[0].MetaData.GetServiceElement<string>(Constants.SOProperties.DynamicPowerShell.MetaDataPSFunctionName);
             string metaDataScriptPath = serviceObject.Methods[0].MetaData.GetServiceElement<string>(Constants.SOProperties.DynamicPowerShell.MetaDataScriptPath);
 
             //get list of functions from powershell script and get current function by name
@@ -170,7 +171,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
 
             //getting input parameters
             Dictionary<string, string> functionInputParameters = new Dictionary<string, string>();
-                
+
             if (currentFunctionMetaData.Parameters != null)
             {
                 foreach (ParameterAst parameter in currentFunctionMetaData.Parameters)
