@@ -19,10 +19,10 @@ namespace K2Field.K2NE.ServiceBroker.Helpers.PowerShell
                 foreach (PowerShellVariablesDC variable in variablesList)
                 {
                     powerShellInstance.Runspace.SessionStateProxy.SetVariable(variable.Name, variable.Value);
-                }                    
+                }
 
                 powerShellInstance.AddScript(powerShellScript);
-                    
+
                 // begin invoke execution on the pipeline
                 Collection<System.Management.Automation.PSObject> returnValue = powerShellInstance.Invoke();
 
@@ -47,7 +47,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers.PowerShell
                 //powerShellInstance.Commands.AddCommand(functionMetaData.Name);
 
                 Command command = new Command(functionMetaData.Name);
-                
+
                 //adding input parameter to command
                 foreach (var functionInputParameter in functionInputParameters)
                 {
@@ -75,44 +75,16 @@ namespace K2Field.K2NE.ServiceBroker.Helpers.PowerShell
         }
 
         #region Directory interaction
-        
+
         public static string LoadScriptByPath(string filePath)
         {
             try
             {
-                // Create an instance of StreamReader to read from our file. 
-                // The using statement also closes the StreamReader. 
-                using (StreamReader sr = new StreamReader(filePath))
-                {
-
-                    // use a string builder to get all our lines from the file 
-                    StringBuilder fileContents = new StringBuilder();
-
-                    // string to hold the current line 
-                    string curLine;
-
-                    // loop through our file and read each line into our 
-                    // stringbuilder as we go along 
-                    while ((curLine = sr.ReadLine()) != null)
-                    {
-                        // read each line and MAKE SURE YOU ADD BACK THE 
-                        // LINEFEED THAT IT THE ReadLine() METHOD STRIPS OFF 
-                        fileContents.Append(curLine + "\n");
-                    }
-
-                    // call RunScript and pass in our file contents 
-                    // converted to a string 
-                    return fileContents.ToString();
-                }
+                return File.ReadAllText(filePath);
             }
             catch (Exception e)
             {
-                // Let the user know what went wrong. 
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.AppendLine("The file could not be read:");
-                stringBuilder.AppendLine(e.Message);
-                stringBuilder.AppendLine("\n");
-                throw new Exception(stringBuilder.ToString(), e);
+                throw new Exception(string.Format("The file could not be read: {0}", e.Message), e);
             }
         }
 
@@ -184,7 +156,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers.PowerShell
                 //get all internal functions
                 return ast.EndBlock.Statements.OfType<FunctionDefinitionAst>().ToList();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 // Let the user know what went wrong. 
                 StringBuilder stringBuilder = new StringBuilder();
@@ -200,7 +172,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers.PowerShell
         public static string BuildScriptBasedOnFunctions(List<FunctionDefinitionAst> functions)
         {
             StringBuilder stringBuilder = new StringBuilder();
-            foreach(var function in functions)
+            foreach (var function in functions)
             {
                 stringBuilder.AppendLine(" ");
                 stringBuilder.AppendLine(function.ToString());
@@ -208,7 +180,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers.PowerShell
 
             return stringBuilder.ToString();
         }
-        
+
         #endregion
     }
 }
