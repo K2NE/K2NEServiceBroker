@@ -40,25 +40,21 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.SimplePowerShell.PowerShellFilePath, SoType.Memo, "The path to PowerShell script file."));
 
             //RunScript
-            Method mRunScript = Helper.CreateMethod(Constants.Methods.SimplePowerShell.RunScript, "Runs the bit of PowerShell script provided in PowerShellScript. Returns the ScriptOutput and adds the variables that are needed.", MethodType.Read);
-            mRunScript.InputProperties.Add(Constants.SOProperties.SimplePowerShell.PowerShellScript);
-            mRunScript.Validation.RequiredProperties.Add(Constants.SOProperties.SimplePowerShell.PowerShellScript);
-            mRunScript.InputProperties.Add(Constants.SOProperties.SimplePowerShell.Variables);
-            
-            mRunScript.ReturnProperties.Add(Constants.SOProperties.SimplePowerShell.ScriptOutput);
-            mRunScript.ReturnProperties.Add(Constants.SOProperties.SimplePowerShell.Variables);
-
-            so.Methods.Add(mRunScript);
+            Method mRunScriptCode = Helper.CreateMethod(Constants.Methods.SimplePowerShell.RunScriptCode, "Runs the bit of PowerShell script provided in PowerShellScript. Returns the ScriptOutput and adds the variables that are needed.", MethodType.Read);
+            mRunScriptCode.InputProperties.Add(Constants.SOProperties.SimplePowerShell.PowerShellScript);
+            mRunScriptCode.Validation.RequiredProperties.Add(Constants.SOProperties.SimplePowerShell.PowerShellScript);
+            mRunScriptCode.InputProperties.Add(Constants.SOProperties.SimplePowerShell.Variables);
+            mRunScriptCode.ReturnProperties.Add(Constants.SOProperties.SimplePowerShell.ScriptOutput);
+            mRunScriptCode.ReturnProperties.Add(Constants.SOProperties.SimplePowerShell.Variables);
+            so.Methods.Add(mRunScriptCode);
 
             //RunScriptByFilePath
             Method mRunScriptByFilePath = Helper.CreateMethod(Constants.Methods.SimplePowerShell.RunScriptByFilePath, "Runs the bit of PowerShell script provided from file by path. Returns the ScriptOutput and adds the variables that are needed.", MethodType.Read);
             mRunScriptByFilePath.InputProperties.Add(Constants.SOProperties.SimplePowerShell.PowerShellFilePath);
             mRunScriptByFilePath.Validation.RequiredProperties.Add(Constants.SOProperties.SimplePowerShell.PowerShellFilePath);
             mRunScriptByFilePath.InputProperties.Add(Constants.SOProperties.SimplePowerShell.Variables);
-            
             mRunScriptByFilePath.ReturnProperties.Add(Constants.SOProperties.SimplePowerShell.ScriptOutput);
             mRunScriptByFilePath.ReturnProperties.Add(Constants.SOProperties.SimplePowerShell.Variables);
-
             so.Methods.Add(mRunScriptByFilePath);
 
             return new List<ServiceObject> { so };
@@ -68,8 +64,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
         {
             switch (ServiceBroker.Service.ServiceObjects[0].Methods[0].Name)
             {
-                case Constants.Methods.SimplePowerShell.RunScript:
-                    RunScript();
+                case Constants.Methods.SimplePowerShell.RunScriptCode:
+                    RunScriptCode();
                     break;
                 case Constants.Methods.SimplePowerShell.RunScriptByFilePath:
                     RunScriptByFilePath();
@@ -77,7 +73,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
             }
         }
 
-        private void RunScript()
+        private void RunScriptCode()
         {
             string powerShellScript = GetStringProperty(Constants.SOProperties.SimplePowerShell.PowerShellScript, true);
             string serializedVariables = GetStringProperty(Constants.SOProperties.SimplePowerShell.Variables, false);

@@ -34,11 +34,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers.PowerShell
             }
             catch (Exception e)
             {
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.AppendLine("Property serialization went wrong: ");
-                stringBuilder.AppendLine(e.Message);
-                stringBuilder.AppendLine("\n");
-                throw new Exception(stringBuilder.ToString(), e);
+                throw new Exception(string.Format("Failed to serialize property: {0}", e.Message), e);
             }
         }
 

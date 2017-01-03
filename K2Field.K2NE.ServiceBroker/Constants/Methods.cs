@@ -134,7 +134,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
 
         public static class SimplePowerShell
         {
-            public const string RunScript = "RunScript";
+            public const string RunScriptCode = "RunScript";
             public const string RunScriptByFilePath = "RunScriptByFilePath";
         }
 
