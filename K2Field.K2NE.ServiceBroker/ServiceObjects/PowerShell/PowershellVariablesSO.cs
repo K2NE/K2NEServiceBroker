@@ -40,88 +40,61 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
             mSerializeItem.Validation.RequiredProperties.Add(Constants.SOProperties.PowershellVariables.Name);
             mSerializeItem.InputProperties.Add(Constants.SOProperties.PowershellVariables.Value);
             mSerializeItem.Validation.RequiredProperties.Add(Constants.SOProperties.PowershellVariables.Value);
-
             mSerializeItem.ReturnProperties.Add(Constants.SOProperties.PowershellVariables.SerializedItem);
-
             so.Methods.Add(mSerializeItem);
 
             //SerializeItemToArray
-            Method mSerializeItemToArray = Helper.CreateMethod(Constants.Methods.PowershellVariables.SerializeItemToArray,
-                "Serialize a single variable into an array and return the json.", MethodType.Read);
-
+            Method mSerializeItemToArray = Helper.CreateMethod(Constants.Methods.PowershellVariables.SerializeItemToArray, "Serialize a single variable into an array and return the json.", MethodType.Read);
             mSerializeItemToArray.InputProperties.Add(Constants.SOProperties.PowershellVariables.Name);
             mSerializeItemToArray.Validation.RequiredProperties.Add(Constants.SOProperties.PowershellVariables.Name);
             mSerializeItemToArray.InputProperties.Add(Constants.SOProperties.PowershellVariables.Value);
             mSerializeItemToArray.Validation.RequiredProperties.Add(Constants.SOProperties.PowershellVariables.Value);
-
             mSerializeItemToArray.ReturnProperties.Add(Constants.SOProperties.PowershellVariables.SerializedArray);
-
             so.Methods.Add(mSerializeItemToArray);
 
             //AddSerializedItemToArray
-            Method mAddSerializedItemToArray = Helper.CreateMethod(Constants.Methods.PowershellVariables.AddSerializedItemToArray,
-                "Add the serialized item to the array and return it.", MethodType.Read);
-
+            Method mAddSerializedItemToArray = Helper.CreateMethod(Constants.Methods.PowershellVariables.AddSerializedItemToArray, "Add the serialized item to the array and return it.", MethodType.Read);
             mAddSerializedItemToArray.InputProperties.Add(Constants.SOProperties.PowershellVariables.SerializedArray);
             mAddSerializedItemToArray.Validation.RequiredProperties.Add(Constants.SOProperties.PowershellVariables.SerializedArray);
             mAddSerializedItemToArray.InputProperties.Add(Constants.SOProperties.PowershellVariables.SerializedItem);
             mAddSerializedItemToArray.Validation.RequiredProperties.Add(Constants.SOProperties.PowershellVariables.SerializedItem);
-
             mAddSerializedItemToArray.ReturnProperties.Add(Constants.SOProperties.PowershellVariables.SerializedArray);
-
             so.Methods.Add(mAddSerializedItemToArray);
 
             //SerializeAddItemToArray
-            Method mSerializeAddItemToArray = Helper.CreateMethod(Constants.Methods.PowershellVariables.SerializeAddItemToArray,
-                "Serialize a single item and add it to the existing array.", MethodType.Read);
-
+            Method mSerializeAddItemToArray = Helper.CreateMethod(Constants.Methods.PowershellVariables.SerializeAddItemToArray, "Serialize a single item and add it to the existing array.", MethodType.Read);
             mSerializeAddItemToArray.InputProperties.Add(Constants.SOProperties.PowershellVariables.Name);
             mSerializeAddItemToArray.Validation.RequiredProperties.Add(Constants.SOProperties.PowershellVariables.Name);
             mSerializeAddItemToArray.InputProperties.Add(Constants.SOProperties.PowershellVariables.Value);
             mSerializeAddItemToArray.Validation.RequiredProperties.Add(Constants.SOProperties.PowershellVariables.Value);
             mSerializeAddItemToArray.InputProperties.Add(Constants.SOProperties.PowershellVariables.SerializedArray);
-            mSerializeAddItemToArray.Validation.RequiredProperties.Add(Constants.SOProperties.PowershellVariables.SerializedArray);
-
             mSerializeAddItemToArray.ReturnProperties.Add(Constants.SOProperties.PowershellVariables.SerializedArray);
-
             so.Methods.Add(mSerializeAddItemToArray);
 
             //Deserialize
-            Method mDeserialize = Helper.CreateMethod(Constants.Methods.PowershellVariables.Deserialize,
-                "Deserialize the provided array and return the name & value.", MethodType.Read);
-
+            Method mDeserialize = Helper.CreateMethod(Constants.Methods.PowershellVariables.Deserialize, "Deserialize the provided array and return the name & value.", MethodType.Read);
             mDeserialize.InputProperties.Add(Constants.SOProperties.PowershellVariables.SerializedItem);
             mDeserialize.Validation.RequiredProperties.Add(Constants.SOProperties.PowershellVariables.SerializedItem);
-            
             mDeserialize.ReturnProperties.Add(Constants.SOProperties.PowershellVariables.Name);
             mDeserialize.ReturnProperties.Add(Constants.SOProperties.PowershellVariables.Value);
-
             so.Methods.Add(mDeserialize);
 
             //DeserializeItemFromArray
-            Method mDeserializeItemFromArray = Helper.CreateMethod(Constants.Methods.PowershellVariables.DeserializeItemFromArray,
-                "Deserialize a single value (name) from the given array.", MethodType.Read);
-
+            Method mDeserializeItemFromArray = Helper.CreateMethod(Constants.Methods.PowershellVariables.DeserializeItemFromArray, "Deserialize a single value (name) from the given array.", MethodType.Read);
             mDeserializeItemFromArray.InputProperties.Add(Constants.SOProperties.PowershellVariables.SerializedArray);
             mDeserializeItemFromArray.Validation.RequiredProperties.Add(Constants.SOProperties.PowershellVariables.SerializedArray);
             mDeserializeItemFromArray.InputProperties.Add(Constants.SOProperties.PowershellVariables.Name);
             mDeserializeItemFromArray.Validation.RequiredProperties.Add(Constants.SOProperties.PowershellVariables.Name);
-            
             mDeserializeItemFromArray.ReturnProperties.Add(Constants.SOProperties.PowershellVariables.Name);
             mDeserializeItemFromArray.ReturnProperties.Add(Constants.SOProperties.PowershellVariables.Value);
-
             so.Methods.Add(mDeserializeItemFromArray);
 
             //DeserializeArrayToList
-            Method mDeserializeArrayToList = Helper.CreateMethod(Constants.Methods.PowershellVariables.DeserializeArrayToList,
-                "Deserialize an array into name/value list.", MethodType.List);
-
+            Method mDeserializeArrayToList = Helper.CreateMethod(Constants.Methods.PowershellVariables.DeserializeArrayToList, "Deserialize an array into name/value list.", MethodType.List);
             mDeserializeArrayToList.InputProperties.Add(Constants.SOProperties.PowershellVariables.SerializedArray);
             mDeserializeArrayToList.Validation.RequiredProperties.Add(Constants.SOProperties.PowershellVariables.SerializedArray);
-            
             mDeserializeArrayToList.ReturnProperties.Add(Constants.SOProperties.PowershellVariables.Name);
             mDeserializeArrayToList.ReturnProperties.Add(Constants.SOProperties.PowershellVariables.Value);
-
             so.Methods.Add(mDeserializeArrayToList);
 
             return new List<ServiceObject> { so };
@@ -210,7 +183,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
         {
             string name = GetStringProperty(Constants.SOProperties.PowershellVariables.Name, true);
             string value = GetStringProperty(Constants.SOProperties.PowershellVariables.Value, true);
-            string serializedArray = GetStringProperty(Constants.SOProperties.PowershellVariables.SerializedArray, true);
+            string serializedArray = GetStringProperty(Constants.SOProperties.PowershellVariables.SerializedArray, false);
 
             ServiceObject serviceObject = ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();

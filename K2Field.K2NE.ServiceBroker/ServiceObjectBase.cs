@@ -330,7 +330,7 @@ namespace K2Field.K2NE.ServiceBroker
                     throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.AllowPowershellScript));
                 }
 
-                bool allowPowershellScript;
+                bool allowPowershellScript = false;
 
                 if (!Boolean.TryParse(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.AllowPowershellScript].ToString(), out allowPowershellScript))
                 {

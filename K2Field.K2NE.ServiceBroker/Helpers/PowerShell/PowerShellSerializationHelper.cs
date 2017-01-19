@@ -34,11 +34,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers.PowerShell
             }
             catch (Exception e)
             {
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.AppendLine("Property serialization went wrong: ");
-                stringBuilder.AppendLine(e.Message);
-                stringBuilder.AppendLine("\n");
-                throw new Exception(stringBuilder.ToString(), e);
+                throw new Exception(string.Format("Failed to serialize property: {0}", e.Message), e);
             }
         }
 
@@ -69,7 +65,11 @@ namespace K2Field.K2NE.ServiceBroker.Helpers.PowerShell
         {
             PowerShellVariablesDC powerShellVariable = new PowerShellVariablesDC(name, value);
 
-            List<PowerShellVariablesDC> powerShellVariableList = DeserializeArrayToList(serializedArray);
+            List<PowerShellVariablesDC> powerShellVariableList = new List<PowerShellVariablesDC>();
+            if (!string.IsNullOrEmpty(serializedArray))
+            {
+                powerShellVariableList = DeserializeArrayToList(serializedArray);
+            }
 
             powerShellVariableList.Add(powerShellVariable);
 
