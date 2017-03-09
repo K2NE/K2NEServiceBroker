@@ -1,4 +1,22 @@
-﻿using System;
+﻿//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   K2NEServiceBroker provides additional functionality to K2 using a Custom Service Broker.
+//   Copyright (C) 2016  K2NE GmbH.
+
+//   This program is free software: you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by
+//   the Free Software Foundation, either version 3 of the License, or
+//   any later version.
+
+//   This program is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+
+//   You should have received a copy of the GNU General Public License
+//   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using K2Field.K2NE.ServiceBroker.ServiceObjects.URM;
@@ -8,6 +26,7 @@ using SourceCode.SmartObjects.Services.ServiceSDK;
 using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using SourceCode.Hosting.Server.Interfaces;
+using K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell;
 
 namespace K2Field.K2NE.ServiceBroker
 {
@@ -21,14 +40,20 @@ namespace K2Field.K2NE.ServiceBroker
         private object syncobject = new object();
         #endregion Private Properties
 
-        //public Logger Logger { get; private set; }
+
+        #region Public properties for ServiceObjectBase's child classes.
+        public Logger HostServiceLogger { get; private set; }
         public IIdentityService IdentityService { get; private set; }
         public ISecurityManager SecurityManager { get; private set; }
+        #endregion Public properties for ServiceObjectBase's child classes.
 
 
 
         #region Private Methods
-        private IEnumerable<ServiceObjectBase> ServiceObjects
+        /// <summary>
+        /// Cache of all service object that we have. We load this into a static object in the hope to re-use it as often as possible.
+        /// </summary>
+        private IEnumerable<ServiceObjectBase> ServiceObjectClasses
         {
             get
             {
@@ -53,7 +78,10 @@ namespace K2Field.K2NE.ServiceBroker
                                 new WorkingHoursConfigurationSO(this),
                                 new GroupSO(this),
                                 new UserSO(this),
-                                new ADOSMOQuerySO(this)
+                                new ADOSMOQuerySO(this),
+                                new PowerShellVariablesSO(this),
+                                new SimplePowerShellSO(this),
+                                new DynamicPowerShellSO(this)
                             };
 
                         }
@@ -62,18 +90,26 @@ namespace K2Field.K2NE.ServiceBroker
                 return _serviceObjects;
             }
         }
+
+        /// <summary>
+        /// helper property to get the type of the service object, to be able to initialize a specific instance of it.
+        /// </summary>
         private Dictionary<string, Type> ServiceObjectToType
         {
             get
             {
-                if (_serviceObjectToType.Count != 0) return _serviceObjectToType;
                 lock (serviceObjectToTypeLock)
                 {
-                    if (_serviceObjectToType.Count != 0) return _serviceObjectToType;
-                    _serviceObjectToType = new Dictionary<string, Type>();
-                    foreach (var soBase in ServiceObjects)
+                    if (_serviceObjectToType.Count != 0)
                     {
-                        foreach (var so in soBase.DescribeServiceObjects())
+                        return _serviceObjectToType;
+                    }
+
+                    _serviceObjectToType = new Dictionary<string, Type>();
+                    foreach (ServiceObjectBase soBase in ServiceObjectClasses)
+                    {
+                        List<ServiceObject> serviceObjs = soBase.DescribeServiceObjects();
+                        foreach (ServiceObject so in serviceObjs)
                         {
                             _serviceObjectToType.Add(so.Name, soBase.GetType());
                         }
@@ -97,7 +133,7 @@ namespace K2Field.K2NE.ServiceBroker
                 }
             }
             ServiceFolder newSf = new ServiceFolder(folderName, new MetaData(folderName, description));
-            Service.ServiceFolders.Add(newSf);
+            Service.ServiceFolders.Create(newSf);
             return newSf;
         }
         #endregion
@@ -120,7 +156,7 @@ namespace K2Field.K2NE.ServiceBroker
             Service.MetaData.Description = "A Service Broker that provides various functional service objects that aid the implementation of a K2 project.";
 
             bool requireServiceFolders = false;
-            foreach (ServiceObjectBase entry in ServiceObjects)
+            foreach (ServiceObjectBase entry in ServiceObjectClasses)
             {
                 if (!string.IsNullOrEmpty(entry.ServiceFolder))
                 {
@@ -128,14 +164,15 @@ namespace K2Field.K2NE.ServiceBroker
                 }
             }
 
-            foreach (var entry in ServiceObjects)
+            foreach (ServiceObjectBase entry in ServiceObjectClasses)
             {
-                foreach (var so in entry.DescribeServiceObjects())
+                List<ServiceObject> serviceObjects = entry.DescribeServiceObjects();
+                foreach (ServiceObject so in serviceObjects)
                 {
-                    Service.ServiceObjects.Add(so);
+                    Service.ServiceObjects.Create(so);
                     if (requireServiceFolders)
                     {
-                        var sf = InitializeServiceFolder(entry.ServiceFolder, entry.ServiceFolder);
+                        ServiceFolder sf = InitializeServiceFolder(entry.ServiceFolder, entry.ServiceFolder);
                         sf.Add(so);
                     }
                 }
@@ -144,35 +181,50 @@ namespace K2Field.K2NE.ServiceBroker
         }
         public override void Execute()
         {
-            var so = Service.ServiceObjects[0];
+            ServiceObject so = Service.ServiceObjects[0];
             try
             {
+                if (base.Service.ServiceConfiguration.ServiceAuthentication.AuthenticationMode == AuthenticationMode.ServiceAccount)
+                {
+                    System.Security.Principal.WindowsIdentity.Impersonate(IntPtr.Zero);
+                }
+
                 //TODO: improve performance? http://bloggingabout.net/blogs/vagif/archive/2010/04/02/don-t-use-activator-createinstance-or-constructorinfo-invoke-use-compiled-lambda-expressions.aspx
 
-
                 // This creates an instance of the object responsible to handle the execution.
-                // We can't cache the instance itself, as that gives threading issue because the object can be re-used by the k2 host server for multiple different SMO calls
-                // so we always need to know which ServiceObject we actually want to execute and create an instance first. This is  "late" initalization. We can also not keep a list of 
-                // service objects that have been instanciated around in memory as this would be to resource intensive and slow (as we would constantly initialize all).
-                var soType = ServiceObjectToType[so.Name];
-                var constParams = new object[] { this };
-                var soInstance = Activator.CreateInstance(soType, constParams) as ServiceObjectBase;
+                // We can't cache the instance itself, as that gives threading issue because the 
+                // object can be re-used by the k2 host server for multiple different SMO calls
+                // so we always need to know which ServiceObject we actually want to execute and 
+                // create an instance first. This is  "late" initalization. We can also not keep a list of 
+                // service objects that have been instanciated around in memory as this would be to resource 
+                // intensive and slow (as we would constantly initialize all).
+                if (so == null || string.IsNullOrEmpty(so.Name))
+                {
+                    throw new ApplicationException("ServiceObject is not set.");
+                }
+                if (! ServiceObjectToType.ContainsKey(so.Name))
+                {
+                    throw new ApplicationException(string.Format("{0} is not a valid service object in the ServiceObjectType collection.", so.Name));
+                }
+                Type soType = ServiceObjectToType[so.Name];
+                object[] constParams = new object[] { this };
+                ServiceObjectBase soInstance = Activator.CreateInstance(soType, constParams) as ServiceObjectBase;
 
                 soInstance.Execute();
                 ServicePackage.IsSuccessful = true;
             }
             catch (Exception ex)
             {
-                var error = new StringBuilder();
-                error.AppendFormat("Exception.Message: {0}", ex.Message);
-                error.AppendFormat("Exception.StackTrace: {0}", ex.Message);
+                StringBuilder error = new StringBuilder();
+                error.AppendFormat("Exception.Message: {0}\n", ex.Message);
+                error.AppendFormat("Exception.StackTrace: {0}\n", ex.StackTrace);
 
-                var innerEx = ex;
-                var i = 0;
+                Exception innerEx = ex;
+                int i = 0;
                 while (innerEx.InnerException != null)
                 {
-                    error.AppendFormat("{0} InnerException.Message: {1}", i, ex.InnerException.Message);
-                    error.AppendFormat("{0} InnerException.StackTrace: {1}", i, ex.InnerException.StackTrace);
+                    error.AppendFormat("{0} InnerException.Message: {1}\n", i, innerEx.InnerException.Message);
+                    error.AppendFormat("{0} InnerException.StackTrace: {1}\n", i, innerEx.InnerException.StackTrace);
                     innerEx = innerEx.InnerException;
                     i++;
                 }
@@ -182,28 +234,31 @@ namespace K2Field.K2NE.ServiceBroker
         }
         public override string GetConfigSection()
         {
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.WorkflowManagmentPort, true, "5555");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.WorkflowClientPort, true, "5252");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.EnvironmentToUse, false, "");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.DefaultCulture, true, "EN-us");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.Platform, false, "ASP");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.AdMaxResultSize, false, "1000");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.LDAPPaths, false, "LDAP://DC=denallix,DC=COM");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.NetbiosNames, false, "Denallix");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ChangeContainsToStartsWith, true, "true");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.AdditionalADProps, false, "");
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ADOSMOQueries, false, "");
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.WorkflowManagmentPort, true, "5555"); // checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.WorkflowClientPort, true, "5252"); // checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.EnvironmentToUse, false, ""); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.DefaultCulture, true, "EN-us"); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.Platform, false, "ASP"); //Checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.AdMaxResultSize, false, "1000"); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.LDAPPaths, false, "LDAP://DC=denallix,DC=COM"); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.NetbiosNames, false, "Denallix"); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ChangeContainsToStartsWith, true, "true"); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.AdditionalADProps, false, ""); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ADOSMOQueries, false, ""); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ADOSMOQueriesFile, false, ""); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.AllowPowershellScript, true, "true"); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.PowerShellSubdirectories, false, "PowerShellScripts"); //checked
             return base.GetConfigSection();
         }
         public void Init(IServiceMarshalling serviceMarshalling, IServerMarshaling serverMarshaling)
         {
             lock (syncobject)
             {
-                //if (Logger == null)
-                //{
-                //    Logger = new Logger(serviceMarshalling.GetHostedService(typeof(SourceCode.Logging.ILogger)) as SourceCode.Logging.ILogger);
-                //    Logger.LogDebug("Logger loaded from ServiceMarshalling");
-                //}
+                if (HostServiceLogger == null)
+                {
+                    HostServiceLogger = new Logger(serviceMarshalling.GetHostedService(typeof(SourceCode.Logging.ILogger)) as SourceCode.Logging.ILogger);
+                    HostServiceLogger.LogDebug("Logger loaded from ServiceMarshalling");
+                }
 
                 if (IdentityService == null)
                 {
@@ -221,7 +276,7 @@ namespace K2Field.K2NE.ServiceBroker
         public override void Extend() { }
         public void Unload()
         {
-            //Logger.Dispose();
+            HostServiceLogger.Dispose();
         }
         #endregion Public overrides for ServiceAssemblyBase
 

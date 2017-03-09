@@ -19,6 +19,9 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string ErrorId = "ErrorId";
             public const string ErrorDate = "ErrorDate";
             public const string TryNewVersion = "TryNewVersion";
+            public const string TypeDescription = "TypeDescription";
+            public const string StackTrace = "StackTrace";
+            public const string ExecutingProcId = "ExecutingProcId";
         }
 
         public static class ManagementWorklist
@@ -78,6 +81,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string IncludeShared = "IncludeShared";
             public const string ExcludeAllocated = "ExcludeAllocated";
             public const string FQN = "FQN";
+            public const string ActionName = "ActionName";
         }
 
         public static class Role
@@ -94,6 +98,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         {
             public const string CurrentPrincipalAuthType = "CurrentPrincipalAuthType =";
             public const string CurrentPrincipalName = "CurrentPrincipalName";
+            public const string CurrentPrincipalIdentityType = "CurrentPrincipalIdentityType";
             public const string FQN = "FQN";
             public const string ResolveContainers = "ResolveContainers";
             public const string ResolveMembers = "ResolveMembers";
@@ -118,6 +123,8 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string UserCultureDateTimeFormat = "UserCultureDateTimeFormat";
             public const string UserCultureLCID = "UserCultureLCID";
             public const string UserCultureNumberFormat = "UserCultureNumberFormat";
+            public const string K2ImpersonateUser = "K2ImpersonateUser";
+            public const string UseCache = "UseCache";
         }
 
         public static class ProcessInstanceManagement
@@ -212,6 +219,30 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string DisplayName = "DisplayName";
             public const string SipAccount = "SipAccount";
             public const string ObjectSid = "ObjectSID";
+        }
+
+        public static class PowershellVariables
+        {
+            public const string Name = "Name";
+            public const string Value = "Value";
+            public const string SerializedItem = "SerializedItem";
+            public const string SerializedArray = "SerializedArray";
+        }
+
+        public static class SimplePowerShell
+        {
+            public const string PowerShellScript = "PowerShellScript";
+            public const string Variables = "Variables";
+            public const string ScriptOutput = "ScriptOutput";
+            public const string PowerShellFilePath = "PowerShellFilePath";
+        }
+
+        public static class DynamicPowerShell
+        {
+            public const string Variables = "Variables";
+            public const string ScriptOutput = "ScriptOutput";
+            public const string MetaDataScriptPath = "MetaDataScriptPath";
+            public const string MetaDataPSFunctionName = "MetaDataPSFunctionName";
         }
     }
 }

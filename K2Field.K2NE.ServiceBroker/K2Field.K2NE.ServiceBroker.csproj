@@ -74,6 +74,11 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\WindowsPowerShell\3.0\System.Management.Automation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -86,12 +91,16 @@
     <Compile Include="Constants\ErrorMessages.cs" />
     <Compile Include="Constants\Methods.cs" />
     <Compile Include="Constants\Properties.cs" />
+    <Compile Include="Constants\ServiceFolders.cs" />
     <Compile Include="Constants\SOProperties.cs" />
     <Compile Include="Constants\StringFormats.cs" />
     <Compile Include="Helpers\FilterItem.cs" />
     <Compile Include="Helpers\LdapHelper.cs" />
     <Compile Include="Helpers\MetaDataExtensions.cs" />
     <Compile Include="Helpers\Extensions.cs" />
+    <Compile Include="Helpers\PowerShell\PowerShellHelper.cs" />
+    <Compile Include="Helpers\PowerShell\PowerShellSerializationHelper.cs" />
+    <Compile Include="Helpers\PowerShell\PowerShellVariablesDC.cs" />
     <Compile Include="K2NEServiceBroker.cs" />
     <Compile Include="Helpers\Helper.cs" />
     <Compile Include="Logger.cs" />
@@ -109,6 +118,9 @@
     <Compile Include="ServiceObjects\Management API\OutOfOfficeSO.cs" />
     <Compile Include="ServiceObjects\Management API\ProcessInstanceManagementSO.cs" />
     <Compile Include="ServiceObjects\Management API\RoleSO.cs" />
+    <Compile Include="ServiceObjects\PowerShell\DynamicPowerShellSO.cs" />
+    <Compile Include="ServiceObjects\PowerShell\PowershellVariablesSO.cs" />
+    <Compile Include="ServiceObjects\PowerShell\SimplePowerShellSO.cs" />
     <Compile Include="ServiceObjects\URM\GroupSO.cs" />
     <Compile Include="ServiceObjects\URM\URMFilter.cs" />
     <Compile Include="ServiceObjects\URM\UserSO.cs" />
@@ -119,7 +131,9 @@
       <Link>key.snk</Link>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="LICENSE.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if "Debug"=="$(ConfigurationName)" (
@@ -128,8 +142,12 @@
 
 xcopy /y /r "$(SolutionDir)\Installer\Install.ps1" "$(SolutionDir)\Release\"
 xcopy /y /r "$(SolutionDir)\Documentation\*.adoc" "$(SolutionDir)\Release\"
+xcopy /y /r "$(SolutionDir)\Documentation\*.txt" "$(SolutionDir)\Release\"
 xcopy /q /y "$(TargetPath)" "$(SolutionDir)\Release\"
 </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>powershell.exe -file "$(SolutionDir)\Solution Files\UpdateBuildNr.ps1"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

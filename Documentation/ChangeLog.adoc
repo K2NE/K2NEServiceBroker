@@ -1,4 +1,35 @@
 == ChangeLog
+=== v1.6.13
+- Added PowerShell Service object. See [PowerShell] section in the documentation.(Documentation/PowerShell.adoc)
+- Added license!
+- Bugfix to maybe return a list of objects which is not fully initialized.
+
+=== v1.6.12
+- New version number.
+- Changed handling of Roles in service broker due to 4.7 release. No 'exclude' flag is available anymore.
+- Added StackTrace, TypeDescription and ExecutingProcId to ErrorLog.GetErrors method. This should provide some more detail than what K2 workspace currently provides.
+- Added new WorklistItem Action method to allow easier execution of an action based on process id and activity name. This is useful for assigning a task to a service account and 'pinging' the K2 process to continue.
+- Enabled Logging again. We had a memory leak with this before, so be warned.
+- Fixed issue where the servictObjectToType property was not loaded when the service instance is in impersonation mode and the user who is executing the SMO does NOT have permissions to retrieve all the procesSets.
+  We now just log a error message when that happens, as at that moment it actually doesn't matter much what the DescribeServiceObjects returns, as long as the ServiceObject classes are there, we know enough. The rest of the execute code uses
+  the ServiceObject provided after the instance of the ServiceObjectClass is created.
+
+=== v1.6.11
+- Improved Error handling and corrected mistake in error messages.
+- Added code to make sure that if a service instance property is not set, we still handle this correctly with either an exception or a expected default.
+- The above two fixes are implemented to avoid a 'KeyNotFound' exception that isn't 100% confirmed to be resolved yet.
+- Added functionality to set the process instance folio in the ProcessInstanceClient. This requires admin premissions on the process.
+
+=== v1.6.10
+==== ADO.NET Query updates:
+- Refactored code
+- Changed logic to pass smartobject properties to filter a query. See link:ADOSMOQuery.adoc[ADO SMO Query service object] for more information.
+- Added support to read queries from the xml file.
+
+=== v1.6.9
+- We now version number every build. this helps with identifying which build a user/customer has.
+- Even better exception handling, we really had a silly bug there
+- We removed all the VAR's and did some code cleanup.
 
 === v1.6.8
 - Slightly better exception handling in UserSO

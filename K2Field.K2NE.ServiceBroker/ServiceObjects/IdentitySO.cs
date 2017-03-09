@@ -25,6 +25,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.CurrentPrincipalAuthType, SoType.Text, "The current principal's authentication type"));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.CurrentPrincipalName, SoType.Text, "The current principal's authentication identity name."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.CurrentPrincipalIdentityType, SoType.Text, "The current principal identity type"));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.FQN, SoType.Text, "The K2 FQN of the user."));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.ResolveContainers, SoType.YesNo, "If Identity containers should be also resolved."));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.ResolveMembers, SoType.YesNo, "If Identity members should be also resolved."));
@@ -49,6 +50,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.UserCultureLCID, SoType.Text, "User Culture LCID."));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.UserCultureName, SoType.Text, "User Culture Name."));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.UserCultureNumberFormat, SoType.Text, "User Culture Number format."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.K2ImpersonateUser, SoType.Text, "User to impersonate with K2 API."));
 
 
 
@@ -63,12 +65,14 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             mGetWorkflowClientIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.CallingFQN);
 
             mGetWorkflowClientIdentity.InputProperties.Add(Constants.SOProperties.Identity.UserWindowsImpersonation);
+            mGetWorkflowClientIdentity.InputProperties.Add(Constants.SOProperties.Identity.K2ImpersonateUser);
             so.Methods.Add(mGetWorkflowClientIdentity);
 
             Method mGetThreadIdentity = Helper.CreateMethod(Constants.Methods.Identity.ReadThreadIdentity, "Retrieve who you are for the API Identity", MethodType.Read);
             mGetThreadIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.CallingFQN);
             mGetThreadIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.CurrentPrincipalAuthType);
             mGetThreadIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.CurrentPrincipalName);
+            mGetThreadIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.CurrentPrincipalIdentityType);
             mGetThreadIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.WindowsIdentityAuthType);
             mGetThreadIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.WindowsIdentityName);
             mGetThreadIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.ServiceBrokerAuthType);
@@ -84,6 +88,14 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             mGetThreadIdentity.ReturnProperties.Add(Constants.SOProperties.Identity.UserCultureNumberFormat);
             mGetThreadIdentity.InputProperties.Add(Constants.SOProperties.Identity.UserWindowsImpersonation);
             so.Methods.Add(mGetThreadIdentity);
+
+            Method mGetIdentities = Helper.CreateMethod(Constants.Methods.Identity.GetIdentities, "Retrieve the email addresses for identities from K2", MethodType.List);
+            mGetIdentities.InputProperties.Add(Constants.SOProperties.Identity.FQN);
+            mGetIdentities.Validation.RequiredProperties.Add(Constants.SOProperties.Identity.FQN);
+            mGetIdentities.ReturnProperties.Add(Constants.SOProperties.Identity.FQN);
+            mGetIdentities.ReturnProperties.Add(Constants.SOProperties.Identity.UserEmail);
+            mGetIdentities.ReturnProperties.Add(Constants.SOProperties.Identity.IdentityDisplayName);
+            so.Methods.Add(mGetIdentities);
 
             Method mResolveUser = Helper.CreateMethod(Constants.Methods.Identity.ResolveUserIdentity, "Resolve User Identity", MethodType.Execute);
             mResolveUser.InputProperties.Add(Constants.SOProperties.Identity.FQN);
@@ -132,6 +144,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 case Constants.Methods.Identity.ResolveRoleIdentity:
                     ResolveIdentity(IdentityType.Role);
                     break;
+                case Constants.Methods.Identity.GetIdentities:
+                    GetIdentities();
+                    break;
             }
 
         }
@@ -151,6 +166,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             dr[Constants.SOProperties.Identity.WindowsIdentityName] = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
             dr[Constants.SOProperties.Identity.WindowsIdentityAuthType] = System.Security.Principal.WindowsIdentity.GetCurrent().AuthenticationType;
             dr[Constants.SOProperties.Identity.CurrentPrincipalName] = System.Threading.Thread.CurrentPrincipal.Identity.Name;
+            dr[Constants.SOProperties.Identity.CurrentPrincipalIdentityType] = System.Threading.Thread.CurrentPrincipal.Identity.GetType().ToString();
             dr[Constants.SOProperties.Identity.CurrentPrincipalAuthType] = System.Threading.Thread.CurrentPrincipal.Identity.AuthenticationType;
             dr[Constants.SOProperties.Identity.ServiceBrokerUserName] = ServiceBroker.Service.ServiceConfiguration.ServiceAuthentication.UserName;
             dr[Constants.SOProperties.Identity.ServiceBrokerPassword] = ServiceBroker.Service.ServiceConfiguration.ServiceAuthentication.Password;
@@ -174,6 +190,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 System.Security.Principal.WindowsIdentity.Impersonate(IntPtr.Zero);
             }
 
+            string k2imp = GetStringProperty(Constants.SOProperties.Identity.K2ImpersonateUser, false);
+
             ServiceObject serviceObject = ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
             DataTable results = ServiceBroker.ServicePackage.ResultTable;
@@ -181,6 +199,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             using (Connection k2Con = new Connection())
             {
                 k2Con.Open(K2ClientConnectionSetup);
+                if (!string.IsNullOrEmpty(k2imp))
+                {
+                    k2Con.ImpersonateUser(k2imp);
+                }
 
                 DataRow dr = results.NewRow();
                 dr[Constants.SOProperties.Identity.FQN] = k2Con.User.FQN;
@@ -197,15 +219,80 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         }
 
 
+        public void GetIdentities()
+        {
+            string fqn = GetStringProperty(Constants.SOProperties.Identity.FQN, true);
+           
+
+
+            Dictionary<string, object> properties = new Dictionary<string, object>();
+            properties.Add("FQN", fqn);
+
+            IdentitySearchOptions options = IdentitySearchOptions.None;
+            options |= IdentitySearchOptions.CachedOnly;
+            if (!fqn.Contains(":"))
+            {
+                options |= IdentitySearchOptions.Roles;
+            }
+            else
+            {
+                options |= IdentitySearchOptions.Groups;
+                options |= IdentitySearchOptions.Users;
+            }
+
+            ICollection<ICachedIdentity> identities = base.ServiceBroker.IdentityService.FindIdentities(properties, options);
+
+
+
+            ServiceObject serviceObject = ServiceBroker.Service.ServiceObjects[0];
+            serviceObject.Properties.InitResultTable();
+            DataTable results = ServiceBroker.ServicePackage.ResultTable;
+
+            foreach (ICachedIdentity identity in identities)
+            {
+                if (identity.Type != IdentityType.User)
+                {
+                    IdentitySearchOptions identityMemberOptions = IdentitySearchOptions.None;
+                    identityMemberOptions |= IdentitySearchOptions.Recursive;
+                    identityMemberOptions |= IdentitySearchOptions.Users;
+                    identityMemberOptions |= IdentitySearchOptions.Groups;
+                    ICollection<ICachedIdentity> identityMembers = base.ServiceBroker.IdentityService.GetIdentityMembers(identity, identityMemberOptions);
+                    foreach (ICachedIdentity identityMember in identityMembers)
+                    {
+                        AddIdentity(results, identityMember);
+                    }
+                }
+                else
+                {
+                    AddIdentity(results, identity);
+                }
+            }
+        }
+
+        private static void AddIdentity(DataTable results, ICachedIdentity identityMember)
+        {
+            DataRow dr = results.NewRow();
+            dr[Constants.SOProperties.Identity.FQN] = identityMember.FullyQualifiedName.FQN;
+            if (identityMember.Properties.ContainsKey("Email"))
+            {
+                dr[Constants.SOProperties.Identity.UserEmail] = identityMember.Properties["Email"] as string;
+            }
+            if (identityMember.Properties.ContainsKey("DisplayName"))
+            {
+                dr[Constants.SOProperties.Identity.IdentityDisplayName] = identityMember.Properties["DisplayName"] as string;
+            }
+            results.Rows.Add(dr);
+        }
+
+
         public void ResolveIdentity(IdentityType iType)
         {
             string fqn = GetStringProperty(Constants.SOProperties.Identity.FQN, true);
             bool resolveContainers = GetBoolProperty(Constants.SOProperties.Identity.ResolveContainers);
             bool resolveMembers = GetBoolProperty(Constants.SOProperties.Identity.ResolveMembers);
 
-            var fqnName = new FQName(fqn);
+            FQName fqnName = new FQName(fqn);
 
-            base.ServiceBroker.IdentityService.ResolveIdentity(fqnName, iType, IdentityResolveOptions.Identity);
 
             if (resolveMembers)
             {

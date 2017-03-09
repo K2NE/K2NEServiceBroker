@@ -26,6 +26,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ErrorLog.ErrorId, SoType.Number, "The Identified for the error log"));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ErrorLog.ErrorDate, SoType.DateTime, "Date when the error occured"));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ErrorLog.TryNewVersion, SoType.YesNo, "retry the error in new version."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ErrorLog.TypeDescription, SoType.Text, "A short description/name of the type of K2 workflow element that is causing the error."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ErrorLog.StackTrace, SoType.Memo, "The stacktrace of the error."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ErrorLog.ExecutingProcId, SoType.Number, "The executing process ID."));
+
 
 
             Method getErrors = Helper.CreateMethod(Constants.Methods.ErrorLog.GetErrors, "Retrieve the K2 error log", MethodType.List);
@@ -37,6 +41,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             getErrors.ReturnProperties.Add(Constants.SOProperties.ErrorLog.ErrorItem);
             getErrors.ReturnProperties.Add(Constants.SOProperties.ErrorLog.ErrorDate);
             getErrors.ReturnProperties.Add(Constants.SOProperties.ErrorLog.ErrorId);
+            getErrors.ReturnProperties.Add(Constants.SOProperties.ErrorLog.TypeDescription);
+            getErrors.ReturnProperties.Add(Constants.SOProperties.ErrorLog.StackTrace);
+            getErrors.ReturnProperties.Add(Constants.SOProperties.ErrorLog.ExecutingProcId);
+
             so.Methods.Add(getErrors);
 
             Method retryProcess = Helper.CreateMethod(Constants.Methods.ErrorLog.RetryProcess, "Retry a process instance", MethodType.Execute);
@@ -52,7 +60,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         {
             get
             {
-                return "Management API";
+                return Constants.ServiceFolders.ManagementAPI;
             }
         }
 
@@ -143,6 +151,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     r[Constants.SOProperties.ErrorLog.ErrorItem] = e.ErrorItemName;
                     r[Constants.SOProperties.ErrorLog.ErrorDate] = e.ErrorDate;
                     r[Constants.SOProperties.ErrorLog.ErrorId] = e.ID;
+                    r[Constants.SOProperties.ErrorLog.TypeDescription] = e.TypeDescription;
+                    r[Constants.SOProperties.ErrorLog.ExecutingProcId] = e.ExecutingProcID;
+                    r[Constants.SOProperties.ErrorLog.StackTrace] = e.StackTrace;
                     results.Rows.Add(r);
                 }
             }

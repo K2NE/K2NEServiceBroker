@@ -19,7 +19,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
         }
         public override string ServiceFolder
         {
-            get { return "URM"; }
+            get { return Constants.ServiceFolders.URM; }
         }
 
         public override List<ServiceObject> DescribeServiceObjects()
@@ -62,7 +62,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                 getUsers.InputProperties.Add(prop);
                 getUsers.ReturnProperties.Add(prop);
             }
-            getUsers.MethodParameters.Add(Helper.CreateParameter(Constants.SOProperties.URM.Label, SoType.Text, true, "The label to use"));
+            getUsers.MethodParameters.Create(Helper.CreateParameter(Constants.SOProperties.URM.Label, SoType.Text, true, "The label to use"));
             soGroup.Methods.Add(getUsers);
 
             return new List<ServiceObject>() { soGroup };
@@ -115,9 +115,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                 DataTable dtResults = ServiceBroker.ServicePackage.ResultTable;
                 URMFilter urmFilter = new URMFilter(ServiceBroker.Service.ServiceObjects[0].Methods[0].Filter);
 
-                foreach (var dictionary in urmFilter.GetFilterCollection().Values)
+                foreach (Dictionary<string,string> dictionary in urmFilter.GetFilterCollection().Values)
                 {
-                    foreach (var keyValuePair in dictionary)
+                    foreach (KeyValuePair<string,string> keyValuePair in dictionary)
                     {
                         switch (keyValuePair.Key)
                         {
@@ -152,7 +152,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                                 continue;
                         }
                     }
-                    var properties = new Dictionary<string, object>()
+                    Dictionary<string, object> properties = new Dictionary<string, object>()
                     {
                         {Constants.SOProperties.URM.Name, name == String.Empty ? (object) (string) null : (object) name},
                         {
@@ -181,7 +181,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                         properties["RowCount"] = (object)(ADMaxResultSize);
                         properties["PageNumber"] = (object)1;
                     }
-                    var collection = base.ServiceBroker.IdentityService.FindIdentities((IDictionary<string, object>)properties, IdentitySearchOptions.Users);
+                    ICollection<ICachedIdentity> collection = base.ServiceBroker.IdentityService.FindIdentities((IDictionary<string, object>)properties, IdentitySearchOptions.Users);
 
           
                     bool flag = properties.ContainsKey("RowCount");
@@ -192,7 +192,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                     }
                     if (collection != null)
                     {
-                        foreach (var cachedIdentity in collection)
+                        foreach (ICachedIdentity cachedIdentity in collection)
                         {
                             if (cachedIdentity.Type == IdentityType.User)
                             {

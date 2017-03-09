@@ -29,7 +29,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         {
             get
             {
-                return "ADOSMOQuery";
+                return Constants.ServiceFolders.ADONETQuery;
             }
         }
 
@@ -42,19 +42,25 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 ServiceObject so = Helper.CreateServiceObject(query.Key, "ADO.NET SMO query.");
 
                 DataTable results = new DataTable();
+
                 /* To do: parsing properties. Without that queries contains WHERE and @parameters will not work on initialization level (no properties created).
                  * The queries like this do not work at the moment:
                  * SELECT * FROM table WHERE type = @type
                  * There is no custom error message, only system one, because
                  * it's impossible to found if there are @parameters used within WHERE clause, because these queries will work:
                  * SELECT * FROM table WHERE type='Type1' HAVING (id = @id)
-                
-                foreach (Match match in Regex.Matches(query.Value, "\\@\\w+"))
-                {
-                }
                 */
 
-                results = GetData(query.Value, new Properties(), true);
+                Dictionary<string, string> props = new Dictionary<string, string>();
+                foreach (Match match in Regex.Matches(query.Value, "\\@\\w+"))
+                {
+                    if (!props.ContainsKey(match.ToString()))
+                    {
+                        props.Add(match.ToString(), "0");
+                    }
+                }
+
+                results = GetSchema(query.Value, props);
 
                 Method soMethod = Helper.CreateMethod("List", "Returns result of SMO query.", MethodType.List);
                 soMethod.MetaData.AddServiceElement("Query", query.Value);
@@ -79,10 +85,11 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             string query = serviceObject.Methods[0].MetaData.GetServiceElement<string>("Query");
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
-            results.Load(GetData(query, serviceObject.Properties, false).CreateDataReader());
+            results.Load(GetData(query, serviceObject.Properties));
         }
 
-        private DataTable GetData(string query, Properties props, bool schemaOnly)
+
+        private DataTableReader GetData(string query, Properties props)
         {
             DataTable results = new DataTable();
 
@@ -92,7 +99,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 {
                     using (SODataAdapter adapter = new SODataAdapter(command))
                     {
-
                         foreach (Property prop in props)
                         {
                             if (prop.Value != null)
@@ -100,23 +106,42 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                                 command.Parameters.AddWithValue(prop.Name, prop.Value);
                             }
                         }
+                        connection.DirectExecution = true;
+                        connection.Open();
+                        adapter.Fill(results);
+                    }
+                }
+                connection.Close();
+            }
+            return results.CreateDataReader();
+        }
+        private DataTable GetSchema(string query, Dictionary<string, string> props)
+        {
+            DataTable results = new DataTable();
+
+            using (SOConnection connection = new SOConnection(base.BaseAPIConnectionString))
+            {
+                using (SOCommand command = new SOCommand(query, connection))
+                {
+                    using (SODataAdapter adapter = new SODataAdapter(command))
+                    {
+                        foreach (KeyValuePair<string, string> prop in props)
+                        {
+                            if (prop.Value != null)
+                            {
+                                command.Parameters.AddWithValue(prop.Key, prop.Value);
+                            }
+                        }
 
                         connection.DirectExecution = true;
                         connection.Open();
-
-                        if (schemaOnly)
-                        {
-                            adapter.FillSchema(results, SchemaType.Source);
-                        }
-                        else
-                        {
-                            adapter.Fill(results);
-                        }
+                        adapter.FillSchema(results, SchemaType.Source);
                     }
                 }
                 connection.Close();
             }
             return results;
         }
+
     }
 }

@@ -1,0 +1,17 @@
+PowerShell Service Objects
+==========================
+
+These service objects allow simple and more advanced powershell to be executed. It's currently the first try at this and shortcomings may be identified.
+
+## SimplePowerShell
+This service object allows the user to simply execute a few PowerShell commands or a specific powershell script on the K2 server.
+It should be noted that the simple execution of powershell might be harmful and therefor a service instance property 'Allow Simple PowerShell Scripts' has been added to disable the creation of this service object.
+
+
+## Variables
+There is a specific PowerShell Variables Service Object which allows you to create a JSON object for various powershell Variables that you might use in the script. Currently, all types are strings!
+It works similar to how the EndPoint brokers work in K2.
+
+## DynamicPowerShell
+This ServiceObject is generated for every PS1 file found in the directory specified by the 'PowerShell Subdirectories' service instance configuration setting. Multiple directories seperated by a semicolon can be provided.
+For every PS1 file it finds, it will create a service object and add a 'RunScript' method. For every Function inside the file, we try to add the same. We ommit some hardcoded service objects. In those cases an Error will be logged to the K2 host server logging framework.

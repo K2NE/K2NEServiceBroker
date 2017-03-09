@@ -24,6 +24,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string GetWorklist = "GetWorklist";
             public const string ReleaseWorklistItem = "ReleaseWorklistItem";
             public const string RedirectWorklistItem = "RedirectWorklistItem";
+            public const string ActionWorklistItem = "ActionWorklistItem";
         }
 
         public static class Identity
@@ -33,6 +34,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string ResolveUserIdentity = "ResolveUserIdentity";
             public const string ResolveGroupIdentity = "ResolveGroupIdentity";
             public const string ResolveRoleIdentity = "ResolveRoleIdentity";
+            public const string GetIdentities = "GetEmailFromIdentity";
         }
 
         public static class ProcessInstanceManagement
@@ -45,6 +47,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         {
             public const string StartProcessInstance = "StartProcessInstance";
             public const string StartProcess = "Start";
+            public const string SetFolio = "SetFolio";
         }
 
         public static class Role
@@ -116,6 +119,28 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         public static class User
         {
             public const string GetUsers = "UMRGetUsers";
+        }
+
+        public static class PowershellVariables
+        {
+            public const string SerializeItem = "SerializeItem";
+            public const string SerializeItemToArray = "SerializeItemToArray";
+            public const string AddSerializedItemToArray = "AddSerializedItemToArray";
+            public const string SerializeAddItemToArray = "SerializeAddItemToArray";
+            public const string Deserialize = "Deserialize";
+            public const string DeserializeItemFromArray = "DeserializeItemFromArray";
+            public const string DeserializeArrayToList = "DeserializeArrayToList";
+        }
+
+        public static class SimplePowerShell
+        {
+            public const string RunScriptCode = "RunScript";
+            public const string RunScriptByFilePath = "RunScriptByFilePath";
+        }
+
+        public static class DynamicPowerShell
+        {
+            public const string RunScript = "RunScript";
         }
     }
 }

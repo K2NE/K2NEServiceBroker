@@ -1,8 +1,8 @@
 #If a GUID is found that is the same, it will "overwrite" the service type.
 $guid = [guid]"1cf912ee-0d6d-43a8-b8b5-9514ac30113e" 
-$brokerName = "K2Field.K2NE.ServiceBroker"
+$brokerName = "K2Field.K2NE.ServiceBroker.K2NEServiceBroker"
 $brokerSystemName = $brokerName
-$brokerDLL = "$($brokerName).dll"
+$brokerDLL = "K2Field.K2NE.ServiceBroker.dll"
 $displayName = $brokerName -replace '\.',' '
 $brokerDescription = "The K2NE Service Broker. For more information, see https://github.com/K2NE/K2NEServiceBroker"
 

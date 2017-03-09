@@ -27,7 +27,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
 
         public override string ServiceFolder
         {
-            get { return "URM"; }
+            get { return Constants.ServiceFolders.URM;  }
         }
 
         public override List<ServiceObject> DescribeServiceObjects()
@@ -65,7 +65,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             getGroups.InputProperties.Add(Constants.SOProperties.URM.Name);
             getGroups.InputProperties.Add(Constants.SOProperties.URM.Description);
             getGroups.InputProperties.Add(Constants.SOProperties.URM.Saml);
-            getGroups.MethodParameters.Add(Helper.CreateParameter(Constants.SOProperties.URM.Label, SoType.Text, true, "Label"));
+            getGroups.MethodParameters.Create(Helper.CreateParameter(Constants.SOProperties.URM.Label, SoType.Text, true, "Label"));
             foreach (string prop in AdditionalADProps)
             {
                 getGroups.InputProperties.Add(prop);
@@ -97,7 +97,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
             DataTable dtResults = ServiceBroker.ServicePackage.ResultTable;
 
-            var identityFromName = base.ServiceBroker.IdentityService.GetIdentityFromName(base.ServiceBroker.SecurityManager.GetFullyQualifiedName(fqn), IdentityType.Group, (string)null);
+            ICachedIdentity identityFromName = base.ServiceBroker.IdentityService.GetIdentityFromName(base.ServiceBroker.SecurityManager.GetFullyQualifiedName(fqn), IdentityType.Group, (string)null);
             if (identityFromName == null)
             {
                 return;
@@ -152,9 +152,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                 DataTable dtResults = ServiceBroker.ServicePackage.ResultTable;
                 URMFilter urmFilter = new URMFilter(ServiceBroker.Service.ServiceObjects[0].Methods[0].Filter);
 
-                foreach (var filterCollectionValues in urmFilter.GetFilterCollection().Values)
+                foreach (Dictionary<string, string> filterCollectionValues in urmFilter.GetFilterCollection().Values)
                 {
-                    foreach (var keyValuePair in filterCollectionValues)
+                    foreach (KeyValuePair<string,string> keyValuePair in filterCollectionValues)
                     {
                         switch (keyValuePair.Key)
                         {
@@ -181,13 +181,13 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                     {
                         dictionary2["Label"] = securityLabel as object;
                     }
-                    var identities = base.ServiceBroker.IdentityService.FindIdentities(dictionary2, IdentitySearchOptions.Groups);
+                    ICollection<ICachedIdentity> identities = base.ServiceBroker.IdentityService.FindIdentities(dictionary2, IdentitySearchOptions.Groups);
                     if (identities == null)
                     {
                         return;
                     }
 
-                    foreach (var cachedIdentity in identities)
+                    foreach (ICachedIdentity cachedIdentity in identities)
                     {
                         if (cachedIdentity.Type == IdentityType.Group)
                         {
@@ -231,7 +231,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             }
             
             string securityLabel = GetStringParameter(Constants.SOProperties.URM.Label, true);
-            var dSearcher = new DirectorySearcher(new DirectoryEntry(ldap));
+            DirectorySearcher dSearcher = new DirectorySearcher(new DirectoryEntry(ldap));
 
             if (string.IsNullOrEmpty(securityLabel))
             {

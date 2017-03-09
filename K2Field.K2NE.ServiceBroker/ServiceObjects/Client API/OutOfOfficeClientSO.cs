@@ -17,7 +17,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         {
             get
             {
-                return "Client API";
+                return Constants.ServiceFolders.ClientAPI;
             }
         }
 
