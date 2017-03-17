@@ -106,8 +106,10 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string SetInOffice = "SetInOffice";
             public const string ListUserShares = "ListUserShares";
             public const string AddOutOfOffice = "AddOutOfOffice";
+            public const string RemoveOutOfOffice = "RemoveOutOfOffice";
             public const string GetUserStatus = "GetUserStatus";
             public const string ListShares = "ListShares";
+            public const string RemoveAllShares = "RemoveAllShares";
         }
 
         public static class Group

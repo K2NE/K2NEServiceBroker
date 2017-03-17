@@ -46,9 +46,19 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             addOutOfOffice.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.DestinationUser);
             so.Methods.Add(addOutOfOffice);
 
+            Method removeOutOfOffice = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.RemoveOutOfOffice, "Remove user share (destination user) from OOF Shares for a current user.", MethodType.Read);
+            removeOutOfOffice.InputProperties.Add(Constants.SOProperties.OutOfOffice.DestinationUser);
+            removeOutOfOffice.Validation.RequiredProperties.Add(Constants.SOProperties.OutOfOffice.DestinationUser);
+            removeOutOfOffice.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.DestinationUser);
+            so.Methods.Add(removeOutOfOffice);
+
             Method listUserShares = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.ListUserShares, "Get all the destination users for OOF shares of current user", MethodType.List);
             listUserShares.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.DestinationUser);
             so.Methods.Add(listUserShares);
+
+            Method removeAllShares = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.RemoveAllShares, "Remove All Shares", MethodType.Execute);
+            removeAllShares.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.CallSuccess);
+            so.Methods.Add(removeAllShares);
 
             return new List<ServiceObject>() { so };
         }
@@ -69,8 +79,14 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 case Constants.Methods.OutOfOfficeClient.AddOutOfOffice:
                     AddOutOfOffice();
                     break;
+                case Constants.Methods.OutOfOfficeClient.RemoveOutOfOffice:
+                    RemoveOutOfOffice();
+                    break;
                 case Constants.Methods.OutOfOfficeClient.ListUserShares:
                     ListSharedUsers();
+                    break;
+                case Constants.Methods.OutOfOfficeClient.RemoveAllShares:
+                    RemoveAllShares();
                     break;
             }
         }
@@ -228,6 +244,73 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         }
 
         /// <summary>
+        /// Remove OOF share for current user
+        /// </summary>
+        [Obsolete("Method is not working, please use RemoveAllShares instead.")]
+        private void RemoveOutOfOffice()
+        {
+
+            string destinationUser = base.GetStringProperty(Constants.SOProperties.OutOfOffice.DestinationUser);
+
+            ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
+            serviceObject.Properties.InitResultTable();
+            DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
+
+
+            using (Connection k2Con = new Connection())
+            {
+                k2Con.Open(base.K2ClientConnectionSetup);
+
+                WorklistShares wsColl = k2Con.GetCurrentSharingSettings(ShareType.OOF);
+
+                //  Throw error if multiple configurations (WorklistShare objects) detected, as this method cannot support that 
+                if (wsColl.Count != 1)
+                {
+                    throw new ApplicationException(Constants.ErrorMessages.MultipleOOFConfigurations);
+                }
+
+
+                //  If configuration exist already, remove user and re-share 
+                else if (wsColl.Count == 1)
+                {
+
+
+
+                    WorklistShare worklistshare = wsColl[0];
+
+                    int capacity = worklistshare.WorkTypes[0].Destinations.Count;
+
+                    string[] existingDestinations = new string[capacity];
+
+                    for (int i = 0; i < capacity; i++)
+                    {
+                        existingDestinations[i] = worklistshare.WorkTypes[0].Destinations[i].Name.ToUpper().Trim();
+                    }
+
+                    int destinationIndex = Array.IndexOf(existingDestinations, destinationUser.ToUpper().Trim());
+
+                    if (destinationIndex != -1)
+                    {
+                        worklistshare.WorkTypes[0].Destinations.Remove(destinationIndex);
+                    }
+
+                    bool result = k2Con.ShareWorkList(worklistshare);
+
+                    DataRow dr = results.NewRow();
+
+                    dr[Constants.SOProperties.OutOfOffice.DestinationUser] = destinationUser;
+
+                    results.Rows.Add(dr); ;
+
+
+                }
+
+                k2Con.Close();
+            }
+        }
+
+
+        /// <summary>
         /// List all existing shares for a current user
         /// </summary>
         private void ListSharedUsers()
@@ -266,5 +349,43 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
             }
         }
+
+        /// <summary>
+        /// Remove all existing shares for a current user
+        /// </summary>
+        private void RemoveAllShares()
+        {
+
+            ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
+            serviceObject.Properties.InitResultTable();
+            DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
+
+            using (Connection k2Con = new Connection())
+            {
+                k2Con.Open(base.K2ClientConnectionSetup);
+
+                // None for userstatus means the users is not configured, throw an exception
+                if (UserStatuses.None == k2Con.GetUserStatus())
+                    throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
+
+                WorklistShares wsColl = k2Con.GetCurrentSharingSettings(ShareType.OOF);
+                if (wsColl != null)
+                {
+                    if (wsColl.Count > 0)
+                    {
+                        k2Con.UnShareAll();
+
+                    }
+                }
+
+                k2Con.Close();
+
+            }
+
+            // Necessary to prevent unwanted errors when configuring status
+            SetStatus(UserStatuses.Available);
+
+        }
+ 
     }
 }
