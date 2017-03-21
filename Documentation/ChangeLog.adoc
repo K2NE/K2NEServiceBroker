@@ -1,4 +1,7 @@
 == ChangeLog
+=== v1.6.14
+- Added excel support, to get excel sheet out of ADO.NET query
+
 === v1.6.13
 - Added PowerShell Service object. See [PowerShell] section in the documentation.(Documentation/PowerShell.adoc)
 - Added license!

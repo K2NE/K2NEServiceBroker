@@ -71,6 +71,14 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             return CreateSpecificProperty(name, AddSpaceBeforeCaptialLetter(name), description, type);
         }
 
+        public static FileProperty CreateFileProperty(string name, string description)
+        {
+            FileProperty fileProperty = new FileProperty(name, new MetaData(), String.Empty, String.Empty);
+            fileProperty.MetaData.DisplayName = AddSpaceBeforeCaptialLetter(name);
+            fileProperty.MetaData.Description = description;
+            return fileProperty;
+        }
+
 
         /// <summary>
         /// Create an instance of a Service Object property
