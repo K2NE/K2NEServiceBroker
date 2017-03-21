@@ -106,10 +106,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 k2Con.Open(base.K2ClientConnectionSetup);
 
                 SourceCode.Workflow.Client.UserStatuses status = k2Con.GetUserStatus();
+
                 DataRow dr = results.NewRow();
-
                 dr[Constants.SOProperties.OutOfOffice.UserStatus] = status.ToString();
-
                 results.Rows.Add(dr);
 
                 k2Con.Close();
@@ -130,7 +129,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 // None for userstatus means the users is not configured, throw an exception
                 if (UserStatuses.None == k2Con.GetUserStatus() && UserStatuses.OOF == status)
                 {
-                    // exception should be thrown only in case that user tries to  set OOF, 
+                    // exception should be thrown only in case that user tries to set OOF, 
                     throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
                 }
 
@@ -173,15 +172,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 {
                     throw new ApplicationException(Constants.ErrorMessages.MultipleOOFConfigurations);
                 }
-
-
-                //  If configuration exist already, add to it 
-                else if (wsColl.Count == 1)
+                else if (wsColl.Count == 1) //  If configuration exist already, add to it 
                 {
-
-
                     WorklistShare worklistshare = wsColl[0];
-
                     int capacity = worklistshare.WorkTypes[0].Destinations.Count;
 
                     string[] existingDestinations = new string[capacity];
@@ -199,19 +192,12 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     bool result = k2Con.ShareWorkList(worklistshare);
 
                     DataRow dr = results.NewRow();
-
                     dr[Constants.SOProperties.OutOfOffice.DestinationUser] = destinationUser;
-
                     results.Rows.Add(dr); ;
 
-
                 }
-                // New user, create configuration for OOF 
-                else
+                else   // New user, create configuration for OOF 
                 {
-
-
-
                     // ALL Work that remains which does not form part of any "WorkTypeException" Filter 
                     WorklistCriteria worklistcriteria = new WorklistCriteria();
                     worklistcriteria.Platform = "ASP";
@@ -231,9 +217,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     k2Con.SetUserStatus(UserStatuses.Available);
 
                     DataRow dr = results.NewRow();
-
                     dr[Constants.SOProperties.OutOfOffice.DestinationUser] = destinationUser;
-
                     results.Rows.Add(dr);
 
                 }
@@ -267,18 +251,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 {
                     throw new ApplicationException(Constants.ErrorMessages.MultipleOOFConfigurations);
                 }
-
-
-                //  If configuration exist already, remove user and re-share 
-                else if (wsColl.Count == 1)
+                else if (wsColl.Count == 1) //  If configuration exist already, remove user and re-share 
                 {
-
-
-
                     WorklistShare worklistshare = wsColl[0];
-
                     int capacity = worklistshare.WorkTypes[0].Destinations.Count;
-
                     string[] existingDestinations = new string[capacity];
 
                     for (int i = 0; i < capacity; i++)
@@ -287,7 +263,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     }
 
                     int destinationIndex = Array.IndexOf(existingDestinations, destinationUser.ToUpper().Trim());
-
                     if (destinationIndex != -1)
                     {
                         worklistshare.WorkTypes[0].Destinations.Remove(destinationIndex);
@@ -296,12 +271,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     bool result = k2Con.ShareWorkList(worklistshare);
 
                     DataRow dr = results.NewRow();
-
                     dr[Constants.SOProperties.OutOfOffice.DestinationUser] = destinationUser;
-
                     results.Rows.Add(dr); ;
-
-
                 }
 
                 k2Con.Close();
@@ -326,7 +297,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
                 // None for userstatus means the users is not configured, throw an exception
                 if (UserStatuses.None == k2Con.GetUserStatus())
+                {
                     throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
+                }
 
                 WorklistShares wsColl = k2Con.GetCurrentSharingSettings(ShareType.OOF);
 
@@ -365,16 +338,14 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
                 // None for userstatus means the users is not configured, throw an exception
                 if (UserStatuses.None == k2Con.GetUserStatus())
+                {
                     throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
+                }
 
                 WorklistShares wsColl = k2Con.GetCurrentSharingSettings(ShareType.OOF);
-                if (wsColl != null)
+                if (wsColl != null && wsColl.Count > 0)
                 {
-                    if (wsColl.Count > 0)
-                    {
-                        k2Con.UnShareAll();
-
-                    }
+                    k2Con.UnShareAll();
                 }
 
                 k2Con.Close();
@@ -385,6 +356,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             SetStatus(UserStatuses.Available);
 
         }
- 
+
     }
 }
