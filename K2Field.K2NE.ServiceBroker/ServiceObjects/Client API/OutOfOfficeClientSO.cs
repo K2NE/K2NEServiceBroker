@@ -57,7 +57,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             so.Methods.Add(listUserShares);
 
             Method removeAllShares = Helper.CreateMethod(Constants.Methods.OutOfOfficeClient.RemoveAllShares, "Remove All Shares", MethodType.Execute);
-            removeAllShares.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.CallSuccess);
             so.Methods.Add(removeAllShares);
 
             return new List<ServiceObject>() { so };

@@ -202,7 +202,6 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         {
             public const string UserFQN = "UserFQN";
             public const string UserStatus = "UserStatus";
-            public const string CallSuccess = "CallSuccess";
             public const string DestinationUser = "DestinationUser";
 
         }
