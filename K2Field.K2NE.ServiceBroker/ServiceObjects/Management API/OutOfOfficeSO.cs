@@ -72,6 +72,11 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             listShares.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.DestinationUser);
             so.Methods.Add(listShares);
 
+            Method removeAllShares = Helper.CreateMethod(Constants.Methods.OutOfOffice.RemoveAllShares, "Remove All Shares", MethodType.Execute);
+            removeAllShares.InputProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
+            removeAllShares.Validation.RequiredProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
+            so.Methods.Add(removeAllShares);
+
             return new List<ServiceObject>() { so };
         }
 
@@ -97,8 +102,13 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 case Constants.Methods.OutOfOffice.ListShares:
                     ListUsers();
                     break;
+                case Constants.Methods.OutOfOffice.RemoveAllShares:
+                    RemoveAllShares();
+                    break;
             }
         }
+
+
 
         private void GetUserStatus()
         {
@@ -123,7 +133,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             }
         }
 
-        private void SetStatus(UserStatuses status)
+        private void SetStatus(UserStatuses status, bool checkCurrentStatus = true)
         {
             string userFQN = base.GetStringProperty(Constants.SOProperties.OutOfOffice.UserFQN);
 
@@ -133,7 +143,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             {
                 mngServer.Open(BaseAPIConnectionString);
                 // None for userstatus means the users is not configured, throw an exception
-                if (UserStatuses.None == mngServer.GetUserStatus(userFQN))
+                if (checkCurrentStatus && UserStatuses.None == mngServer.GetUserStatus(userFQN))
                 {
                     throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
                 }
@@ -184,7 +194,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     DataRow dr = results.NewRow();
                     dr[Constants.SOProperties.OutOfOffice.UserFQN] = userFQN;
                     dr[Constants.SOProperties.OutOfOffice.DestinationUser] = destinationUser;
-    
+
                     results.Rows.Add(dr); ;
 
                 }
@@ -237,8 +247,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             using (mngServer.CreateConnection())
             {
                 mngServer.Open(BaseAPIConnectionString);
-                SourceCode.Workflow.Management.OOF.Users  users = mngServer.GetUsers(ShareType.OOF);
-          
+                SourceCode.Workflow.Management.OOF.Users users = mngServer.GetUsers(ShareType.OOF);
+
 
                 foreach (SourceCode.Workflow.Management.OOF.User user in users)
                 {
@@ -260,7 +270,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                         }
                     }
                 }
-                
+
             }
         }
 
@@ -300,6 +310,33 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 }
 
             }
+        }
+
+
+        private void RemoveAllShares()
+        {
+            string userFQN = base.GetStringProperty(Constants.SOProperties.OutOfOffice.UserFQN);
+
+            WorkflowManagementServer mngServer = new WorkflowManagementServer();
+
+            using (mngServer.CreateConnection())
+            {
+                mngServer.Open(BaseAPIConnectionString);
+                if (mngServer.GetUserStatus(userFQN) == UserStatuses.None)
+                {
+                    throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
+                }
+
+                WorklistShares shares = mngServer.GetCurrentSharingSettings(userFQN, ShareType.OOF);
+
+                if (shares == null || shares.Count > 0)
+                {
+                    mngServer.UnShareAll(userFQN);
+                }
+
+                mngServer.Connection.Close();
+            }
+            SetStatus(UserStatuses.Available,false);
         }
     }
 }

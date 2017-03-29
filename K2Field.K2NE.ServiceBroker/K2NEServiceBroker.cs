@@ -224,10 +224,37 @@ namespace K2Field.K2NE.ServiceBroker
                 while (innerEx.InnerException != null)
                 {
                     error.AppendFormat("{0} InnerException.Message: {1}\n", i, innerEx.InnerException.Message);
-                    error.AppendFormat("{0} InnerException.StackTrace: {1}\n", i, innerEx.InnerException.StackTrace);
+                    error.AppendFormat("{0} InnerException.StackTrace: {1}\n\n", i, innerEx.InnerException.StackTrace);
                     innerEx = innerEx.InnerException;
                     i++;
                 }
+
+                error.AppendLine();
+                if (base.Service.ServiceObjects.Count > 0)
+                {
+                    foreach (ServiceObject executingSo in base.Service.ServiceObjects)
+                    {
+                        error.AppendFormat("Service Object Name: {0}\n", executingSo.Name);
+                        foreach (Method method in executingSo.Methods) {
+                            error.AppendFormat("Service Object Methods: {0}\n", method.Name);
+                        }
+                        
+                        foreach (Property prop in executingSo.Properties)
+                        {
+                            string val = prop.Value as string;
+                            if (!string.IsNullOrEmpty(val))
+                            {
+                                error.AppendFormat("[{0}].{1}: {2}\n", executingSo.Name, prop.Name, val);
+                            }
+                            else
+                            {
+                                error.AppendFormat("[{0}].{1}: [String.Empty]\n", executingSo.Name, prop.Name);
+                            }
+                        }
+                    }
+                }
+                
+
                 ServicePackage.ServiceMessages.Add(error.ToString(), MessageSeverity.Error);
                 ServicePackage.IsSuccessful = false;
             }
