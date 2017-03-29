@@ -235,6 +235,10 @@ namespace K2Field.K2NE.ServiceBroker
                     foreach (ServiceObject executingSo in base.Service.ServiceObjects)
                     {
                         error.AppendFormat("Service Object Name: {0}\n", executingSo.Name);
+                        foreach (Method method in executingSo.Methods) {
+                            error.AppendFormat("Service Object Methods: {0}\n", method.Name);
+                        }
+                        
                         foreach (Property prop in executingSo.Properties)
                         {
                             string val = prop.Value as string;

@@ -133,7 +133,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             }
         }
 
-        private void SetStatus(UserStatuses status)
+        private void SetStatus(UserStatuses status, bool checkCurrentStatus = true)
         {
             string userFQN = base.GetStringProperty(Constants.SOProperties.OutOfOffice.UserFQN);
 
@@ -143,7 +143,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             {
                 mngServer.Open(BaseAPIConnectionString);
                 // None for userstatus means the users is not configured, throw an exception
-                if (UserStatuses.None == mngServer.GetUserStatus(userFQN))
+                if (checkCurrentStatus && UserStatuses.None == mngServer.GetUserStatus(userFQN))
                 {
                     throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
                 }
@@ -329,14 +329,14 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
                 WorklistShares shares = mngServer.GetCurrentSharingSettings(userFQN, ShareType.OOF);
 
-                if (shares == null || shares.Count == 0)
+                if (shares == null || shares.Count > 0)
                 {
                     mngServer.UnShareAll(userFQN);
                 }
 
                 mngServer.Connection.Close();
             }
-            SetStatus(UserStatuses.Available);
+            SetStatus(UserStatuses.Available,false);
         }
     }
 }
