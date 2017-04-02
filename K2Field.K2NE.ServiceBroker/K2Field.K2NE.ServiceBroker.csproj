@@ -73,6 +73,7 @@
       <HintPath>..\..\..\Program Files (x86)\K2 blackpearl\Bin\SourceCode.Workflow.Management.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
@@ -90,6 +91,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\BaseAPIConnectionExtensions.cs" />
+    <Compile Include="Helpers\ObjectExtensions.cs" />
+    <Compile Include="Helpers\TypeExtensions.cs" />
+    <Compile Include="Helpers\ValidationExtensions.cs" />
+    <Compile Include="K2Connection.cs" />
     <Compile Include="Constants\ConfigurationProperties.cs" />
     <Compile Include="Constants\ErrorMessages.cs" />
     <Compile Include="Constants\Methods.cs" />
@@ -110,6 +116,11 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Helpers\MapHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="ServiceObjectBase.cs" />
     <Compile Include="ServiceObjects\ActiveDirectorySO.cs" />
     <Compile Include="ServiceObjects\ADOSMOQuerySO.cs" />
@@ -137,6 +148,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="LICENSE.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
