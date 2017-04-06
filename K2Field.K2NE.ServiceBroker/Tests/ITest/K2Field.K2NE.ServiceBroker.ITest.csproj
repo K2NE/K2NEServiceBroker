@@ -47,6 +47,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\K2 blackpearl\Bin\SourceCode.HostClientAPI.dll</HintPath>
     </Reference>
+    <Reference Include="SourceCode.Security.UserRoleManager.Client, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\K2 blackpearl\Bin\SourceCode.Security.UserRoleManager.Client.dll</HintPath>
+    </Reference>
     <Reference Include="SourceCode.Security.UserRoleManager.Management, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\K2 blackpearl\Bin\SourceCode.Security.UserRoleManager.Management.dll</HintPath>
@@ -95,6 +99,9 @@
     <Compile Include="Constants.cs" />
     <Compile Include="DescribeTests.cs" />
     <Compile Include="AD_UserTests.cs" />
+    <Compile Include="Helpers\UserRoleManagerHelper.cs" />
+    <Compile Include="ProcessInstanceManagementTests.cs" />
+    <Compile Include="IdentityTests.cs" />
     <Compile Include="RoleManagementTests.cs" />
     <Compile Include="ManagementWorklistTests.cs" />
     <Compile Include="ErrorLogTests.cs" />
