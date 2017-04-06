@@ -39,8 +39,6 @@ namespace K2Field.K2NE.ServiceBroker.ITest
         public void A02_Deploy_K2NEServiceBroker_Packages()
         {
 #endif
-            UserRoleManagerHelper.ResolveIdentitiesForTestUsers();
-
             // Delete ProcessDefinitions
             WorkflowManagementHelper.DeleteProcessDefinitions(Constants.ProcessSetFolder.K2NEServiceBroker);
             WorkflowManagementHelper.DeleteProcessDefinitions(Constants.Category.CategoryK2NEServiceBrokerName);

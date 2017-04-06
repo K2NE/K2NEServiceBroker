@@ -27,6 +27,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -91,7 +92,7 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="DescribeTests.cs" />
-    <Compile Include="Helpers\UserRoleManagerHelper.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\WorkflowManagementHelper.cs" />
     <Compile Include="Helpers\WorkflowClientHelper.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -108,10 +109,6 @@
     <ProjectReference Include="..\..\..\SourceCode.SmartObjects.Services.Tests\SourceCode.SmartObjects.Services.Tests.csproj">
       <Project>{cc1046c1-5fd5-4d53-92d2-f9f0e5361bcb}</Project>
       <Name>SourceCode.SmartObjects.Services.Tests</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\K2Field.K2NE.ServiceBroker.csproj">
-      <Project>{5D45A104-69BD-4B55-A255-9BCC629D62DF}</Project>
-      <Name>K2Field.K2NE.ServiceBroker</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
