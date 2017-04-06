@@ -76,6 +76,7 @@
       <HintPath>C:\Program Files (x86)\K2 blackpearl\Bin\SourceCode.Workflow.Management.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -104,6 +105,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\K2NEServiceBrokerServiceTypeSettings.cs" />
     <Compile Include="Settings\K2NEServiceBrokerIntegrationTestsServiceInstanceSettings.cs" />
+    <Compile Include="WorklistServiceObjectTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\SourceCode.SmartObjects.Services.Tests\SourceCode.SmartObjects.Services.Tests.csproj">

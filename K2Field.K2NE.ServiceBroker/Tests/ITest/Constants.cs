@@ -18,5 +18,10 @@
         {
             public const string K2NEServiceBroker = "K2NEServiceBroker";
         }
+
+        public static class TestAttribute
+        {
+            public const string Worklist = "Worklist";
+        }
     }
 }
