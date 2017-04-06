@@ -77,6 +77,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -93,6 +94,10 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="DescribeTests.cs" />
+    <Compile Include="AD_UserTests.cs" />
+    <Compile Include="RoleManagementTests.cs" />
+    <Compile Include="ManagementWorklistTests.cs" />
+    <Compile Include="ErrorLogTests.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\WorkflowManagementHelper.cs" />
     <Compile Include="Helpers\WorkflowClientHelper.cs" />
