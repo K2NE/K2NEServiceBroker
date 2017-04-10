@@ -101,17 +101,13 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            using (Connection k2Con = new Connection())
+            using (Connection k2Con = this.ServiceBroker.K2Connection.GetWorkflowClientConnection())
             {
-                k2Con.Open(base.K2ClientConnectionSetup);
-
                 SourceCode.Workflow.Client.UserStatuses status = k2Con.GetUserStatus();
 
                 DataRow dr = results.NewRow();
                 dr[Constants.SOProperties.OutOfOffice.UserStatus] = status.ToString();
                 results.Rows.Add(dr);
-
-                k2Con.Close();
             }
 
 
