@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Linq;
 
 namespace K2Field.K2NE.ServiceBroker.Helpers
 {
@@ -17,12 +16,12 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         /// <returns></returns>
         internal static object GetPropertyValue(this object obj, string fieldName)
         {
-            obj.ThrowIfNull(nameof(obj));
+            obj.ThrowIfNull("obj");
 
             Type objType = obj.GetType();
             var propertyValue = objType.GetPropertyInfo(fieldName);
 
-            propertyValue.ThrowIfNull(nameof(propertyValue));
+            propertyValue.ThrowIfNull("propertyValue");
 
             return propertyValue.GetValue(obj, null);
         }

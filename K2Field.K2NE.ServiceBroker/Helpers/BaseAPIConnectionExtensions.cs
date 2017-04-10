@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using SourceCode.Hosting.Client.BaseAPI;
 using SourceCode.Hosting.Server.Interfaces;
 
@@ -17,8 +16,8 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         /// <param name="k2Connection">The broker base.</param>
         internal static void ImpersonateSessionUser(this BaseAPIConnection connection, K2Connection k2Connection)
         {
-            connection.ThrowIfNull(nameof(connection));
-            k2Connection.ThrowIfNull(nameof(k2Connection));
+            connection.ThrowIfNull("connection");
+            k2Connection.ThrowIfNull("k2Connection");
 
             try
             {
@@ -31,7 +30,9 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
 
                 // Don't impersonate if the session's FQN is the same as the expected user's FQN
                 var activeSession = k2Connection.SessionManager.GetActiveSession(sessionCookie);
-                if (string.Equals(k2Connection.UserName, activeSession?.Owner?.PrimaryCredential?.FullyQualifiedName?.FQN, StringComparison.OrdinalIgnoreCase))
+                activeSession.ThrowIfNull("activeSession");
+
+                if (string.Equals(k2Connection.UserName, activeSession.Owner.PrimaryCredential.FullyQualifiedName.FQN, StringComparison.OrdinalIgnoreCase))
                 {
                     return;
                 }
@@ -50,7 +51,11 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             }
             catch
             {
-                connection?.Dispose();
+                if (connection != null)
+                {
+                    connection.Dispose();
+                }
+
                 throw;
             }
         }

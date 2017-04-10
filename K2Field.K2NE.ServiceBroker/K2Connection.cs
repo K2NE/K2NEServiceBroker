@@ -15,6 +15,7 @@ namespace K2Field.K2NE.ServiceBroker
         private static string _defaultWorkflowServerConnectionString;
         private static int _workflowServerPort;
         private readonly string _sessionConnectionString;
+        private ISessionManager _sessionManager;
         private ConnectionSetup _sessionWorkflowConnectionSetup;
 
         public K2Connection(IServiceMarshalling serviceMarshalling, IServerMarshaling serverMarshaling)
@@ -32,7 +33,7 @@ namespace K2Field.K2NE.ServiceBroker
                 _workflowServerPort = int.Parse(workflowConnectionSetup.ConnectionParameters[SourceCode.Workflow.Client.ConnectionSetup.ParamKeys.Port]);
             }
 
-            SessionManager = serverMarshaling.GetSessionManagerContext();
+            _sessionManager = serverMarshaling.GetSessionManagerContext();
 
             var sessionCookie = SessionManager.CurrentSessionCookie;
             _sessionConnectionString = K2NEServiceBroker.SecurityManager.GetSessionConnectionString(sessionCookie);
@@ -46,7 +47,13 @@ namespace K2Field.K2NE.ServiceBroker
             }
         }
 
-        public ISessionManager SessionManager { get; }
+        public ISessionManager SessionManager
+        {
+            get
+            {
+                return _sessionManager;
+            }
+        }
 
         public string UserName { get; set; }
 
@@ -88,8 +95,9 @@ namespace K2Field.K2NE.ServiceBroker
             try
             {
                 connection.Open(this.SessionWorkflowConnectionSetup);
+                connection.User.ThrowIfNull("connection.User");
 
-                if (!UserName.Equals(connection?.User?.FQN, StringComparison.InvariantCultureIgnoreCase))
+                if (!UserName.Equals(connection.User.FQN, StringComparison.InvariantCultureIgnoreCase))
                 {
                     connection.ImpersonateUser(UserName);
                 }
@@ -98,7 +106,11 @@ namespace K2Field.K2NE.ServiceBroker
             }
             catch
             {
-                connection?.Dispose();
+                if (connection != null)
+                {
+                    connection.Dispose();
+                }
+
                 throw;
             }
         }
