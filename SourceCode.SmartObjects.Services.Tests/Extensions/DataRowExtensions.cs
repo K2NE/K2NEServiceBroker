@@ -7,23 +7,23 @@ namespace SourceCode.SmartObjects.Services.Tests.Extensions
     {
         public static void AssertAreEqual<U>(this DataRow dataRow, string columnName, U expectedValue, string rowIdentifier = null)
         {
-            dataRow.ThrowIfNull(nameof(dataRow));
-            columnName.ThrowIfNullOrWhiteSpace(nameof(columnName));
+            dataRow.ThrowIfNull("dataRow");
+            columnName.ThrowIfNullOrWhiteSpace("columnName");
 
             Assert.AreEqual<U>(expectedValue, dataRow.Field<U>(columnName)
-                , string.Concat($"{dataRow.Table.TableName}.{columnName} has an incorrect value.", rowIdentifier ?? string.Empty));
+                , string.Format("{0}.{1} has an incorrect value.{2}", dataRow.Table.TableName, columnName, rowIdentifier ?? string.Empty));
         }
 
         public static U AssertHasValue<U>(this DataRow dataRow, string columnName, string rowIdentifier = null)
         {
-            dataRow.ThrowIfNull(nameof(dataRow));
-            columnName.ThrowIfNullOrWhiteSpace(nameof(columnName));
+            dataRow.ThrowIfNull("dataRow");
+            columnName.ThrowIfNullOrWhiteSpace("columnName");
 
-            var cellObjectValue = (dataRow.Field<object>(columnName))?.ToString();
+            var cellObjectValue = (dataRow.Field<object>(columnName));
 
-            Assert.IsFalse(string.IsNullOrEmpty(cellObjectValue)
-                , $"[{dataRow?.Table?.TableName}].[{columnName}] must have a '{typeof(U).ToString()}' value. Row Identifier: [{rowIdentifier}]");
-
+            Assert.IsFalse(cellObjectValue == null || string.IsNullOrEmpty(cellObjectValue.ToString()),
+                string.Format("[{0}].[{1}] must have a '{2}' value. Row Identifier: [{3}]",
+                    dataRow.Table.TableName, columnName, typeof(U).ToString(), rowIdentifier));
             try
             {
                 var cellValue = dataRow.Field<U>(columnName);
@@ -31,7 +31,9 @@ namespace SourceCode.SmartObjects.Services.Tests.Extensions
             }
             catch (System.Exception ex)
             {
-                Assert.Fail($"[{dataRow?.Table?.TableName}].[{columnName}] convert to '{typeof(U).ToString()}' error. Value: '{cellObjectValue}' Row Identifier: [{rowIdentifier}] Error: '{ex.Message}'");
+                Assert.Fail(string.Format("[{0}].[{1}] convert to '{2}' error. Value: '{3}' Row Identifier: [{4}] Error: '{5}'",
+                    dataRow.Table.TableName, columnName, typeof(U).ToString(), cellObjectValue, rowIdentifier, ex.Message));
+
                 throw;
             }
         }
@@ -43,13 +45,17 @@ namespace SourceCode.SmartObjects.Services.Tests.Extensions
 
         public static string GetFirstValue(this DataRow dataRow, params string[] columnNames)
         {
-            if (dataRow?.Table == null) return null;
+            if (dataRow == null ||
+                dataRow.Table == null)
+            {
+                return null;
+            }
 
             foreach (var columnName in columnNames)
             {
-                if (dataRow?.Table?.Columns == null ||
+                if (dataRow.Table.Columns == null ||
                     !dataRow.Table.Columns.Contains(columnName) ||
-                    string.IsNullOrWhiteSpace(dataRow[columnName]?.ToString()))
+                    string.IsNullOrWhiteSpace(dataRow[columnName].ToString()))
                 {
                     continue;
                 }

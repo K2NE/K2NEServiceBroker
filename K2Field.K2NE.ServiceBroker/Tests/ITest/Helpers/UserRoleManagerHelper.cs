@@ -7,7 +7,14 @@ namespace K2Field.K2NE.ServiceBroker.ITest.Helpers
     {
         public static string ConvertUserNameToFQN(string userName)
         {
-            return $"{GetDefaultLabelName()}:{userName}";
+            return string.Format("{0}:{1}", GetDefaultLabelName(), userName);
+        }
+
+        public static string GetCurrentUserFQN()
+        {
+            var userName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+
+            return ConvertUserNameToFQN(userName);
         }
 
         public static string GetDefaultLabelName()
@@ -17,13 +24,6 @@ namespace K2Field.K2NE.ServiceBroker.ITest.Helpers
             {
                 return server.GetDefaultLabelName();
             }
-        }
-
-        public static string GetCurrentUserFQN()
-        {
-            var userName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-
-            return ConvertUserNameToFQN(userName);
         }
     }
 }

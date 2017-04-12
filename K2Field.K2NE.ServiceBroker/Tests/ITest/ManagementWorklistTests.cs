@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using System.Threading.Tasks;
+using System.Threading;
 using K2Field.K2NE.ServiceBroker.ITest.Settings;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SourceCode.SmartObjects.Client;
@@ -17,7 +17,7 @@ namespace K2Field.K2NE.ServiceBroker.ITest
         public void Execute_ManagementWorklist_GetWorklist()
         {
             // Wait for Worklist to be assigned
-            Task.Delay(2000).Wait();
+            Thread.Sleep(2000);
 
             DataTable dataTable;
             var clientServer = ConnectionHelper.GetServer<SmartObjectClientServer>();

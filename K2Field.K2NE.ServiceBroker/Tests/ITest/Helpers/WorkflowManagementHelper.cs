@@ -14,7 +14,7 @@ namespace K2Field.K2NE.ServiceBroker.ITest.Helpers
             {
                 foreach (SourceCode.Workflow.Management.ProcessSet processSet in server.GetProcSets())
                 {
-                    if (processSetFolder?.Equals(processSet.Folder, StringComparison.OrdinalIgnoreCase) == true)
+                    if (processSetFolder.Equals(processSet.Folder, StringComparison.OrdinalIgnoreCase) == true)
                     {
                         server.DeleteProcessDefinition(processSet.FullName, 0, true);
                     }
@@ -28,7 +28,7 @@ namespace K2Field.K2NE.ServiceBroker.ITest.Helpers
             using (workflowManagent.Connection)
             {
                 var processSet = workflowManagent.GetProcSet(ProcessFullName);
-                Assert.IsNotNull(processSet, $"Process does not exist. {ProcessFullName}");
+                Assert.IsNotNull(processSet, string.Format("Process does not exist. {0}", ProcessFullName));
 
                 return processSet.ProcSetID;
             }
@@ -50,7 +50,7 @@ namespace K2Field.K2NE.ServiceBroker.ITest.Helpers
             {
                 var processSet = workflowManagent.GetProcSet(processFullName);
 
-                return workflowManagent.GetProcessInstances(processSet.ProcID)?[0];
+                return workflowManagent.GetProcessInstances(processSet.ProcID)[0];
             }
         }
     }

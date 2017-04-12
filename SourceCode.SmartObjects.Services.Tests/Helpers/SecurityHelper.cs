@@ -23,7 +23,7 @@ namespace SourceCode.SmartObjects.Services.Tests.Helpers
             userName = userName.Split('\\').Last();
 
             var currentUserName = WindowsIdentity.GetCurrent().Name;
-            var userDomainName = $"{Environment.UserDomainName}\\{userName}";
+            var userDomainName = string.Format("{0}\\{1}", Environment.UserDomainName, userName);
 
             if (userDomainName.Equals(currentUserName, StringComparison.InvariantCultureIgnoreCase))
             {

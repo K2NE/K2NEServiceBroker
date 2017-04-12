@@ -12,7 +12,7 @@ namespace K2Field.K2NE.ServiceBroker.ITest
 #if DEBUG
 
         [TestMethod()]
-        [TestCategory("Initialize Service Instance")]
+        [Priority(1)]
         public void Create_K2NEServiceBrokerIntegrationTests_SmartObjects()
 #else
 
@@ -35,8 +35,8 @@ namespace K2Field.K2NE.ServiceBroker.ITest
         }
 
         [TestMethod()]
-        [TestCategory("1 Initialize")]
-        public void A02_Deploy_K2NEServiceBroker_Packages()
+        [Priority(1)]
+        public void Deploy_K2NEServiceBroker_Packages()
         {
 #endif
             // Delete ProcessDefinitions

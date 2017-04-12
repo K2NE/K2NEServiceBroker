@@ -14,19 +14,22 @@ namespace SourceCode.SmartObjects.Services.Tests.Extensions
         public static string GenerateGetAssertHasValue(this DataTable dataTable)
         {
             var row = dataTable.Rows.Cast<DataRow>().FirstOrDefault();
-            row.ThrowIfNull(nameof(row));
+            row.ThrowIfNull("row");
 
             var returnResult = new StringBuilder();
             var emptyStringBuilder = new StringBuilder();
             foreach (DataColumn column in row.Table.Columns)
             {
-                if (!string.IsNullOrEmpty(row[column]?.ToString()))
+                var assertHasValue = string.Format("row.AssertHasValue<{0}>(\"{1}\");", column.DataType.Name, column.ColumnName);
+
+                if (row[column] != null &&
+                    !string.IsNullOrEmpty(row[column].ToString()))
                 {
-                    returnResult.AppendLine($"row.AssertHasValue<{column.DataType.Name}>(\"{column.ColumnName}\");");
+                    returnResult.AppendLine(assertHasValue);
                 }
                 else
                 {
-                    emptyStringBuilder.AppendLine($"//row.AssertHasValue<{column.DataType.Name}>(\"{column.ColumnName}\");");
+                    emptyStringBuilder.AppendLine(string.Concat(@"//", assertHasValue));
                 }
             }
 
