@@ -19,7 +19,9 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         internal static void ThrowIfNull<T>(this T param, string name) where T : class
         {
             if (param == null)
+            {
                 throw new ArgumentException(Resources.ErrorRequiredEmpty, name);
+            }
         }
 
         /// <summary>
@@ -31,8 +33,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         /// <exception cref="System.ArgumentException"></exception>
         internal static void ThrowIfNullOrEmpty<T>(this IEnumerable<T> param, string name)
         {
-            if (param == null ||
-                !param.Any())
+            if (param == null || !param.Any())
             {
                 throw new ArgumentException(Resources.ErrorRequiredEmpty, name);
             }
@@ -47,7 +48,9 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         internal static void ThrowIfNullOrWhiteSpace(this string value, string name)
         {
             if (string.IsNullOrWhiteSpace(value))
+            {
                 throw new ArgumentException(Resources.ErrorRequiredEmpty, name);
+            }
         }
     }
 }

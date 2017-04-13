@@ -184,6 +184,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
             string actionName = base.GetStringProperty(Constants.SOProperties.ClientWorklist.ActionName, true);
 
 
+            
             using (Connection k2Con = new Connection())
             {
                 k2Con.Open(base.K2ClientConnectionSetup);
