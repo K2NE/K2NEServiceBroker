@@ -245,10 +245,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            using (Connection k2Con = new Connection())
+            using (Connection k2Con = base.ServiceBroker.K2Connection.GetWorkflowClientConnection())
             {
-                k2Con.Open(base.K2ClientConnectionSetup);
-
                 WorklistItem wli = k2Con.OpenWorklistItem(sn);
                 wli.Release();
 
@@ -263,9 +261,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            using (Connection k2Con = new Connection())
+            using (Connection k2Con = base.ServiceBroker.K2Connection.GetWorkflowClientConnection())
             {
-                k2Con.Open(base.K2ClientConnectionSetup);
                 
                 WorklistCriteria wc = new WorklistCriteria();
                 wc.Platform = base.Platform;
