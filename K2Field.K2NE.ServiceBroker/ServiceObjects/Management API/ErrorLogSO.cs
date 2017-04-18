@@ -86,10 +86,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             base.ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
-            using (mngServer.CreateConnection())
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
+
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
 
                 ErrorProfile all = mngServer.GetErrorProfiles()[0];
                 ErrorLogCriteriaFilter errorfilter = new ErrorLogCriteriaFilter();
@@ -132,10 +132,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             base.ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
-            using (mngServer.CreateConnection())
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
+
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
 
                 //TODO: catch exception on this?
                 ErrorProfile prof = mngServer.GetErrorProfile(profile);

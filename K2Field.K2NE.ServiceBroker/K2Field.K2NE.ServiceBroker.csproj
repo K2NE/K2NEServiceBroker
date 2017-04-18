@@ -108,7 +108,7 @@
     <Compile Include="Helpers\FilterItem.cs" />
     <Compile Include="Helpers\LdapHelper.cs" />
     <Compile Include="Helpers\MetaDataExtensions.cs" />
-    <Compile Include="Helpers\Extensions.cs" />
+    <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Helpers\PowerShell\PowerShellHelper.cs" />
     <Compile Include="Helpers\PowerShell\PowerShellSerializationHelper.cs" />
     <Compile Include="Helpers\PowerShell\PowerShellVariablesDC.cs" />

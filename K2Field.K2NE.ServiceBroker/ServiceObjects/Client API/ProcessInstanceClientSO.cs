@@ -48,10 +48,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
             //Adding a separate StartWF method for each workflow, exposing DataFields as Parameters
             try
             {
-                WorkflowManagementServer mngServer = new WorkflowManagementServer();
-                using (mngServer.CreateConnection())
+                WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
+                using (mngServer.Connection)
                 {
-                    mngServer.Open(BaseAPIConnectionString);
 
                     ProcessSets pSets = mngServer.GetProcSets();
                     foreach (ProcessSet pSet in pSets)

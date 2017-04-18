@@ -83,12 +83,11 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         {
             int processInstanceId = base.GetIntProperty(Constants.SOProperties.ProcessInstanceManagement.ProcessInstanceId);
             string activityName = base.GetStringProperty(Constants.SOProperties.ProcessInstanceManagement.ActivityName);
-            
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
 
-            using (mngServer.CreateConnection())
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
+
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
 
                 ProcessInstanceCriteriaFilter filter = new ProcessInstanceCriteriaFilter();
                 filter.AddRegularFilter(ProcessInstanceFields.ProcInstID, Comparison.Equals, processInstanceId);
@@ -109,11 +108,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
 
-            using (mngServer.CreateConnection())
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
 
                 ProcessInstanceCriteriaFilter filter = new ProcessInstanceCriteriaFilter();
                 filter.AddRegularFilter(ProcessInstanceFields.ProcInstID, Comparison.Equals, processInstanceId);
