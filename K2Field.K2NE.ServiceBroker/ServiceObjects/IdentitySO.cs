@@ -196,9 +196,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             serviceObject.Properties.InitResultTable();
             DataTable results = ServiceBroker.ServicePackage.ResultTable;
 
-            using (Connection k2Con = new Connection())
+            using (Connection k2Con = this.ServiceBroker.K2Connection.GetWorkflowClientConnection())
             {
-                k2Con.Open(K2ClientConnectionSetup);
                 if (!string.IsNullOrEmpty(k2imp))
                 {
                     k2Con.ImpersonateUser(k2imp);

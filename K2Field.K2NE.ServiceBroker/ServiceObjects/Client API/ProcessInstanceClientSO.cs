@@ -107,9 +107,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
             string folio = base.GetStringProperty(Constants.SOProperties.ProcessInstanceClient.ProcessFolio, false);
             int procId = base.GetIntProperty(Constants.SOProperties.ProcessInstanceClient.ProcessInstanceId, true);
 
-            using (CLIENT.Connection k2Con = new CLIENT.Connection())
+            using (CLIENT.Connection k2Con = this.ServiceBroker.K2Connection.GetWorkflowClientConnection())
             {
-                k2Con.Open(K2ClientConnectionSetup);
 
                 CLIENT.ProcessInstance pi = k2Con.OpenProcessInstance(procId);
                 pi.Folio = folio;
@@ -131,9 +130,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
             DataTable results = ServiceBroker.ServicePackage.ResultTable;
 
 
-            using (CLIENT.Connection k2Con = new CLIENT.Connection())
+            using (CLIENT.Connection k2Con = this.ServiceBroker.K2Connection.GetWorkflowClientConnection())
             {
-                k2Con.Open(K2ClientConnectionSetup);
 
                 CLIENT.ProcessInstance pi;
 

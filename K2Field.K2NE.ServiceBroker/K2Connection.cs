@@ -87,7 +87,7 @@ namespace K2Field.K2NE.ServiceBroker
 
         public Connection GetWorkflowClientConnection()
         {
-            var connection = new Connection();
+            Connection connection = new Connection();
 
             try
             {
@@ -101,14 +101,14 @@ namespace K2Field.K2NE.ServiceBroker
 
                 return connection;
             }
-            catch
+            catch (Exception ex)
             {
                 if (connection != null)
                 {
                     connection.Dispose();
                 }
 
-                throw;
+                throw new Exception("Failed to create Connection to K2.", ex);
             }
         }
     }
