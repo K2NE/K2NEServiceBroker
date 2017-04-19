@@ -1,4 +1,7 @@
 == ChangeLog
+=== v1.7
+- Rework the K2 connection string to get this from the K2 environment itself. Massive improvement to the overal code!
+
 === v1.6.14
 - Added excel support, to get excel sheet out of ADO.NET query
 
