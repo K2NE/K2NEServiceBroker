@@ -138,6 +138,11 @@ namespace K2Field.K2NE.ServiceBroker
             return newSf;
         }
 
+        private void EnforceServiceAuthenticationSettings()
+        {
+            this.Service.ServiceConfiguration.ServiceAuthentication.Impersonate = true;
+            this.Service.ServiceConfiguration.ServiceAuthentication.UseOAuth = false;
+        }
         #endregion
 
         #region Constructor
@@ -180,6 +185,8 @@ namespace K2Field.K2NE.ServiceBroker
                 }
             }
 
+            EnforceServiceAuthenticationSettings();
+
             return base.DescribeSchema();
         }
         public override void Execute()
@@ -190,6 +197,10 @@ namespace K2Field.K2NE.ServiceBroker
             ServiceObject so = Service.ServiceObjects[0];
             try
             {
+                // Always enforce impersonation
+                EnforceServiceAuthenticationSettings();
+                this.Service.ServiceConfiguration.ServiceAuthentication.EnforceImpersonation = true;
+
                 //TODO: improve performance? http://bloggingabout.net/blogs/vagif/archive/2010/04/02/don-t-use-activator-createinstance-or-constructorinfo-invoke-use-compiled-lambda-expressions.aspx
 
                 // This creates an instance of the object responsible to handle the execution.
@@ -263,6 +274,7 @@ namespace K2Field.K2NE.ServiceBroker
         }
         public override string GetConfigSection()
         {
+            EnforceServiceAuthenticationSettings();
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.EnvironmentToUse, false, ""); //checked
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.DefaultCulture, true, "EN-us"); //checked
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.Platform, false, "ASP"); //Checked
