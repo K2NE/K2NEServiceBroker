@@ -263,8 +263,6 @@ namespace K2Field.K2NE.ServiceBroker
         }
         public override string GetConfigSection()
         {
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.WorkflowManagmentPort, true, "5555"); // checked
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.WorkflowClientPort, true, "5252"); // checked
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.EnvironmentToUse, false, ""); //checked
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.DefaultCulture, true, "EN-us"); //checked
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.Platform, false, "ASP"); //Checked
