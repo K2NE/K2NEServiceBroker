@@ -71,7 +71,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
 
                         foreach (ProcessDataField pDataField in mngServer.GetProcessDataFields(pSet.ProcID))
                         {
-                            m.MethodParameters.Add(Helper.CreateParameter(pDataField.Name, GetDataFieldType(pDataField.Type), false, pDataField.Name));
+                            m.MethodParameters.Create(Helper.CreateParameter(pDataField.Name, GetDataFieldType(pDataField.Type), false, pDataField.Name));
                         }
                         so.Methods.Add(m);
                     }
