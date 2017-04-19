@@ -255,7 +255,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             {
 
                 role.Name = base.GetStringProperty(Constants.SOProperties.Role.RoleName, true);
-                role.Description = base.GetStringProperty(Constants.SOProperties.Role.RoleDescription); ;
+                role.Description = base.GetStringProperty(Constants.SOProperties.Role.RoleDescription);
                 role.IsDynamic = base.GetBoolProperty(Constants.SOProperties.Role.RoleDynamic);
 
                 // At least one roleItem has to be created with the new group
