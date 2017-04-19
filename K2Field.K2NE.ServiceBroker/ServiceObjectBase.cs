@@ -20,9 +20,6 @@ namespace K2Field.K2NE.ServiceBroker
     public abstract class ServiceObjectBase
     {
         #region private variables
-        private ConnectionSetup connectionSetup = null;
-        private SCConnectionStringBuilder baseConnection = null;
-
         private static Dictionary<string, string> environmentFields = new Dictionary<string, string>();
         private static Object envLock = new Object();
         private Mutex envMutex;
