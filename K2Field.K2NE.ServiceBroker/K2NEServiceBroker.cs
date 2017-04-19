@@ -41,11 +41,12 @@ namespace K2Field.K2NE.ServiceBroker
         #endregion Private Properties
 
 
-        #region Public properties for ServiceObjectBase's child classes.
-        public Logger HostServiceLogger { get; private set; }
-        public IIdentityService IdentityService { get; private set; }
-        public ISecurityManager SecurityManager { get; private set; }
-        #endregion Public properties for ServiceObjectBase's child classes.
+        #region Internal properties for ServiceObjectBase's child classes.
+        internal Logger HostServiceLogger { get; private set; }
+        internal IIdentityService IdentityService { get; private set; }
+        internal static ISecurityManager SecurityManager { get; private set; }
+        internal K2Connection K2Connection { get; private set; }
+        #endregion Internal properties for ServiceObjectBase's child classes.
 
 
 
@@ -136,6 +137,7 @@ namespace K2Field.K2NE.ServiceBroker
             Service.ServiceFolders.Create(newSf);
             return newSf;
         }
+
         #endregion
 
         #region Constructor
@@ -177,18 +179,17 @@ namespace K2Field.K2NE.ServiceBroker
                     }
                 }
             }
+
             return base.DescribeSchema();
         }
         public override void Execute()
         {
+            // Value can't be set in K2Connection constructor, because the SmartBroker sets the UserName value after Init
+            K2Connection.UserName = Service.ServiceConfiguration.ServiceAuthentication.UserName;
+
             ServiceObject so = Service.ServiceObjects[0];
             try
             {
-                if (base.Service.ServiceConfiguration.ServiceAuthentication.AuthenticationMode == AuthenticationMode.ServiceAccount)
-                {
-                    System.Security.Principal.WindowsIdentity.Impersonate(IntPtr.Zero);
-                }
-
                 //TODO: improve performance? http://bloggingabout.net/blogs/vagif/archive/2010/04/02/don-t-use-activator-createinstance-or-constructorinfo-invoke-use-compiled-lambda-expressions.aspx
 
                 // This creates an instance of the object responsible to handle the execution.
@@ -202,7 +203,7 @@ namespace K2Field.K2NE.ServiceBroker
                 {
                     throw new ApplicationException("ServiceObject is not set.");
                 }
-                if (! ServiceObjectToType.ContainsKey(so.Name))
+                if (!ServiceObjectToType.ContainsKey(so.Name))
                 {
                     throw new ApplicationException(string.Format("{0} is not a valid service object in the ServiceObjectType collection.", so.Name));
                 }
@@ -235,10 +236,11 @@ namespace K2Field.K2NE.ServiceBroker
                     foreach (ServiceObject executingSo in base.Service.ServiceObjects)
                     {
                         error.AppendFormat("Service Object Name: {0}\n", executingSo.Name);
-                        foreach (Method method in executingSo.Methods) {
+                        foreach (Method method in executingSo.Methods)
+                        {
                             error.AppendFormat("Service Object Methods: {0}\n", method.Name);
                         }
-                        
+
                         foreach (Property prop in executingSo.Properties)
                         {
                             string val = prop.Value as string;
@@ -253,7 +255,7 @@ namespace K2Field.K2NE.ServiceBroker
                         }
                     }
                 }
-                
+
 
                 ServicePackage.ServiceMessages.Add(error.ToString(), MessageSeverity.Error);
                 ServicePackage.IsSuccessful = false;
@@ -261,8 +263,6 @@ namespace K2Field.K2NE.ServiceBroker
         }
         public override string GetConfigSection()
         {
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.WorkflowManagmentPort, true, "5555"); // checked
-            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.WorkflowClientPort, true, "5252"); // checked
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.EnvironmentToUse, false, ""); //checked
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.DefaultCulture, true, "EN-us"); //checked
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.Platform, false, "ASP"); //Checked
@@ -296,10 +296,10 @@ namespace K2Field.K2NE.ServiceBroker
                     SecurityManager = serverMarshaling.GetSecurityManagerContext();
                 }
 
+                K2Connection = new K2Connection(serviceMarshalling, serverMarshaling);
             }
-            
-
         }
+
         public override void Extend() { }
         public void Unload()
         {

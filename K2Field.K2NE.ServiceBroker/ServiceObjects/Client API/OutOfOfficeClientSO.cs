@@ -101,16 +101,13 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            using (Connection k2Con = new Connection())
+            using (Connection k2Con = this.ServiceBroker.K2Connection.GetWorkflowClientConnection())
             {
-                k2Con.Open(base.K2ClientConnectionSetup);
-
                 SourceCode.Workflow.Client.UserStatuses status = k2Con.GetUserStatus();
 
                 DataRow dr = results.NewRow();
                 dr[Constants.SOProperties.OutOfOffice.UserStatus] = status.ToString();
                 results.Rows.Add(dr);
-
                 k2Con.Close();
             }
 
@@ -123,9 +120,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         /// <param name="status">OOF Status (Available, OOF, None)</param>
         private void SetStatus(SourceCode.Workflow.Client.UserStatuses status)
         {
-            using (Connection k2Con = new Connection())
+            using (Connection k2Con = this.ServiceBroker.K2Connection.GetWorkflowClientConnection())
             {
-                k2Con.Open(base.K2ClientConnectionSetup);
                 // None for userstatus means the users is not configured, throw an exception
                 if (UserStatuses.None == k2Con.GetUserStatus() && UserStatuses.OOF == status)
                 {
@@ -161,9 +157,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
 
-            using (Connection k2Con = new Connection())
+            using (Connection k2Con = this.ServiceBroker.K2Connection.GetWorkflowClientConnection())
             {
-                k2Con.Open(base.K2ClientConnectionSetup);
 
                 WorklistShares wsColl = k2Con.GetCurrentSharingSettings(ShareType.OOF);
 
@@ -239,11 +234,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-
-            using (Connection k2Con = new Connection())
+            using (Connection k2Con = this.ServiceBroker.K2Connection.GetWorkflowClientConnection())
             {
-                k2Con.Open(base.K2ClientConnectionSetup);
-
                 WorklistShares wsColl = k2Con.GetCurrentSharingSettings(ShareType.OOF);
 
                 //  Throw error if multiple configurations (WorklistShare objects) detected, as this method cannot support that 
@@ -291,9 +283,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            using (Connection k2Con = new Connection())
+            using (Connection k2Con = this.ServiceBroker.K2Connection.GetWorkflowClientConnection())
             {
-                k2Con.Open(base.K2ClientConnectionSetup);
 
                 // None for userstatus means the users is not configured, throw an exception
                 if (UserStatuses.None == k2Con.GetUserStatus())
@@ -332,9 +323,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            using (Connection k2Con = new Connection())
+            using (Connection k2Con = this.ServiceBroker.K2Connection.GetWorkflowClientConnection())
             {
-                k2Con.Open(base.K2ClientConnectionSetup);
 
                 // None for userstatus means the users is not configured, throw an exception
                 if (UserStatuses.None == k2Con.GetUserStatus())

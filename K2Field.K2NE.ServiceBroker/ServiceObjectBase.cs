@@ -20,9 +20,6 @@ namespace K2Field.K2NE.ServiceBroker
     public abstract class ServiceObjectBase
     {
         #region private variables
-        private ConnectionSetup connectionSetup = null;
-        private SCConnectionStringBuilder baseConnection = null;
-
         private static Dictionary<string, string> environmentFields = new Dictionary<string, string>();
         private static Object envLock = new Object();
         private Mutex envMutex;
@@ -41,8 +38,6 @@ namespace K2Field.K2NE.ServiceBroker
             private set;
         }
 
-
-
         /// <summary>
         /// This is the connectionstring for any baseAPI Connection (management, smartobjects, etc).
         /// </summary>
@@ -50,10 +45,11 @@ namespace K2Field.K2NE.ServiceBroker
         {
             get
             {
-                return GetBaseConnection(WorkflowManagementPort);
+                return this.ServiceBroker.K2Connection.SessionConnectionString;
             }
 
         }
+ 
 
         public string LDAPPaths
         {
@@ -164,22 +160,6 @@ namespace K2Field.K2NE.ServiceBroker
             }
         }
 
-        /// <summary>
-        /// This is the k2 client api connectionSetup object that can be used to create a connection.
-        /// </summary>
-        protected ConnectionSetup K2ClientConnectionSetup
-        {
-            get
-            {
-                if (connectionSetup == null)
-                {
-                    connectionSetup = new ConnectionSetup();
-                    connectionSetup.ConnectionString = GetBaseConnection(WorkflowClientPort);
-                }
-                return connectionSetup;
-            }
-        }
-
         protected string EnvironmentToUseConfiguration
         {
             get
@@ -193,31 +173,7 @@ namespace K2Field.K2NE.ServiceBroker
         }
 
 
-        protected uint WorkflowClientPort
-        {
-            get
-            {
-                if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.WorkflowClientPort))
-                {
-                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.WorkflowClientPort));
-                }
-                return uint.Parse(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.WorkflowClientPort].ToString());
-            }
-        }
-
-        protected uint WorkflowManagementPort
-        {
-            get
-            {
-                if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.WorkflowManagmentPort))
-                {
-                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.WorkflowManagmentPort));
-                }
-
-                return uint.Parse(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.WorkflowManagmentPort].ToString());
-            }
-        }
-
+ 
 
         /// <summary>
         /// The default culture to use.
@@ -540,19 +496,6 @@ namespace K2Field.K2NE.ServiceBroker
 
         #region Private helper methods
 
-        private string GetBaseConnection(uint port)
-        {
-            if (this.baseConnection == null)
-            {
-                this.baseConnection = new SCConnectionStringBuilder();
-                this.baseConnection.Authenticate = true;
-                this.baseConnection.Host = "localhost"; //hardcoded, always connect to yourself. Works better on NLB environments.
-                this.baseConnection.Integrated = true;
-                this.baseConnection.IsPrimaryLogin = true;
-                this.baseConnection.Port = port;
-            }
-            return this.baseConnection.ToString();
-        }
 
 
         private string ReplaceEnvironmentFields(string value)

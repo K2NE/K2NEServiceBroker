@@ -109,12 +109,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
 
-            using (mngServer.CreateConnection())
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
-
                 WorklistCriteriaFilter filter = new WorklistCriteriaFilter();
                 WorklistItems wlItems = mngServer.GetWorklistItems(filter);
 
@@ -158,11 +156,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
 
-            using (mngServer.CreateConnection())
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
                 mngServer.ReleaseWorklistItem(worklistItemId);
             }
         }
@@ -180,11 +177,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
 
-            using (mngServer.CreateConnection())
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
                 mngServer.RedirectWorklistItem(fromUser, toUser, procInstId, actInstId, worklistItemId);
             }
         }

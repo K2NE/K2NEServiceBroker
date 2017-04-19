@@ -142,7 +142,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             userCalculateEvent.Validation.RequiredProperties.Add(Constants.SOProperties.WorkingHoursConfiguration.StartDateTime);
             userCalculateEvent.ReturnProperties.Add(Constants.SOProperties.WorkingHoursConfiguration.FinishDateTime);
             so.Methods.Add(userCalculateEvent);
-            
+
             return new List<ServiceObject> { so };
         }
 
@@ -203,10 +203,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             int GmtOffSet = base.GetIntProperty(Constants.SOProperties.WorkingHoursConfiguration.GMTOffset, true);
             bool DefaultZone = base.GetBoolProperty(Constants.SOProperties.WorkingHoursConfiguration.DefaultZone);
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
-            using (mngServer.CreateConnection())
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
+
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
 
                 if (!Helper.SpecialCharactersExist(ZoneName))
                 {
@@ -230,7 +230,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     aZone.DefaultZone = DefaultZone;
 
                     mngServer.ZoneCreateNew(aZone);
-                }                    
+                }
             }
         }
         private void SaveZone()
@@ -242,10 +242,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             int GmtOffSet = base.GetIntProperty(Constants.SOProperties.WorkingHoursConfiguration.GMTOffset);
             bool DefaultZone = base.GetBoolProperty(Constants.SOProperties.WorkingHoursConfiguration.DefaultZone);
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
-            using (mngServer.CreateConnection())
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
+
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
 
                 if (!String.IsNullOrEmpty(NewZoneName) && !Helper.SpecialCharactersExist(NewZoneName))
                 {
@@ -284,11 +284,11 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         private void DeleteZone()
         {
             string ZoneName = base.GetStringProperty(Constants.SOProperties.WorkingHoursConfiguration.ZoneName, true);
-            
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
-            using (mngServer.CreateConnection())
+
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
+
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
 
                 if (!mngServer.ZoneExists(ZoneName))
                 {
@@ -307,10 +307,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             base.ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
-            using (mngServer.CreateConnection())
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
+
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
 
                 if (!mngServer.ZoneExists(ZoneName))
                 {
@@ -326,16 +326,16 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     dRow[Constants.SOProperties.WorkingHoursConfiguration.Description] = aZone.ZoneDescription;
                     results.Rows.Add(dRow);
                 }
-            }        
+            }
         }
         private void ListZones()
         {
             base.ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
-            using (mngServer.CreateConnection())
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
+
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
                 List<string> zoneList = mngServer.ZoneListAll();
                 foreach (string zone in zoneList)
                 {
@@ -343,18 +343,17 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     dRow[Constants.SOProperties.WorkingHoursConfiguration.ZoneName] = zone;
                     results.Rows.Add(dRow);
                 }
-            }        
+            }
         }
         private void ListZoneUsers()
         {
             string ZoneName = base.GetStringProperty(Constants.SOProperties.WorkingHoursConfiguration.ZoneName, true);
             base.ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
-            using (mngServer.CreateConnection())
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
                 if (!mngServer.ZoneExists(ZoneName))
                 {
                     throw new ApplicationException(Constants.ErrorMessages.ZoneDoesNotExist + ZoneName + ".");
@@ -370,32 +369,32 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                         results.Rows.Add(dRow);
                     }
                 }
-            }        
+            }
         }
         private void GetDefaultZone()
         {
             base.ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
-            using (mngServer.CreateConnection())
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
+
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
                 string defaultZone = mngServer.ZoneGetDefault();
 
                 DataRow dRow = results.NewRow();
                 dRow[Constants.SOProperties.WorkingHoursConfiguration.ZoneName] = defaultZone;
-                results.Rows.Add(dRow);                
-            }     
+                results.Rows.Add(dRow);
+            }
         }
         private void SetDefaultZone()
         {
             string ZoneName = base.GetStringProperty(Constants.SOProperties.WorkingHoursConfiguration.ZoneName, true);
-                        
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
-            using (mngServer.CreateConnection())
+
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
+
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
                 if (!mngServer.ZoneExists(ZoneName))
                 {
                     throw new ApplicationException(Constants.ErrorMessages.ZoneDoesNotExist + ZoneName + ".");
@@ -404,7 +403,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 {
                     mngServer.ZoneSetDefault(ZoneName);
                 }
-            }        
+            }
         }
         private void ZoneExists()
         {
@@ -412,14 +411,14 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             base.ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
-            using (mngServer.CreateConnection())
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
+
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);                
                 DataRow dRow = results.NewRow();
                 dRow[Constants.SOProperties.WorkingHoursConfiguration.ZoneExists] = mngServer.ZoneExists(ZoneName);
                 results.Rows.Add(dRow);
-            }        
+            }
         }
         private void ZoneCalculateEvent()
         {
@@ -427,15 +426,15 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             string Start = base.GetStringProperty(Constants.SOProperties.WorkingHoursConfiguration.StartDateTime, true);
             int DurationHours = base.GetIntProperty(Constants.SOProperties.WorkingHoursConfiguration.DurationHours);
             int DurationMinutes = base.GetIntProperty(Constants.SOProperties.WorkingHoursConfiguration.DurationMinutes);
-            int DurationSeconds = base.GetIntProperty(Constants.SOProperties.WorkingHoursConfiguration.DurationSeconds);            
+            int DurationSeconds = base.GetIntProperty(Constants.SOProperties.WorkingHoursConfiguration.DurationSeconds);
 
             base.ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
-            using (mngServer.CreateConnection())
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
+
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
                 if (!mngServer.ZoneExists(ZoneName))
                 {
                     throw new ApplicationException(Constants.ErrorMessages.ZoneDoesNotExist + ZoneName + ".");
@@ -466,11 +465,13 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         {
             string ZoneName = base.GetStringProperty(Constants.SOProperties.WorkingHoursConfiguration.ZoneName, true);
             string FQN = base.GetStringProperty(Constants.SOProperties.WorkingHoursConfiguration.FQN, true);
-            
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
-            using (mngServer.CreateConnection())
+
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
+
+
+
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
                 if (!mngServer.ZoneExists(ZoneName))
                 {
                     throw new ApplicationException(Constants.ErrorMessages.ZoneDoesNotExist + ZoneName + ".");
@@ -488,24 +489,24 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             base.ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
-            using (mngServer.CreateConnection())
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
+
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
                 DataRow dRow = results.NewRow();
                 dRow[Constants.SOProperties.WorkingHoursConfiguration.ZoneName] = mngServer.UserGetZone(FQN);
-                results.Rows.Add(dRow);                
+                results.Rows.Add(dRow);
             }
         }
         private void UserDeleteZone()
         {
             string FQN = base.GetStringProperty(Constants.SOProperties.WorkingHoursConfiguration.FQN, true);
-            
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
-            using (mngServer.CreateConnection())
+
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
+
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
-                mngServer.UserDeleteZone(FQN);                
+                mngServer.UserDeleteZone(FQN);
             }
         }
 
@@ -520,10 +521,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             base.ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
-            using (mngServer.CreateConnection())
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
+
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
 
                 TimeSpan Duration = new TimeSpan(DurationHours, DurationMinutes, DurationSeconds);
 
@@ -541,7 +542,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
                 DataRow dRow = results.NewRow();
                 dRow[Constants.SOProperties.WorkingHoursConfiguration.FinishDateTime] = mngServer.UserCalculateEvent(FQN, dt, Duration);
-                results.Rows.Add(dRow);                
+                results.Rows.Add(dRow);
             }
         }
     }

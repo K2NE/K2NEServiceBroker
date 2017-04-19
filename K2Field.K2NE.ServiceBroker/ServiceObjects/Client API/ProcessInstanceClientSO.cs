@@ -48,10 +48,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
             //Adding a separate StartWF method for each workflow, exposing DataFields as Parameters
             try
             {
-                WorkflowManagementServer mngServer = new WorkflowManagementServer();
-                using (mngServer.CreateConnection())
+                WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
+                using (mngServer.Connection)
                 {
-                    mngServer.Open(BaseAPIConnectionString);
 
                     ProcessSets pSets = mngServer.GetProcSets();
                     foreach (ProcessSet pSet in pSets)
@@ -72,7 +71,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
 
                         foreach (ProcessDataField pDataField in mngServer.GetProcessDataFields(pSet.ProcID))
                         {
-                            m.MethodParameters.Add(Helper.CreateParameter(pDataField.Name, GetDataFieldType(pDataField.Type), false, pDataField.Name));
+                            m.MethodParameters.Create(Helper.CreateParameter(pDataField.Name, GetDataFieldType(pDataField.Type), false, pDataField.Name));
                         }
                         so.Methods.Add(m);
                     }
@@ -108,9 +107,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
             string folio = base.GetStringProperty(Constants.SOProperties.ProcessInstanceClient.ProcessFolio, false);
             int procId = base.GetIntProperty(Constants.SOProperties.ProcessInstanceClient.ProcessInstanceId, true);
 
-            using (CLIENT.Connection k2Con = new CLIENT.Connection())
+            using (CLIENT.Connection k2Con = this.ServiceBroker.K2Connection.GetWorkflowClientConnection())
             {
-                k2Con.Open(K2ClientConnectionSetup);
 
                 CLIENT.ProcessInstance pi = k2Con.OpenProcessInstance(procId);
                 pi.Folio = folio;
@@ -132,9 +130,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
             DataTable results = ServiceBroker.ServicePackage.ResultTable;
 
 
-            using (CLIENT.Connection k2Con = new CLIENT.Connection())
+            using (CLIENT.Connection k2Con = this.ServiceBroker.K2Connection.GetWorkflowClientConnection())
             {
-                k2Con.Open(K2ClientConnectionSetup);
 
                 CLIENT.ProcessInstance pi;
 

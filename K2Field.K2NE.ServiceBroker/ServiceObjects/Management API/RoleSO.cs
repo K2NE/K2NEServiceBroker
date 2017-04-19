@@ -35,7 +35,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             soRoleItem.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Role.RoleItem, SoType.Text, "The FQN name of the role item."));
             soRoleItem.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Role.RoleDynamic, SoType.YesNo, "Is a role dynamic?"));
 
-            Method addRoleItem = Helper.CreateMethod(Constants.Methods.Role.AddRoleItem, "Add a RoleItem to a role" ,MethodType.Create);
+            Method addRoleItem = Helper.CreateMethod(Constants.Methods.Role.AddRoleItem, "Add a RoleItem to a role", MethodType.Create);
             addRoleItem.InputProperties.Add(Constants.SOProperties.Role.RoleName);
             addRoleItem.InputProperties.Add(Constants.SOProperties.Role.RoleItem);
             addRoleItem.InputProperties.Add(Constants.SOProperties.Role.RoleItemType);
@@ -81,7 +81,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             listRoles.ReturnProperties.Add(Constants.SOProperties.Role.RoleDynamic);
             soRoleItem.Methods.Add(listRoles);
 
-            return new List<ServiceObject>() {soRoleItem};
+            return new List<ServiceObject>() { soRoleItem };
 
 
         }
@@ -91,7 +91,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
             switch (base.ServiceBroker.Service.ServiceObjects[0].Methods[0].Name)
             {
-            
+
                 case Constants.Methods.Role.ListRoleItem:
                     ListRoleItems();
                     break;
@@ -110,7 +110,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 case Constants.Methods.Role.RemoveRole:
                     DeleteRole();
                     break;
-            
+
             }
         }
 
@@ -122,10 +122,11 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             serviceObject.Properties.InitResultTable();
 
             string roleName = base.GetStringProperty(Constants.SOProperties.Role.RoleName, true);
-            UserRoleManager urmServer = new UserRoleManager();
-            using (urmServer.CreateConnection())
+
+            UserRoleManager urmServer = this.ServiceBroker.K2Connection.GetConnection<UserRoleManager>();
+            using (urmServer.Connection)
             {
-                urmServer.Connection.Open(base.BaseAPIConnectionString);
+
                 Role role = urmServer.GetRole(roleName);
                 if (role == null)
                 {
@@ -155,11 +156,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             serviceObject.Properties.InitResultTable();
 
 
-            UserRoleManager urmServer = new UserRoleManager();
-            using (urmServer.CreateConnection())
+            UserRoleManager urmServer = this.ServiceBroker.K2Connection.GetConnection<UserRoleManager>();
+            using (urmServer.Connection)
             {
-                urmServer.Connection.Open(base.BaseAPIConnectionString);
-                Role role = urmServer.GetRole(base.GetStringProperty(Constants.SOProperties.Role.RoleName,true));
+                Role role = urmServer.GetRole(base.GetStringProperty(Constants.SOProperties.Role.RoleName, true));
                 if (role == null)
                 {
                     throw new ApplicationException(Constants.ErrorMessages.RoleNotExists);
@@ -188,10 +188,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         {
             base.ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
-            UserRoleManager urmServer = new UserRoleManager();
-            using (urmServer.CreateConnection())
+            UserRoleManager urmServer = this.ServiceBroker.K2Connection.GetConnection<UserRoleManager>();
+            using (urmServer.Connection)
             {
-                urmServer.Connection.Open(base.BaseAPIConnectionString);
                 Role role = urmServer.GetRole(base.GetStringProperty(Constants.SOProperties.Role.RoleName, true));
                 if (role == null)
                 {
@@ -213,7 +212,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             }
             else if (ri is UserItem)
             {
-                row[Constants.SOProperties.Role.RoleItemType] = "User" ;
+                row[Constants.SOProperties.Role.RoleItemType] = "User";
             }
             else if (ri is SmartObjectItem)
             {
@@ -232,10 +231,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             base.ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            UserRoleManager urmServer = new UserRoleManager();
-            using (urmServer.CreateConnection())
+            UserRoleManager urmServer = this.ServiceBroker.K2Connection.GetConnection<UserRoleManager>();
+            using (urmServer.Connection)
             {
-                urmServer.Connection.Open(base.BaseAPIConnectionString);
                 Role[] roles = urmServer.GetRoles();
                 foreach (Role r in roles)
                 {
@@ -252,13 +250,12 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             base.ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
             Role role = new Role();
-            UserRoleManager urmServer = new UserRoleManager();
-            using (urmServer.CreateConnection())
+            UserRoleManager urmServer = this.ServiceBroker.K2Connection.GetConnection<UserRoleManager>();
+            using (urmServer.Connection)
             {
-                urmServer.Connection.Open(base.BaseAPIConnectionString);
 
                 role.Name = base.GetStringProperty(Constants.SOProperties.Role.RoleName, true);
-                role.Description = base.GetStringProperty(Constants.SOProperties.Role.RoleDescription);;
+                role.Description = base.GetStringProperty(Constants.SOProperties.Role.RoleDescription); ;
                 role.IsDynamic = base.GetBoolProperty(Constants.SOProperties.Role.RoleDynamic);
 
                 // At least one roleItem has to be created with the new group
@@ -286,10 +283,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         {
             base.ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
-            UserRoleManager urmServer = new UserRoleManager();
-            using (urmServer.CreateConnection())
+            UserRoleManager urmServer = this.ServiceBroker.K2Connection.GetConnection<UserRoleManager>();
+            using (urmServer.Connection)
             {
-                urmServer.Connection.Open(base.BaseAPIConnectionString);
                 string roleName = base.GetStringProperty(Constants.SOProperties.Role.RoleName, true);
                 Role role = urmServer.GetRole(roleName);
                 if (role == null)
