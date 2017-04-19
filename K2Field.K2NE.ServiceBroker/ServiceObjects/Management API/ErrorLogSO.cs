@@ -136,10 +136,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
             using (mngServer.Connection)
             {
-                ErrorProfile prof = mngServer.GetErrorProfile(profile);
-                if (prof == null)
-                    throw new Exception(string.Format("Profile with name \"{0}\" was not found.", profile));
 
+                //TODO: catch exception on this?
+                ErrorProfile prof = mngServer.GetErrorProfile(profile);
                 ErrorLogs errors = mngServer.GetErrorLogs(prof.ID);
 
                 foreach (ErrorLog e in errors)
