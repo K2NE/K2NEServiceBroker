@@ -5,6 +5,7 @@ using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using System.Data;
 using SourceCode.Workflow.Client;
+using K2Field.K2NE.ServiceBroker.Properties;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 {
@@ -126,7 +127,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 if (UserStatuses.None == k2Con.GetUserStatus() && UserStatuses.OOF == status)
                 {
                     // exception should be thrown only in case that user tries to set OOF, 
-                    throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
+                    throw new ApplicationException(Resources.OutOfOfficeNotConfiguredForUser);
                 }
 
                 try
@@ -135,7 +136,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 }
                 catch (Exception ex)
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.FailedToSetOOF, ex);
+                    throw new ApplicationException(Resources.FailedToSetOOF, ex);
                 }
 
                 k2Con.Close();
@@ -165,7 +166,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 //  Throw error if multiple configurations (WorklistShare objects) detected, as this method cannot support that 
                 if (wsColl.Count > 1)
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.MultipleOOFConfigurations);
+                    throw new ApplicationException(Resources.MultipleOOFConfigurations);
                 }
                 else if (wsColl.Count == 1) //  If configuration exist already, add to it 
                 {
@@ -241,7 +242,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 //  Throw error if multiple configurations (WorklistShare objects) detected, as this method cannot support that 
                 if (wsColl.Count != 1)
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.MultipleOOFConfigurations);
+                    throw new ApplicationException(Resources.MultipleOOFConfigurations);
                 }
                 else if (wsColl.Count == 1) //  If configuration exist already, remove user and re-share 
                 {
@@ -289,7 +290,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 // None for userstatus means the users is not configured, throw an exception
                 if (UserStatuses.None == k2Con.GetUserStatus())
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
+                    throw new ApplicationException(Resources.OutOfOfficeNotConfiguredForUser);
                 }
 
                 WorklistShares wsColl = k2Con.GetCurrentSharingSettings(ShareType.OOF);
@@ -329,7 +330,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 // None for userstatus means the users is not configured, throw an exception
                 if (UserStatuses.None == k2Con.GetUserStatus())
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
+                    throw new ApplicationException(Resources.OutOfOfficeNotConfiguredForUser);
                 }
 
                 WorklistShares wsColl = k2Con.GetCurrentSharingSettings(ShareType.OOF);

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using SourceCode.Security.UserRoleManager.Management;
 using System.Data;
+using K2Field.K2NE.ServiceBroker.Properties;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 {
@@ -130,7 +131,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 Role role = urmServer.GetRole(roleName);
                 if (role == null)
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.RoleNotExists);
+                    throw new ApplicationException(Resources.RoleNotExists);
                 }
 
                 string roleItemName = base.GetStringProperty(Constants.SOProperties.Role.RoleItem, true);
@@ -162,7 +163,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 Role role = urmServer.GetRole(base.GetStringProperty(Constants.SOProperties.Role.RoleName, true));
                 if (role == null)
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.RoleNotExists);
+                    throw new ApplicationException(Resources.RoleNotExists);
                 }
                 string roleItemName = base.GetStringProperty(Constants.SOProperties.Role.RoleItem, true);
                 string roleItemType = base.GetStringProperty(Constants.SOProperties.Role.RoleItemType, true);
@@ -176,7 +177,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                         ri = new UserItem(roleItemName);
                         break;
                     default:
-                        throw new ApplicationException(string.Format(Constants.ErrorMessages.RoleTypeNotSupported, roleItemType));
+                        throw new ApplicationException(string.Format(Resources.RoleTypeNotSupported, roleItemType));
                     //break;
                 }
                 role.RoleItems.Add(ri);
@@ -194,7 +195,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 Role role = urmServer.GetRole(base.GetStringProperty(Constants.SOProperties.Role.RoleName, true));
                 if (role == null)
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.RoleNotExists);
+                    throw new ApplicationException(Resources.RoleNotExists);
                 }
                 foreach (RoleItem ri in role.RoleItems)
                 {
@@ -271,7 +272,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                         ri = new UserItem(roleItemName);
                         break;
                     default:
-                        throw new ApplicationException(string.Format(Constants.ErrorMessages.RoleTypeNotSupported, roleItemType));
+                        throw new ApplicationException(string.Format(Resources.RoleTypeNotSupported, roleItemType));
                     //break;
                 }
                 role.RoleItems.Add(ri);
@@ -290,7 +291,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 Role role = urmServer.GetRole(roleName);
                 if (role == null)
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.RoleNotExists);
+                    throw new ApplicationException(Resources.RoleNotExists);
                 }
                 else
                 {

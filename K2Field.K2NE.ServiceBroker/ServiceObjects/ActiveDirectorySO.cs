@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using K2Field.K2NE.ServiceBroker.Helpers;
+using K2Field.K2NE.ServiceBroker.Properties;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 {
@@ -545,7 +546,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             }
             catch (Exception ex)
             {
-                throw new ApplicationException(string.Format("Failed to query {0}", ldap), ex);
+                throw new ApplicationException(string.Format(Resources.FailedToQuery, ldap), ex);
             }
         }
         #endregion SearchUsers

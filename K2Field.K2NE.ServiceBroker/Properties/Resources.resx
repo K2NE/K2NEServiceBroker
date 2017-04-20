@@ -117,10 +117,118 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CaughtExceptionAtRunUMGetUsers" xml:space="preserve">
+    <value>Caught exception at RunUMGetUsers({0},{1})</value>
+  </data>
+  <data name="ConfigOptionNotFound" xml:space="preserve">
+    <value>The Service Instance Configuration option '{0}' could not be found. Please specify it.</value>
+  </data>
+  <data name="DateNotValid" xml:space="preserve">
+    <value>Time Zone does not exist. Name: The string could not be parsed into a valid date and time.</value>
+  </data>
+  <data name="ErrorCreatingExcelFile" xml:space="preserve">
+    <value>Error creating excel file.</value>
+  </data>
   <data name="ErrorRequiredEmpty" xml:space="preserve">
     <value>Required field is empty</value>
   </data>
+  <data name="FailedToFindTheAction" xml:space="preserve">
+    <value>Failed to find the action specified. Worklist item was found.</value>
+  </data>
+  <data name="FailedToQuery" xml:space="preserve">
+    <value>Failed to query {0}</value>
+  </data>
+  <data name="FailedToRetrieveProcesses" xml:space="preserve">
+    <value>Failed to retrieve processes for ProcessInstanceClient Service Object.</value>
+  </data>
+  <data name="FailedToRetrievePropertyResultPropertyCollection" xml:space="preserve">
+    <value>Failed to retrieve property '{0}' from ResultPropertyCollection.</value>
+  </data>
+  <data name="FailedToRetrievePSFiles" xml:space="preserve">
+    <value>Failed to retrieve PowerShell files.</value>
+  </data>
+  <data name="FailedToSetOOF" xml:space="preserve">
+    <value>Failed to get/set the OOF status for the given user.</value>
+  </data>
+  <data name="FileNameIsRequired" xml:space="preserve">
+    <value>FileName is required.</value>
+  </data>
+  <data name="GMTOffSetValidationFailed" xml:space="preserve">
+    <value>GMTOffset must be between -13 and 13</value>
+  </data>
+  <data name="IdentityTypeRoleIsNotSupported" xml:space="preserve">
+    <value>Identity type role is not supported for this filtering.</value>
+  </data>
+  <data name="IsNotValidSO" xml:space="preserve">
+    <value>{0} is not a valid service object in the ServiceObjectType collection.</value>
+  </data>
+  <data name="MoreThanOneWorklistItemFound" xml:space="preserve">
+    <value>More than one worklist item found with those criteria.</value>
+  </data>
+  <data name="MultipleOOFConfigurations" xml:space="preserve">
+    <value>Multiple OOF scenarios detected for this user which is supported by this method.</value>
+  </data>
+  <data name="NotCreatingSOForPSScript" xml:space="preserve">
+    <value>Not creating service object for PowerShell script '{0}'. This is a system service object already.</value>
+  </data>
+  <data name="NotCreatingSOMethodForPSFunction" xml:space="preserve">
+    <value>Not creating Service Object Method for PowerShell function '{0}' in script '{1}'. This is a system method.</value>
+  </data>
+  <data name="NotParseToByte" xml:space="preserve">
+    <value>{0} could not be parsed to a Byte.</value>
+  </data>
+  <data name="NotParseToGuid" xml:space="preserve">
+    <value>{0} could not be parsed to a Guid.</value>
+  </data>
+  <data name="NotParseToInteger" xml:space="preserve">
+    <value>{0} could not be parsed to a Integer</value>
+  </data>
+  <data name="NotRetrieveProcess" xml:space="preserve">
+    <value>Could not retrieve process (with id: {0}). Got {1} results.</value>
+  </data>
+  <data name="NoWorklistItemFound" xml:space="preserve">
+    <value>No worklist item found with those criteria.</value>
+  </data>
+  <data name="OutOfOfficeNotConfiguredForUser" xml:space="preserve">
+    <value>User does not have out of office configured.  Please configure the users out of office settings.</value>
+  </data>
+  <data name="ProcessInstanceNotFound" xml:space="preserve">
+    <value>Sorry, process instance with id {0} not found.</value>
+  </data>
   <data name="ProfileNotFound" xml:space="preserve">
     <value>Profile with name "{0}" was not found.</value>
+  </data>
+  <data name="RequiredParameterIsEmpty" xml:space="preserve">
+    <value>{0} is required but is empty.</value>
+  </data>
+  <data name="RequiredParameterNotFound" xml:space="preserve">
+    <value>{0} is a required parameter, but does not exist.</value>
+  </data>
+  <data name="RequiredPropertyIsEmpty" xml:space="preserve">
+    <value>{0} is required but is empty.</value>
+  </data>
+  <data name="RequiredPropertyNotFound" xml:space="preserve">
+    <value>{0} is a required property, but does not exist.</value>
+  </data>
+  <data name="RoleNotExists" xml:space="preserve">
+    <value>The given role does not exist.</value>
+  </data>
+  <data name="RoleTypeNotSupported" xml:space="preserve">
+    <value>Role Type is not supported. Only User and group allowed.</value>
+  </data>
+  <data name="SOIsNotSet" xml:space="preserve">
+    <value>ServiceObject is not set.</value>
+  </data>
+  <data name="SpecialCharactersAreNotAllowed" xml:space="preserve">
+    <value>Special characters are not allowed.</value>
+  </data>
+  <data name="WorkingHoursNotSet" xml:space="preserve">
+    <value>No working hours have been set. Please set the working hours using the K2 Workspace.</value>
+  </data>
+  <data name="ZoneDoesNotExist" xml:space="preserve">
+    <value>Time Zone does not exist. Name:</value>
+  </data>
+  <data name="ZoneExists" xml:space="preserve">
+    <value>Time Zone already exists. Name:</value>
   </data>
 </root>

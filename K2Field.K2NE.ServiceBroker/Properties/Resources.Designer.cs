@@ -61,6 +61,42 @@ namespace K2Field.K2NE.ServiceBroker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Caught exception at RunUMGetUsers({0},{1}).
+        /// </summary>
+        internal static string CaughtExceptionAtRunUMGetUsers {
+            get {
+                return ResourceManager.GetString("CaughtExceptionAtRunUMGetUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Service Instance Configuration option &apos;{0}&apos; could not be found. Please specify it..
+        /// </summary>
+        internal static string ConfigOptionNotFound {
+            get {
+                return ResourceManager.GetString("ConfigOptionNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time Zone does not exist. Name: The string could not be parsed into a valid date and time..
+        /// </summary>
+        internal static string DateNotValid {
+            get {
+                return ResourceManager.GetString("DateNotValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error creating excel file..
+        /// </summary>
+        internal static string ErrorCreatingExcelFile {
+            get {
+                return ResourceManager.GetString("ErrorCreatingExcelFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Required field is empty.
         /// </summary>
         internal static string ErrorRequiredEmpty {
@@ -70,11 +106,299 @@ namespace K2Field.K2NE.ServiceBroker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to find the action specified. Worklist item was found..
+        /// </summary>
+        internal static string FailedToFindTheAction {
+            get {
+                return ResourceManager.GetString("FailedToFindTheAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to query {0}.
+        /// </summary>
+        internal static string FailedToQuery {
+            get {
+                return ResourceManager.GetString("FailedToQuery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to retrieve processes for ProcessInstanceClient Service Object..
+        /// </summary>
+        internal static string FailedToRetrieveProcesses {
+            get {
+                return ResourceManager.GetString("FailedToRetrieveProcesses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to retrieve property &apos;{0}&apos; from ResultPropertyCollection..
+        /// </summary>
+        internal static string FailedToRetrievePropertyResultPropertyCollection {
+            get {
+                return ResourceManager.GetString("FailedToRetrievePropertyResultPropertyCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to retrieve PowerShell files..
+        /// </summary>
+        internal static string FailedToRetrievePSFiles {
+            get {
+                return ResourceManager.GetString("FailedToRetrievePSFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get/set the OOF status for the given user..
+        /// </summary>
+        internal static string FailedToSetOOF {
+            get {
+                return ResourceManager.GetString("FailedToSetOOF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FileName is required..
+        /// </summary>
+        internal static string FileNameIsRequired {
+            get {
+                return ResourceManager.GetString("FileNameIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GMTOffset must be between -13 and 13.
+        /// </summary>
+        internal static string GMTOffSetValidationFailed {
+            get {
+                return ResourceManager.GetString("GMTOffSetValidationFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Identity type role is not supported for this filtering..
+        /// </summary>
+        internal static string IdentityTypeRoleIsNotSupported {
+            get {
+                return ResourceManager.GetString("IdentityTypeRoleIsNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is not a valid service object in the ServiceObjectType collection..
+        /// </summary>
+        internal static string IsNotValidSO {
+            get {
+                return ResourceManager.GetString("IsNotValidSO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to More than one worklist item found with those criteria..
+        /// </summary>
+        internal static string MoreThanOneWorklistItemFound {
+            get {
+                return ResourceManager.GetString("MoreThanOneWorklistItemFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Multiple OOF scenarios detected for this user which is supported by this method..
+        /// </summary>
+        internal static string MultipleOOFConfigurations {
+            get {
+                return ResourceManager.GetString("MultipleOOFConfigurations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not creating service object for PowerShell script &apos;{0}&apos;. This is a system service object already..
+        /// </summary>
+        internal static string NotCreatingSOForPSScript {
+            get {
+                return ResourceManager.GetString("NotCreatingSOForPSScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not creating Service Object Method for PowerShell function &apos;{0}&apos; in script &apos;{1}&apos;. This is a system method..
+        /// </summary>
+        internal static string NotCreatingSOMethodForPSFunction {
+            get {
+                return ResourceManager.GetString("NotCreatingSOMethodForPSFunction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} could not be parsed to a Byte..
+        /// </summary>
+        internal static string NotParseToByte {
+            get {
+                return ResourceManager.GetString("NotParseToByte", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} could not be parsed to a Guid..
+        /// </summary>
+        internal static string NotParseToGuid {
+            get {
+                return ResourceManager.GetString("NotParseToGuid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} could not be parsed to a Integer.
+        /// </summary>
+        internal static string NotParseToInteger {
+            get {
+                return ResourceManager.GetString("NotParseToInteger", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not retrieve process (with id: {0}). Got {1} results..
+        /// </summary>
+        internal static string NotRetrieveProcess {
+            get {
+                return ResourceManager.GetString("NotRetrieveProcess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No worklist item found with those criteria..
+        /// </summary>
+        internal static string NoWorklistItemFound {
+            get {
+                return ResourceManager.GetString("NoWorklistItemFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User does not have out of office configured.  Please configure the users out of office settings..
+        /// </summary>
+        internal static string OutOfOfficeNotConfiguredForUser {
+            get {
+                return ResourceManager.GetString("OutOfOfficeNotConfiguredForUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorry, process instance with id {0} not found..
+        /// </summary>
+        internal static string ProcessInstanceNotFound {
+            get {
+                return ResourceManager.GetString("ProcessInstanceNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Profile with name &quot;{0}&quot; was not found..
         /// </summary>
         internal static string ProfileNotFound {
             get {
                 return ResourceManager.GetString("ProfileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is required but is empty..
+        /// </summary>
+        internal static string RequiredParameterIsEmpty {
+            get {
+                return ResourceManager.GetString("RequiredParameterIsEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is a required parameter, but does not exist..
+        /// </summary>
+        internal static string RequiredParameterNotFound {
+            get {
+                return ResourceManager.GetString("RequiredParameterNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is required but is empty..
+        /// </summary>
+        internal static string RequiredPropertyIsEmpty {
+            get {
+                return ResourceManager.GetString("RequiredPropertyIsEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is a required property, but does not exist..
+        /// </summary>
+        internal static string RequiredPropertyNotFound {
+            get {
+                return ResourceManager.GetString("RequiredPropertyNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given role does not exist..
+        /// </summary>
+        internal static string RoleNotExists {
+            get {
+                return ResourceManager.GetString("RoleNotExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Role Type is not supported. Only User and group allowed..
+        /// </summary>
+        internal static string RoleTypeNotSupported {
+            get {
+                return ResourceManager.GetString("RoleTypeNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ServiceObject is not set..
+        /// </summary>
+        internal static string SOIsNotSet {
+            get {
+                return ResourceManager.GetString("SOIsNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Special characters are not allowed..
+        /// </summary>
+        internal static string SpecialCharactersAreNotAllowed {
+            get {
+                return ResourceManager.GetString("SpecialCharactersAreNotAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No working hours have been set. Please set the working hours using the K2 Workspace..
+        /// </summary>
+        internal static string WorkingHoursNotSet {
+            get {
+                return ResourceManager.GetString("WorkingHoursNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time Zone does not exist. Name:.
+        /// </summary>
+        internal static string ZoneDoesNotExist {
+            get {
+                return ResourceManager.GetString("ZoneDoesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time Zone already exists. Name:.
+        /// </summary>
+        internal static string ZoneExists {
+            get {
+                return ResourceManager.GetString("ZoneExists", resourceCulture);
             }
         }
     }

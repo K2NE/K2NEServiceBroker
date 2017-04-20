@@ -8,6 +8,7 @@ using SourceCode.Workflow.Management;
 using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using System.Text.RegularExpressions;
+using K2Field.K2NE.ServiceBroker.Properties;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 {
@@ -210,15 +211,15 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
                 if (!Helper.SpecialCharactersExist(ZoneName))
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.SpecialCharactersAreNotAllowed);
+                    throw new ApplicationException(Resources.SpecialCharactersAreNotAllowed);
                 }
                 else if (mngServer.ZoneExists(ZoneName))
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.ZoneExists + ZoneName + ".");
+                    throw new ApplicationException(Resources.ZoneExists + ZoneName + ".");
                 }
                 else if (GmtOffSet > 13 || GmtOffSet < -13)
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.GMTOffSetValidationFailed);
+                    throw new ApplicationException(Resources.GMTOffSetValidationFailed);
                 }
                 else
                 {
@@ -249,19 +250,19 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
                 if (!String.IsNullOrEmpty(NewZoneName) && !Helper.SpecialCharactersExist(NewZoneName))
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.SpecialCharactersAreNotAllowed);
+                    throw new ApplicationException(Resources.SpecialCharactersAreNotAllowed);
                 }
                 else if (!String.IsNullOrEmpty(NewZoneName) && mngServer.ZoneExists(NewZoneName))
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.ZoneExists + NewZoneName + ".");
+                    throw new ApplicationException(Resources.ZoneExists + NewZoneName + ".");
                 }
                 else if (!mngServer.ZoneExists(CurrentZoneName))
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.ZoneDoesNotExist + CurrentZoneName + ".");
+                    throw new ApplicationException(Resources.ZoneDoesNotExist + CurrentZoneName + ".");
                 }
                 else if (GmtOffSet > 13 || GmtOffSet < -13)
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.GMTOffSetValidationFailed);
+                    throw new ApplicationException(Resources.GMTOffSetValidationFailed);
                 }
                 else
                 {
@@ -292,7 +293,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
                 if (!mngServer.ZoneExists(ZoneName))
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.ZoneDoesNotExist + ZoneName + ".");
+                    throw new ApplicationException(Resources.ZoneDoesNotExist + ZoneName + ".");
                 }
                 else
                 {
@@ -314,7 +315,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
                 if (!mngServer.ZoneExists(ZoneName))
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.ZoneDoesNotExist + ZoneName + ".");
+                    throw new ApplicationException(Resources.ZoneDoesNotExist + ZoneName + ".");
                 }
                 else
                 {
@@ -356,7 +357,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             {
                 if (!mngServer.ZoneExists(ZoneName))
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.ZoneDoesNotExist + ZoneName + ".");
+                    throw new ApplicationException(Resources.ZoneDoesNotExist + ZoneName + ".");
                 }
                 else
                 {
@@ -397,7 +398,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             {
                 if (!mngServer.ZoneExists(ZoneName))
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.ZoneDoesNotExist + ZoneName + ".");
+                    throw new ApplicationException(Resources.ZoneDoesNotExist + ZoneName + ".");
                 }
                 else
                 {
@@ -437,7 +438,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             {
                 if (!mngServer.ZoneExists(ZoneName))
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.ZoneDoesNotExist + ZoneName + ".");
+                    throw new ApplicationException(Resources.ZoneDoesNotExist + ZoneName + ".");
                 }
                 else
                 {
@@ -446,13 +447,13 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     DateTime dt;
                     if (!DateTime.TryParse(Start, out dt))
                     {
-                        throw new ApplicationException(Constants.ErrorMessages.DateNotValid);
+                        throw new ApplicationException(Resources.DateNotValid);
                     }
 
                     AvailabilityZone zone = mngServer.ZoneLoad(ZoneName);
                     if (zone.AvailabilityHoursList == null || zone.AvailabilityHoursList.Count == 0)
                     {
-                        throw new ApplicationException(Constants.ErrorMessages.WorkingHoursNotSet);
+                        throw new ApplicationException(Resources.WorkingHoursNotSet);
                     }
 
                     DataRow dRow = results.NewRow();
@@ -474,7 +475,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             {
                 if (!mngServer.ZoneExists(ZoneName))
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.ZoneDoesNotExist + ZoneName + ".");
+                    throw new ApplicationException(Resources.ZoneDoesNotExist + ZoneName + ".");
                 }
                 else
                 {
@@ -531,13 +532,13 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 DateTime dt;
                 if (!DateTime.TryParse(Start, out dt))
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.DateNotValid);
+                    throw new ApplicationException(Resources.DateNotValid);
                 }
 
                 AvailabilityZone zone = mngServer.ZoneLoad(mngServer.UserGetZone(FQN));
                 if (zone.AvailabilityHoursList == null || zone.AvailabilityHoursList.Count == 0)
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.WorkingHoursNotSet);
+                    throw new ApplicationException(Resources.WorkingHoursNotSet);
                 }
 
                 DataRow dRow = results.NewRow();
