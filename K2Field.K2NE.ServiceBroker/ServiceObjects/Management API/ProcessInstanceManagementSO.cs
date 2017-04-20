@@ -7,6 +7,7 @@ using SourceCode.Workflow.Management.Criteria;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using K2Field.K2NE.ServiceBroker.Properties;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 {
@@ -94,7 +95,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 ProcessInstances procInsts = mngServer.GetProcessInstancesAll(filter);
                 if (procInsts.Count == 0)
                 {
-                    throw new ApplicationException(String.Format("Sorry, process instance with id {0} not found.", processInstanceId));
+                    throw new ApplicationException(String.Format(Resources.ProcessInstanceNotFound, processInstanceId));
                 }
                 mngServer.GotoActivity(procInsts[0].ID, activityName);
             }
@@ -118,7 +119,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 ProcessInstances procInsts = mngServer.GetProcessInstancesAll(filter);
                 if (procInsts.Count == 0)
                 {
-                    throw new ApplicationException(String.Format("Sorry, process instance with id {0} not found.", processInstanceId));
+                    throw new ApplicationException(String.Format(Resources.ProcessInstanceNotFound, processInstanceId));
                 }
 
                 foreach (Activity actvt in mngServer.GetProcActivities(procInsts[0].ProcID))
