@@ -4,7 +4,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
 {
     public static class ErrorMessages
     {
-        //public const string RequiredPropertyNotFound = "{0} is a required property, but does not exist.";
+        public const string RequiredPropertyNotFound = "{0} is a required property, but does not exist.";
         public const string RequiredParameterNotFound = "{0} is a required parameter, but does not exist.";
         public const string PropertyNotFound = "The property with name '{0}', could not be found.";
         public const string RoleNotExists = "The given role does not exist.";
@@ -24,8 +24,5 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         public const string MultipleOOFConfigurations = "Multiple OOF scenarios detected for this user which is supported by this method.";
 
         public const string ConfigOptionNotFound = "The Service Instance Configuration option '{0}' could not be found. Please specify it.";
-
-        //Error Log
-        //public const string ProfileNotFound = "Profile with name \"{0}\" was not found.";
     }
 }

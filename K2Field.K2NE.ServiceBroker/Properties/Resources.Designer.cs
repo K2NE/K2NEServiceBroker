@@ -61,74 +61,11 @@ namespace K2Field.K2NE.ServiceBroker.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not retrieve process (with id: {0}). Got {1} results..
-        /// </summary>
-        internal static string CouldNotRetrieveProcess {
-            get {
-                return ResourceManager.GetString("CouldNotRetrieveProcess", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Required field is empty.
         /// </summary>
         internal static string ErrorRequiredEmpty {
             get {
                 return ResourceManager.GetString("ErrorRequiredEmpty", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} could not be parsed to a Byte..
-        /// </summary>
-        internal static string NotParseToByte {
-            get {
-                return ResourceManager.GetString("NotParseToByte", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} could not be parsed to a Guid..
-        /// </summary>
-        internal static string NotParseToGuid {
-            get {
-                return ResourceManager.GetString("NotParseToGuid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} could not be parsed to a Integer..
-        /// </summary>
-        internal static string NotParseToInteger {
-            get {
-                return ResourceManager.GetString("NotParseToInteger", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Profile with name &quot;{0}&quot; was not found..
-        /// </summary>
-        internal static string ProfileNotFound {
-            get {
-                return ResourceManager.GetString("ProfileNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} is required but is empty..
-        /// </summary>
-        internal static string RequiredPropertyIsEmpty {
-            get {
-                return ResourceManager.GetString("RequiredPropertyIsEmpty", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} is a required property, but does not exist..
-        /// </summary>
-        internal static string RequiredPropertyNotFound {
-            get {
-                return ResourceManager.GetString("RequiredPropertyNotFound", resourceCulture);
             }
         }
     }

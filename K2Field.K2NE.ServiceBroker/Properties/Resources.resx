@@ -117,28 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CouldNotRetrieveProcess" xml:space="preserve">
-    <value>Could not retrieve process (with id: {0}). Got {1} results.</value>
-  </data>
   <data name="ErrorRequiredEmpty" xml:space="preserve">
     <value>Required field is empty</value>
-  </data>
-  <data name="NotParseToByte" xml:space="preserve">
-    <value>{0} could not be parsed to a Byte.</value>
-  </data>
-  <data name="NotParseToGuid" xml:space="preserve">
-    <value>{0} could not be parsed to a Guid.</value>
-  </data>
-  <data name="NotParseToInteger" xml:space="preserve">
-    <value>{0} could not be parsed to a Integer.</value>
-  </data>
-  <data name="ProfileNotFound" xml:space="preserve">
-    <value>Profile with name "{0}" was not found.</value>
-  </data>
-  <data name="RequiredPropertyIsEmpty" xml:space="preserve">
-    <value>{0} is required but is empty.</value>
-  </data>
-  <data name="RequiredPropertyNotFound" xml:space="preserve">
-    <value>{0} is a required property, but does not exist.</value>
   </data>
 </root>
