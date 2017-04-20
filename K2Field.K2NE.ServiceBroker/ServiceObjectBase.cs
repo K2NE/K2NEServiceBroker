@@ -14,6 +14,7 @@ using K2Field.K2NE.ServiceBroker.Helpers;
 using System.Xml;
 using System.Xml.Linq;
 using System.Linq;
+using K2Field.K2NE.ServiceBroker.Properties;
 
 namespace K2Field.K2NE.ServiceBroker
 {
@@ -316,12 +317,12 @@ namespace K2Field.K2NE.ServiceBroker
             if (p == null)
             {
                 if (isRequired)
-                    throw new ArgumentException(string.Format(Constants.ErrorMessages.RequiredPropertyNotFound, name));
+                    throw new ArgumentException(string.Format(Resources.RequiredPropertyNotFound, name));
                 return string.Empty;
             }
             string val = p.Value as string;
             if (isRequired && string.IsNullOrEmpty(val))
-                throw new ArgumentException(string.Format("{0} is required but is empty.", name));
+                throw new ArgumentException(string.Format(Resources.RequiredPropertyIsEmpty, name));
 
             return val;
         }
@@ -339,7 +340,7 @@ namespace K2Field.K2NE.ServiceBroker
             }
             string val = p.Value as string;
             if (isRequired && string.IsNullOrEmpty(val))
-                throw new ArgumentException(string.Format("{0} is required but is empty.", name));
+                throw new ArgumentException(string.Format(Resources.RequiredPropertyIsEmpty, name));
 
             return val;
         }
@@ -362,7 +363,7 @@ namespace K2Field.K2NE.ServiceBroker
             if (p == null)
             {
                 if (isRequred)
-                    throw new ArgumentException(string.Format(Constants.ErrorMessages.RequiredPropertyNotFound, name));
+                    throw new ArgumentException(string.Format(Resources.RequiredPropertyNotFound, name));
                 return 0;
             }
             string val = p.Value as string;
@@ -370,7 +371,7 @@ namespace K2Field.K2NE.ServiceBroker
             if (int.TryParse(val, out ret))
                 return ret;
             if (isRequred)
-                throw new ArgumentException(string.Format("{0} could not be parsed to a Integer", name));
+                throw new ArgumentException(string.Format(Resources.NotParseToInteger, name));
 
             return 0;
         }
@@ -381,7 +382,7 @@ namespace K2Field.K2NE.ServiceBroker
             if (p == null)
             {
                 if (isRequired)
-                    throw new ArgumentException(string.Format(Constants.ErrorMessages.RequiredPropertyNotFound, name));
+                    throw new ArgumentException(string.Format(Resources.RequiredPropertyNotFound, name));
                 return 0;
             }
             string val = p.Value as string;
@@ -389,7 +390,7 @@ namespace K2Field.K2NE.ServiceBroker
             if (short.TryParse(val, out ret))
                 return ret;
             if (isRequired)
-                throw new ArgumentException(string.Format("{0} could not be parsed to a Integer", name));
+                throw new ArgumentException(string.Format(Resources.NotParseToInteger, name));
 
             return 0;
         }
@@ -428,7 +429,7 @@ namespace K2Field.K2NE.ServiceBroker
             if (p == null)
             {
                 if (isRequired)
-                    throw new ArgumentException(string.Format(Constants.ErrorMessages.RequiredPropertyNotFound, name));
+                    throw new ArgumentException(string.Format(Resources.RequiredPropertyNotFound, name));
                 return 0;
             }
             string val = p.Value as string;
@@ -436,7 +437,7 @@ namespace K2Field.K2NE.ServiceBroker
             if (byte.TryParse(val, out ret))
                 return ret;
             if (isRequired)
-                throw new ArgumentException(string.Format("{0} could not be parsed to a Byte.", name));
+                throw new ArgumentException(string.Format(Resources.NotParseToByte, name));
             return 0;
         }
 
@@ -446,7 +447,7 @@ namespace K2Field.K2NE.ServiceBroker
             if (p == null)
             {
                 if (isRequired)
-                    throw new ArgumentException(string.Format(Constants.ErrorMessages.RequiredPropertyNotFound, name));
+                    throw new ArgumentException(string.Format(Resources.RequiredPropertyNotFound, name));
                 return Guid.Empty;
             }
             string val = p.Value as string;
@@ -454,7 +455,7 @@ namespace K2Field.K2NE.ServiceBroker
             if (Guid.TryParse(val, out ret))
                 return ret;
             if (isRequired)
-                throw new ArgumentException(string.Format("{0} could not be parsed to a Guid.", name));
+                throw new ArgumentException(string.Format(Resources.NotParseToGuid, name));
             return Guid.Empty;
         }
 
