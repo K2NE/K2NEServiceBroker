@@ -68,5 +68,14 @@ namespace K2Field.K2NE.ServiceBroker.Properties {
                 return ResourceManager.GetString("ErrorRequiredEmpty", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile with name &quot;{0}&quot; was not found..
+        /// </summary>
+        internal static string ProfileNotFound {
+            get {
+                return ResourceManager.GetString("ProfileNotFound", resourceCulture);
+            }
+        }
     }
 }

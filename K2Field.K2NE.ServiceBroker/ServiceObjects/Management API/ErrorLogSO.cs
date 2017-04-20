@@ -6,6 +6,7 @@ using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using System.Data;
 using SourceCode.Workflow.Management;
 using SourceCode.Workflow.Management.Criteria;
+using K2Field.K2NE.ServiceBroker.Properties;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 {
@@ -139,7 +140,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 ErrorProfile prof = mngServer.GetErrorProfile(profile);
                 if (prof == null)
                 {
-                    throw new Exception(string.Format("Profile with name \"{0}\" was not found.", profile));
+                    //throw new Exception(string.Format("Profile with name \"{0}\" was not found.", profile));
+                    throw new Exception(string.Format(Resources.ProfileNotFound, profile));
                 }
 
                 ErrorLogs errors = mngServer.GetErrorLogs(prof.ID);
