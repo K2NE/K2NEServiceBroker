@@ -78,10 +78,6 @@ namespace K2Field.K2NE.ServiceBroker
             server.CreateConnection();
             server.Connection.Open(this.SessionConnectionString);
 
-            //if we should execute as the current user, always make sure we apply the user's credential to the session.
-            //Think of PTA, our connection string might be integrated but the connection will be created as the Service Account.
-            server.Connection.ImpersonateSessionUser(this);
-
             return server;
         }
 
@@ -93,12 +89,6 @@ namespace K2Field.K2NE.ServiceBroker
             {
                 connection.Open(this.SessionWorkflowConnectionSetup);
                 connection.User.ThrowIfNull("connection.User");
-
-                if (!UserName.Equals(connection.User.FQN, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    connection.ImpersonateUser(UserName);
-                }
-
                 return connection;
             }
             catch (Exception ex)
