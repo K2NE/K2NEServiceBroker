@@ -142,7 +142,6 @@ namespace SourceCode.SmartObjects.Services.Tests.Managers
             serviceConfig.ServiceAuthentication.EnforceImpersonation = _serviceInstanceSettings.ServiceAuthentication.EnforceImpersonation;
             serviceConfig.ServiceAuthentication.Extra = _serviceInstanceSettings.ServiceAuthentication.Extra;
             serviceConfig.ServiceAuthentication.Impersonate = _serviceInstanceSettings.ServiceAuthentication.Impersonate;
-            serviceConfig.ServiceAuthentication.OAuthResourceId = _serviceInstanceSettings.ServiceAuthentication.OAuthResourceId;
             serviceConfig.ServiceAuthentication.OAuthToken = _serviceInstanceSettings.ServiceAuthentication.OAuthToken;
             serviceConfig.ServiceAuthentication.Password = _serviceInstanceSettings.ServiceAuthentication.Password;
             serviceConfig.ServiceAuthentication.SecurityProvider = _serviceInstanceSettings.ServiceAuthentication.SecurityProvider;

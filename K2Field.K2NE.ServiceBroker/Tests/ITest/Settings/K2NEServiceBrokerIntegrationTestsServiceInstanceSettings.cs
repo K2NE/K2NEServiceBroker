@@ -50,19 +50,19 @@ namespace K2Field.K2NE.ServiceBroker.ITest.Settings
             }
         }
 
-        public override string DisplayName
-        {
-            get
-            {
-                return "K2NEServiceBroker Integration Tests";
-            }
-        }
-
         public override string Description
         {
             get
             {
                 return "A Service Broker that provides various functional service objects that aid the implementation of a K2 project.";
+            }
+        }
+
+        public override string DisplayName
+        {
+            get
+            {
+                return "K2NEServiceBroker Integration Tests";
             }
         }
 
@@ -92,7 +92,6 @@ namespace K2Field.K2NE.ServiceBroker.ITest.Settings
                     Extra = "",
                     Impersonate = true,
                     OAuthResourceAudience = "",
-                    OAuthResourceId = "",
                     OAuthToken = "",
                     Password = "",
                     SecurityProvider = "",

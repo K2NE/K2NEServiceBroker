@@ -10,8 +10,6 @@ namespace SourceCode.SmartObjects.Services.Tests.Helpers
     {
         private static SCConnectionStringBuilder _connBuilder;
 
-        private static Guid _environmentGuid;
-
         static ConnectionHelper()
         {
             _connBuilder = new SCConnectionStringBuilder();
@@ -19,23 +17,6 @@ namespace SourceCode.SmartObjects.Services.Tests.Helpers
             _connBuilder.Port = 5555;
             _connBuilder.Integrated = true;
             _connBuilder.IsPrimaryLogin = true;
-        }
-
-        public static Guid EnvironmentGuid
-        {
-            get
-            {
-                if (_environmentGuid == Guid.Empty)
-                {
-                    var server = ConnectionHelper.GetServer<SmartObjects.Client.SmartObjectClientServer>();
-                    using (server.Connection)
-                    {
-                        _environmentGuid = server.Connection.ServerInfo.EnvironmentGuid;
-                    }
-                }
-
-                return _environmentGuid;
-            }
         }
 
         public static SCConnectionStringBuilder SmartObjectConnectionStringBuilder
