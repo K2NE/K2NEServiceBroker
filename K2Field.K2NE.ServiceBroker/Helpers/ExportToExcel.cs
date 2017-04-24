@@ -11,6 +11,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System.Text;
 using System.Xml.XPath;
+using K2Field.K2NE.ServiceBroker.Properties;
 
 
 namespace K2Field.K2NE.ServiceBroker.Helpers
@@ -32,7 +33,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         {
             if (string.IsNullOrEmpty(fileName))
             {
-                throw new ArgumentException("FileName is required.");
+                throw new ArgumentException(Resources.FileNameIsRequired);
             }
             try
             {
@@ -48,7 +49,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             }
             catch (Exception ex)
             {
-                throw new Exception("Error creating excel file.", ex);
+                throw new Exception(Resources.ErrorCreatingExcelFile, ex);
             }
         }
 

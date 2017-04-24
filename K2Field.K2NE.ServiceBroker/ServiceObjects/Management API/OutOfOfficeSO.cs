@@ -7,7 +7,7 @@ using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using SourceCode.Workflow.Management;
 using System.Data;
-
+using K2Field.K2NE.ServiceBroker.Properties;
 using SourceCode.Workflow.Management.OOF;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects
@@ -143,12 +143,12 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 // None for userstatus means the users is not configured, throw an exception
                 if (checkCurrentStatus && UserStatuses.None == mngServer.GetUserStatus(userFQN))
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
+                    throw new ApplicationException(Resources.OutOfOfficeNotConfiguredForUser);
                 }
                 bool result = mngServer.SetUserStatus(userFQN, status);
                 if (!result)
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.FailedToSetOOF);
+                    throw new ApplicationException(Resources.FailedToSetOOF);
                 }
             }
         }
@@ -174,7 +174,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 //  Throw error if multiple configurations (WorklistShare objects) detected, as this method cannot support that
                 if (wsColl.Count > 1)
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.MultipleOOFConfigurations);
+                    throw new ApplicationException(Resources.MultipleOOFConfigurations);
                 }
 
                 //  If configuration exist already, add to it
@@ -186,7 +186,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     bool result = mngServer.ShareWorkList(userFQN, worklistshare);
                     if (!result)
                     {
-                        throw new ApplicationException(Constants.ErrorMessages.FailedToSetOOF);
+                        throw new ApplicationException(Resources.FailedToSetOOF);
                     }
                     DataRow dr = results.NewRow();
                     dr[Constants.SOProperties.OutOfOffice.UserFQN] = userFQN;
@@ -216,12 +216,12 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     bool result = mngServer.ShareWorkList(userFQN, worklistshare);
                     if (!result)
                     {
-                        throw new ApplicationException(Constants.ErrorMessages.FailedToSetOOF);
+                        throw new ApplicationException(Resources.FailedToSetOOF);
                     }
                     result = mngServer.SetUserStatus(userFQN, UserStatuses.Available);
                     if (!result)
                     {
-                        throw new ApplicationException(Constants.ErrorMessages.FailedToSetOOF);
+                        throw new ApplicationException(Resources.FailedToSetOOF);
                     }
 
                     DataRow dr = results.NewRow();
@@ -286,7 +286,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 // None for userstatus means the users is not configured, throw an exception
                 if (mngServer.GetUserStatus(userFQN) == UserStatuses.None)
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
+                    throw new ApplicationException(Resources.OutOfOfficeNotConfiguredForUser);
                 }
                 WorklistShares wsColl = mngServer.GetCurrentSharingSettings(userFQN, ShareType.OOF);
 
@@ -318,7 +318,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             {
                 if (mngServer.GetUserStatus(userFQN) == UserStatuses.None)
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
+                    throw new ApplicationException(Resources.OutOfOfficeNotConfiguredForUser);
                 }
 
                 WorklistShares shares = mngServer.GetCurrentSharingSettings(userFQN, ShareType.OOF);

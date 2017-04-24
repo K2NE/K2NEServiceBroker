@@ -98,7 +98,6 @@
     <Compile Include="Helpers\ValidationExtensions.cs" />
     <Compile Include="K2Connection.cs" />
     <Compile Include="Constants\ConfigurationProperties.cs" />
-    <Compile Include="Constants\ErrorMessages.cs" />
     <Compile Include="Constants\Methods.cs" />
     <Compile Include="Constants\Properties.cs" />
     <Compile Include="Constants\ServiceFolders.cs" />

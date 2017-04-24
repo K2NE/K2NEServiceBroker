@@ -5,6 +5,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Xml;
 using SourceCode.Hosting.Server.Interfaces;
+using K2Field.K2NE.ServiceBroker.Properties;
 
 namespace K2Field.K2NE.ServiceBroker.Helpers
 {
@@ -197,7 +198,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             }
             catch (Exception ex)
             {
-                throw new ApplicationException(string.Format("Failed to retrieve property '{0}' from ResultPropertyCollection.", name), ex);
+                throw new ApplicationException(string.Format(Resources.FailedToRetrievePropertyResultPropertyCollection, name), ex);
             }
          }
         /// <summary>
@@ -223,7 +224,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                     searchFilter.Append("(objectcategory=person)(objectclass=user)");
                     break;
                 case IdentityType.Role:
-                    throw new ArgumentException("Identity type role is not supported for this filtering.");
+                    throw new ArgumentException(Resources.IdentityTypeRoleIsNotSupported);
             }
    
             //Parameters

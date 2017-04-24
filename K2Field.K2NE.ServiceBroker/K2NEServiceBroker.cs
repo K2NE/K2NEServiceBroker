@@ -27,6 +27,7 @@ using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using SourceCode.Hosting.Server.Interfaces;
 using K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell;
+using K2Field.K2NE.ServiceBroker.Properties;
 
 namespace K2Field.K2NE.ServiceBroker
 {
@@ -201,11 +202,11 @@ namespace K2Field.K2NE.ServiceBroker
                 // intensive and slow (as we would constantly initialize all).
                 if (so == null || string.IsNullOrEmpty(so.Name))
                 {
-                    throw new ApplicationException("ServiceObject is not set.");
+                    throw new ApplicationException(Resources.SOIsNotSet);
                 }
                 if (!ServiceObjectToType.ContainsKey(so.Name))
                 {
-                    throw new ApplicationException(string.Format("{0} is not a valid service object in the ServiceObjectType collection.", so.Name));
+                    throw new ApplicationException(string.Format(Resources.IsNotValidSO, so.Name));
                 }
                 Type soType = ServiceObjectToType[so.Name];
                 object[] constParams = new object[] { this };

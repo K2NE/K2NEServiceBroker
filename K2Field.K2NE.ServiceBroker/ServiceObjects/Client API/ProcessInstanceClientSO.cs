@@ -6,6 +6,7 @@ using SourceCode.Workflow.Management;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using K2Field.K2NE.ServiceBroker.Properties;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
 {
@@ -79,7 +80,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
             }
             catch (Exception ex)
             {
-                base.ServiceBroker.HostServiceLogger.LogError("Failed to retrieve processes for ProcessInstanceClient Service Object.");
+                base.ServiceBroker.HostServiceLogger.LogError(Resources.FailedToRetrieveProcesses);
                 base.ServiceBroker.HostServiceLogger.LogException(ex);
             }
             return new List<ServiceObject>() { so };
