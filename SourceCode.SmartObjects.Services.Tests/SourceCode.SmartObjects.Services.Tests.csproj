@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CC1046C1-5FD5-4D53-92D2-F9F0E5361BCB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SourceCode.SmartObjects.Services.Tests</RootNamespace>
+    <AssemblyName>SourceCode.SmartObjects.Services.Tests</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\Common\Key.snk</AssemblyOriginatorKeyFile>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>5</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>BasicCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="SourceCode.ComponentModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Build Output\Assemblies\x86\Program Files\K2\Bin\SourceCode.ComponentModel.dll</HintPath>
+    </Reference>
+    <Reference Include="SourceCode.Deployment.Management, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Build Output\Assemblies\x86\Program Files\K2\Bin\SourceCode.Deployment.Management.dll</HintPath>
+    </Reference>
+    <Reference Include="SourceCode.EnvironmentSettings.Client, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\K2 blackpearl\Bin\SourceCode.EnvironmentSettings.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="SourceCode.Forms.Management, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\K2 blackpearl\Bin\SourceCode.Forms.Management.dll</HintPath>
+    </Reference>
+    <Reference Include="SourceCode.Forms.Utilities, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\K2 blackpearl\Bin\SourceCode.Forms.Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="SourceCode.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\K2 blackpearl\Bin\SourceCode.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="SourceCode.HostClientAPI, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\K2 blackpearl\Bin\SourceCode.HostClientAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="SourceCode.SmartObjects.Authoring, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\K2 blackpearl\Bin\SourceCode.SmartObjects.Authoring.dll</HintPath>
+    </Reference>
+    <Reference Include="SourceCode.SmartObjects.Client, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\K2 blackpearl\Bin\SourceCode.SmartObjects.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="SourceCode.SmartObjects.Management, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\K2 blackpearl\Bin\SourceCode.SmartObjects.Management.dll</HintPath>
+    </Reference>
+    <Reference Include="SourceCode.SmartObjects.Services.Management, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\K2 blackpearl\Bin\SourceCode.SmartObjects.Services.Management.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Extensions\ActionExtensions.cs" />
+    <Compile Include="Extensions\DataRowExtensions.cs" />
+    <Compile Include="Extensions\DataTableExtensions.cs" />
+    <Compile Include="Extensions\ExceptionExtensions.cs" />
+    <Compile Include="Extensions\ServiceManagementServerExtensions.cs" />
+    <Compile Include="Extensions\SmartObjectClientServerExtensions.cs" />
+    <Compile Include="Extensions\SmartObjectExtensions.cs" />
+    <Compile Include="Extensions\SmartObjectManagementServerExtensions.cs" />
+    <Compile Include="Extensions\ValidationExtensions.cs" />
+    <Compile Include="Helpers\UriCreator.cs" />
+    <Compile Include="Helpers\ConnectionHelper.cs" />
+    <Compile Include="Helpers\EnvironmentHelper.cs" />
+    <Compile Include="Helpers\PackageDeploymentHelper.cs" />
+    <Compile Include="Helpers\SecurityHelper.cs" />
+    <Compile Include="Helpers\SmartFormHelper.cs" />
+    <Compile Include="Helpers\SmartObjectHelper.cs" />
+    <Compile Include="Helpers\ValueHelper.cs" />
+    <Compile Include="Managers\ServiceInstanceManager.cs" />
+    <Compile Include="Managers\ServiceInstanceSettings.cs" />
+    <Compile Include="Managers\ServiceTypeManager.cs" />
+    <Compile Include="Managers\ServiceTypeSettings.cs" />
+    <Compile Include="Managers\SmartObjectsManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
+  <PropertyGroup>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>if "Debug"=="$(ConfigurationName)" (
+ xcopy /R /Y "$(TargetPath)" "c:\Program Files (x86)\K2 blackpearl\ServiceBroker\"
+)
+</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

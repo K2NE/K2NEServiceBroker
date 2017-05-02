@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "K2Field.K2NE.ServiceBroker", "K2Field.K2NE.ServiceBroker\K2Field.K2NE.ServiceBroker.csproj", "{5D45A104-69BD-4B55-A255-9BCC629D62DF}"
 EndProject
@@ -30,6 +30,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer", "Installer", "{
 		Installer\Install.ps1 = Installer\Install.ps1
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "K2Field.K2NE.ServiceBroker.ITest", "K2Field.K2NE.ServiceBroker\Tests\ITest\K2Field.K2NE.ServiceBroker.ITest.csproj", "{02348883-7DB4-4A1E-9BAF-FDB7239709BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceCode.SmartObjects.Services.Tests", "SourceCode.SmartObjects.Services.Tests\SourceCode.SmartObjects.Services.Tests.csproj", "{CC1046C1-5FD5-4D53-92D2-F9F0E5361BCB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +44,14 @@ Global
 		{5D45A104-69BD-4B55-A255-9BCC629D62DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D45A104-69BD-4B55-A255-9BCC629D62DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D45A104-69BD-4B55-A255-9BCC629D62DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02348883-7DB4-4A1E-9BAF-FDB7239709BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02348883-7DB4-4A1E-9BAF-FDB7239709BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02348883-7DB4-4A1E-9BAF-FDB7239709BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02348883-7DB4-4A1E-9BAF-FDB7239709BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC1046C1-5FD5-4D53-92D2-F9F0E5361BCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC1046C1-5FD5-4D53-92D2-F9F0E5361BCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC1046C1-5FD5-4D53-92D2-F9F0E5361BCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC1046C1-5FD5-4D53-92D2-F9F0E5361BCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
