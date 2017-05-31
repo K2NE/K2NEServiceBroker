@@ -9,6 +9,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         {
             public const string GetErrors = "GetErrors";
             public const string RetryProcess = "RetryProcessInstance";
+            public const string GetErrorById = "GetErrorById";
         }
         
         public static class ADOSMOQuery

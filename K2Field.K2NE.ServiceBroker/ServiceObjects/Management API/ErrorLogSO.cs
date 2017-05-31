@@ -48,6 +48,23 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
             so.Methods.Add(getErrors);
 
+            Method getErrorById = Helper.CreateMethod(Constants.Methods.ErrorLog.GetErrorById, "Retrieve a K2 error by Id", MethodType.List);
+            getErrorById.InputProperties.Add(Constants.SOProperties.ErrorLog.ErrorId);
+            getErrorById.Validation.RequiredProperties.Add(Constants.SOProperties.ErrorLog.ErrorId);
+            getErrorById.ReturnProperties.Add(Constants.SOProperties.ErrorLog.ProcessInstanceId);
+            getErrorById.ReturnProperties.Add(Constants.SOProperties.ErrorLog.ProcessName);
+            getErrorById.ReturnProperties.Add(Constants.SOProperties.ErrorLog.Folio);
+            getErrorById.ReturnProperties.Add(Constants.SOProperties.ErrorLog.ErrorDescription);
+            getErrorById.ReturnProperties.Add(Constants.SOProperties.ErrorLog.ErrorItem);
+            getErrorById.ReturnProperties.Add(Constants.SOProperties.ErrorLog.ErrorDate);
+            getErrorById.ReturnProperties.Add(Constants.SOProperties.ErrorLog.ErrorId);
+            getErrorById.ReturnProperties.Add(Constants.SOProperties.ErrorLog.TypeDescription);
+            getErrorById.ReturnProperties.Add(Constants.SOProperties.ErrorLog.StackTrace);
+            getErrorById.ReturnProperties.Add(Constants.SOProperties.ErrorLog.ExecutingProcId);
+
+            so.Methods.Add(getErrorById);
+
+
             Method retryProcess = Helper.CreateMethod(Constants.Methods.ErrorLog.RetryProcess, "Retry a process instance", MethodType.Execute);
             retryProcess.InputProperties.Add(Constants.SOProperties.ErrorLog.ProcessInstanceId);
             retryProcess.Validation.RequiredProperties.Add(Constants.SOProperties.ErrorLog.ProcessInstanceId);
@@ -74,6 +91,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     break;
                 case Constants.Methods.ErrorLog.RetryProcess:
                     RetryProcess();
+                    break;
+                case Constants.Methods.ErrorLog.GetErrorById:
+                    getErrorById();
                     break;
             }
 
@@ -163,6 +183,44 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             }
 
 
+        }
+
+        private void getErrorById()
+        {
+            string profile = "All";
+
+            base.ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
+            DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
+
+            WorkflowManagementServer mngServer = new WorkflowManagementServer();
+            using (mngServer.CreateConnection())
+            {
+                mngServer.Open(BaseAPIConnectionString);
+
+                ErrorProfile prof = mngServer.GetErrorProfile(profile);
+                ErrorLogs errors = mngServer.GetErrorLogs(prof.ID);
+                string ErrorId = base.GetStringProperty(Constants.SOProperties.ErrorLog.ErrorId, true);
+
+
+                foreach (ErrorLog e in errors)
+                {
+                    if (e.ID == Convert.ToInt32(ErrorId))
+                    {
+                        DataRow r = results.NewRow();
+                        r[Constants.SOProperties.ErrorLog.ProcessInstanceId] = e.ProcInstID;
+                        r[Constants.SOProperties.ErrorLog.ProcessName] = e.ProcessName;
+                        r[Constants.SOProperties.ErrorLog.Folio] = e.Folio;
+                        r[Constants.SOProperties.ErrorLog.ErrorDescription] = e.Description;
+                        r[Constants.SOProperties.ErrorLog.ErrorItem] = e.ErrorItemName;
+                        r[Constants.SOProperties.ErrorLog.ErrorDate] = e.ErrorDate;
+                        r[Constants.SOProperties.ErrorLog.ErrorId] = e.ID;
+                        r[Constants.SOProperties.ErrorLog.TypeDescription] = e.TypeDescription;
+                        r[Constants.SOProperties.ErrorLog.ExecutingProcId] = e.ExecutingProcID;
+                        r[Constants.SOProperties.ErrorLog.StackTrace] = e.StackTrace;
+                        results.Rows.Add(r);
+                    }
+                }
+            }
         }
     }
 }
