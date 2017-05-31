@@ -199,12 +199,11 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
                 ErrorProfile prof = mngServer.GetErrorProfile(profile);
                 ErrorLogs errors = mngServer.GetErrorLogs(prof.ID);
-                string ErrorId = base.GetStringProperty(Constants.SOProperties.ErrorLog.ErrorId, true);
-
+                int ErrorId = base.GetIntProperty(Constants.SOProperties.ErrorLog.ErrorId, true);
 
                 foreach (ErrorLog e in errors)
                 {
-                    if (e.ID == Convert.ToInt32(ErrorId))
+                    if (e.ID == ErrorId)
                     {
                         DataRow r = results.NewRow();
                         r[Constants.SOProperties.ErrorLog.ProcessInstanceId] = e.ProcInstID;
