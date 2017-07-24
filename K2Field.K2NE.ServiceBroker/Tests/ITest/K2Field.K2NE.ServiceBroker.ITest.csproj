@@ -72,8 +72,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\K2 blackpearl\Bin\SourceCode.SmartObjects.Services.Management.dll</HintPath>
     </Reference>
-    <Reference Include="SourceCode.SmartObjects.Services.Tests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a72685ad1fb19b82, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\SourceCode.SmartObjects.Services.Tests.1.0.65\lib\net40\SourceCode.SmartObjects.Services.Tests.dll</HintPath>
+    <Reference Include="SourceCode.SmartObjects.Services.Tests, Version=1.0.198.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\SourceCode.SmartObjects.Services.Tests.1.0.198\lib\net40\SourceCode.SmartObjects.Services.Tests.dll</HintPath>
     </Reference>
     <Reference Include="SourceCode.Workflow.Client, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
@@ -132,7 +132,9 @@
     <EmbeddedResource Include="Resources\K2NEServiceBroker.kspx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

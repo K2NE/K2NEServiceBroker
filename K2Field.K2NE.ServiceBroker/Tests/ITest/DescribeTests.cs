@@ -91,10 +91,8 @@ namespace K2Field.K2NE.ServiceBroker.ITest
             Assert.AreEqual("K2NEServiceBroker", serviceTypeInfo.DisplayName);
             Assert.AreEqual("e84598f2-31cc-4593-bf99-a21dafcd0911", serviceTypeInfo.Guid.ToString());
             Assert.AreEqual("K2Field.K2NE.ServiceBroker.K2NEServiceBroker", serviceTypeInfo.Name);
-            Assert.AreEqual(@"C:\Program Files (x86)\K2 blackpearl\ServiceBroker\K2Field.K2NE.ServiceBroker.dll", serviceTypeInfo.Path, true);
             Assert.AreEqual("", serviceTypeInfo.Provider ?? string.Empty);
             Assert.AreEqual("K2Field.K2NE.ServiceBroker.K2NEServiceBroker", serviceTypeInfo.ConfigInfo.Assembly.Class);
-            Assert.AreEqual(@"C:\Program Files (x86)\K2 blackpearl\ServiceBroker\K2Field.K2NE.ServiceBroker.dll", serviceTypeInfo.ConfigInfo.Assembly.Path, true);
             Assert.AreEqual(false, serviceTypeInfo.ConfigInfo.ServiceIntegration.IsFeature);
             // SERVICECONFIG
             var serviceConfigInfo = SmartObjectHelper.GetServiceConfigInfo(K2NEServiceBrokerServiceTypeSettings.Instance.DefaultGuid);

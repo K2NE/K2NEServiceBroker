@@ -159,6 +159,7 @@
   <PropertyGroup>
     <PostBuildEvent>if "Debug"=="$(ConfigurationName)" (
  xcopy /R /Y "$(TargetPath)" "c:\Program Files (x86)\K2 blackpearl\ServiceBroker\"
+ xcopy /R /Y "$(TargetPath)" "c:\Program Files (x86)\K2\ServiceBroker\"
 )
 
 xcopy /y /r "$(SolutionDir)\Installer\Install.ps1" "$(SolutionDir)\Release\"
