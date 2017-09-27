@@ -47,7 +47,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                  * SELECT * FROM table WHERE type='Type1' HAVING (id = @id)
                  */
 
-                
+
 
                 Dictionary<string, string> props = new Dictionary<string, string>();
                 foreach (Match match in Regex.Matches(query.Value, "\\@\\w+"))
@@ -72,7 +72,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 }
                 so.Methods.Add(soMethod);
 
-                Method mExcelFromADOQuery = Helper.CreateMethod(Constants.Methods.ADOSMOQuery.ExcelFromADOQuery, "Generate an Excel file based on ADO query", MethodType.Read);
+                Method mExcelFromADOQuery = Helper.CreateMethod(Constants.Methods.ADOSMOQuery.ExcelFromADOQuery, "Generate an Excel file based on the configured ADO query", MethodType.Read);
                 mExcelFromADOQuery.MetaData.AddServiceElement("Query", query.Value);
                 mExcelFromADOQuery.ReturnProperties.Add(Constants.SOProperties.ExportToExcel.ExcelFile);
                 mExcelFromADOQuery.InputProperties.Add(Constants.SOProperties.ExportToExcel.FileName);
@@ -80,8 +80,25 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 so.Methods.Add(mExcelFromADOQuery);
 
 
+
                 sos.Add(so);
             }
+
+
+            ServiceObject soAdo2Excel = Helper.CreateServiceObject("ADOQueryToExcel", "ADO Query 2 Excel file.");
+            soAdo2Excel.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ExportToExcel.FileName, SoType.Text, "The name of generated file"));
+            soAdo2Excel.Properties.Add(Helper.CreateFileProperty(Constants.SOProperties.ExportToExcel.ExcelFile, "The excel file that will be generated"));
+            soAdo2Excel.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ExportToExcel.ADOQuery, SoType.Memo, "The ADO query to perform for Excel export."));
+
+            Method mADOQuery2Excel = Helper.CreateMethod(Constants.Methods.ADOSMOQuery.ADOQuery2Excel, "Generate an Excel file based on the provided ADO query.", MethodType.Read);
+            mADOQuery2Excel.ReturnProperties.Add(Constants.SOProperties.ExportToExcel.ExcelFile);
+            mADOQuery2Excel.InputProperties.Add(Constants.SOProperties.ExportToExcel.ADOQuery);
+            mADOQuery2Excel.InputProperties.Add(Constants.SOProperties.ExportToExcel.FileName);
+            mADOQuery2Excel.Validation.RequiredProperties.Add(Constants.SOProperties.ExportToExcel.ADOQuery);
+            mADOQuery2Excel.Validation.RequiredProperties.Add(Constants.SOProperties.ExportToExcel.FileName);
+            soAdo2Excel.Methods.Add(mADOQuery2Excel);
+
+            sos.Add(soAdo2Excel);
 
             return sos;
         }
@@ -98,9 +115,15 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 case Constants.Methods.ADOSMOQuery.ExcelFromADOQuery:
                     ExportToExcel();
                     break;
+                case Constants.Methods.ADOSMOQuery.ADOQuery2Excel:
+                    ADOQuery2Excel();
+                    break;
 
             }
         }
+
+ 
+
 
 
         private void ListQuery()
@@ -134,7 +157,65 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             }
         }
 
-        
+
+        private void ExportToExcel()
+        {
+            ServiceObject serviceObject = ServiceBroker.Service.ServiceObjects[0];
+            serviceObject.Properties.InitResultTable();
+            DataTable results = ServiceBroker.ServicePackage.ResultTable;
+            string fileName = GetStringProperty(Constants.SOProperties.ExportToExcel.FileName, true);
+            string query = serviceObject.Methods[0].MetaData.GetServiceElement<string>("Query");
+
+            DataTable SOQueryResult = new DataTable();
+
+            using (SOConnection connection = new SOConnection(base.BaseAPIConnectionString))
+            using (SOCommand command = new SOCommand(query, connection))
+            using (SODataAdapter adapter = new SODataAdapter(command))
+            {
+                connection.DirectExecution = true;
+                adapter.Fill(SOQueryResult);
+            }
+            DataRow dr = results.NewRow();
+            //Calling the helper method with dataresult and expecting a File in return.
+            CreateExcel excel = new CreateExcel();
+            dr[Constants.SOProperties.ExportToExcel.ExcelFile] = excel.ConvertDataTable2Excelfile(SOQueryResult, fileName).ToString();
+
+            results.Rows.Add(dr);
+
+        }
+
+        private void ADOQuery2Excel()
+        {
+            ServiceObject serviceObject = ServiceBroker.Service.ServiceObjects[0];
+            serviceObject.Properties.InitResultTable();
+            DataTable results = ServiceBroker.ServicePackage.ResultTable;
+            string fileName = GetStringProperty(Constants.SOProperties.ExportToExcel.FileName, true);
+            string query = GetStringProperty(Constants.SOProperties.ExportToExcel.ADOQuery, true);
+
+            DataTable SOQueryResult = new DataTable();
+
+            using (SOConnection connection = new SOConnection(base.BaseAPIConnectionString))
+            using (SOCommand command = new SOCommand(query, connection))
+            using (SODataAdapter adapter = new SODataAdapter(command))
+            {
+                connection.DirectExecution = true;
+                adapter.Fill(SOQueryResult);
+            }
+            DataRow dr = results.NewRow();
+            //Calling the helper method with dataresult and expecting a File in return.
+            CreateExcel excel = new CreateExcel();
+            dr[Constants.SOProperties.ExportToExcel.ExcelFile] = excel.ConvertDataTable2Excelfile(SOQueryResult, fileName).ToString();
+
+            results.Rows.Add(dr);
+
+        }
+
+
+
+
+
+
+
         private DataTable GetSchema(string query, Dictionary<string, string> props)
         {
             DataTable results = new DataTable();
@@ -162,34 +243,5 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             }
             return results;
         }
-
-        private void ExportToExcel()
-        {
-            ServiceObject serviceObject = ServiceBroker.Service.ServiceObjects[0];
-            serviceObject.Properties.InitResultTable();
-            DataTable results = ServiceBroker.ServicePackage.ResultTable;
-            string fileName = GetStringProperty(Constants.SOProperties.ExportToExcel.FileName, true);
-            string query = serviceObject.Methods[0].MetaData.GetServiceElement<string>("Query");
-
-            DataTable SOQueryResult = new DataTable();
-            
-            using (SOConnection connection = new SOConnection(base.BaseAPIConnectionString))
-            using (SOCommand command = new SOCommand(query, connection))
-            using (SODataAdapter adapter = new SODataAdapter(command))
-            {
-                connection.DirectExecution = true;
-                adapter.Fill(SOQueryResult);
-            }
-            DataRow dr = results.NewRow();
-            //Calling the helper method with dataresult and expecting a File in return.
-            CreateExcel excel = new CreateExcel();
-            dr[Constants.SOProperties.ExportToExcel.ExcelFile] = excel.ConvertDataTable2Excelfile(SOQueryResult, fileName).ToString();
-
-            results.Rows.Add(dr);
-
-        }
-
-
-
     }
 }

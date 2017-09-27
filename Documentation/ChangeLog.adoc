@@ -1,4 +1,7 @@
 == ChangeLog
+=== v1.7.1
+- Added support for ADO.NET query input via SMO to return a Excel file.
+
 === v1.7
 - Rework the K2 connection string to get this from the K2 environment itself. Massive improvement to the overal code!
 

@@ -15,6 +15,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         {
             public const string ExcelFromADOQuery = "ExcelFromADOQuery";
             public const string ListQueryData = "List";
+            public const string ADOQuery2Excel = "ADOQueryToExcel";
         }
 
         public static class ManagementWorklist
