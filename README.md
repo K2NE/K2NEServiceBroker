@@ -1,5 +1,9 @@
 [![Stories in Ready](https://badge.waffle.io/k2ne/k2neservicebroker.png?label=ready&title=Ready)](https://waffle.io/k2ne/k2neservicebroker)
 
+#Branch Note
+Please note that this is the old 4.7 stable branch that you are looking at. It was created to retain support for K2 4.7, while the master branch will continue supporting K2 five.
+
+
 # K2NE ServiceBroker
 
 ## Introduction
