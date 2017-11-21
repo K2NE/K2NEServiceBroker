@@ -1,4 +1,7 @@
 == ChangeLog
+=== 1.9
+- We are now version 1.9. Version 1.8 is the last version on the 4.7 release of K2. This 1.9 version will now continue to work on K2 five and the Core 7 VM's.
+
 === v1.7.1
 - Added support for ADO.NET query input via SMO to return a Excel file.
 
