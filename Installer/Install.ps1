@@ -6,6 +6,8 @@ $brokerDLL = "K2Field.K2NE.ServiceBroker.dll"
 $displayName = $brokerName -replace '\.',' '
 $brokerDescription = "The K2NE Service Broker. For more information, see https://github.com/K2NE/K2NEServiceBroker"
 
+
+
 Function StartK2Service() {
 	Write-Host  "Starting K2 blackpearl service"
 	$job = Start-Job -ScriptBlock {
