@@ -91,11 +91,17 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             mRedirectWorklistItem.InputProperties.Add(Constants.SOProperties.ManagementWorklist.WorklistItemId);
             mRedirectWorklistItem.InputProperties.Add(Constants.SOProperties.ManagementWorklist.ActivityInstanceDestinationId);
             mRedirectWorklistItem.InputProperties.Add(Constants.SOProperties.ManagementWorklist.FromUser);
-            mRedirectWorklistItem.InputProperties.Add(Constants.SOProperties.ManagementWorklist.ToUser);
+            mRedirectWorklistItem.InputProperties.Add(Constants.SOProperties.ManagementWorklist.ToUser); 
+            mRedirectWorklistItem.Validation.RequiredProperties.Add(Constants.SOProperties.ManagementWorklist.ProcessInstanceId);
+            mRedirectWorklistItem.Validation.RequiredProperties.Add(Constants.SOProperties.ManagementWorklist.WorklistItemId);
+            mRedirectWorklistItem.Validation.RequiredProperties.Add(Constants.SOProperties.ManagementWorklist.ActivityInstanceDestinationId);
+            mRedirectWorklistItem.Validation.RequiredProperties.Add(Constants.SOProperties.ManagementWorklist.ToUser);
+            
             so.Methods.Add(mRedirectWorklistItem);
 
             Method mReleaseWorklistItem = Helper.CreateMethod(Constants.Methods.ManagementWorklist.ReleaseWorklistItem, "Release the worklistitem slot back into the wild", SourceCode.SmartObjects.Services.ServiceSDK.Types.MethodType.Execute);
-            mReleaseWorklistItem.InputProperties.Add(Constants.SOProperties.ManagementWorklist.WorklistItemId);
+            mReleaseWorklistItem.InputProperties.Add(Constants.SOProperties.ManagementWorklist.WorklistItemId); 
+            mReleaseWorklistItem.Validation.RequiredProperties.Add(Constants.SOProperties.ManagementWorklist.WorklistItemId);
             so.Methods.Add(mReleaseWorklistItem);
 
             return new List<ServiceObject> { so };
