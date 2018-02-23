@@ -6,6 +6,18 @@ $brokerDLL = "K2Field.K2NE.ServiceBroker.dll"
 $displayName = $brokerName -replace '\.',' '
 $brokerDescription = "The K2NE Service Broker. For more information, see https://github.com/K2NE/K2NEServiceBroker"
 
+Function GetK2Version([string]$machine = $env:computername) {
+    $registryKeyLocation = "SOFTWARE\SourceCode\Installer\"
+    $registryKeyName = "Version"
+
+	Write-Debug "Getting K2 version from $machine "
+    
+    $reg = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $machine)
+    $regKey= $reg.OpenSubKey($registryKeyLocation)
+    $installVer = $regKey.GetValue($registryKeyName)
+    return $installVer
+}
+
 Function StartK2Service() {
 	Write-Host  "Starting K2 blackpearl service"
 	$job = Start-Job -ScriptBlock {
@@ -20,6 +32,26 @@ Function StopK2Service() {
 
 	$job = Start-Job -ScriptBlock {
 		Get-Service -DisplayName 'K2 blackpearl Server' | where-object {$_.Status -eq "Running"} | Stop-Service -Confirm:$false -Force 
+		Stop-Process -ProcessName "K2HostServer"  -force -ErrorAction SilentlyContinue -Confirm:$false
+	}
+	Wait-Job $job
+	Receive-Job $job
+}
+
+Function StartK2FiveService() {
+	Write-Host  "Starting K2 Server service"
+	$job = Start-Job -ScriptBlock {
+		Get-Service -DisplayName 'K2 Server' | where-object {$_.Status -ne "Running"} | Start-Service
+	}
+	Wait-Job $job
+	Receive-Job $job
+}
+
+Function StopK2FiveService() {
+    Write-Host "Stopping K2 Server service"
+
+	$job = Start-Job -ScriptBlock {
+		Get-Service -DisplayName 'K2 Server' | where-object {$_.Status -eq "Running"} | Stop-Service -Confirm:$false -Force 
 		Stop-Process -ProcessName "K2HostServer"  -force -ErrorAction SilentlyContinue -Confirm:$false
 	}
 	Wait-Job $job
@@ -87,11 +119,23 @@ Function RegisterServiceType([string]$k2ConnectionString, [string]$k2Server, [st
 $targetPath = GetK2InstallPath
 $scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
 
-StopK2Service -server localhost 
+if (GetK2Version -ge 5) {
+    StopK2FiveService -server localhost 
+}
+else {
+    StopK2Service -server localhost 
+}
+
+
 Copy-Item $scriptPath\* -Include K2Field.K2NE.ServiceBroker.dll -Destination "$targetPath\ServiceBroker"
-StartK2Service -server localhost
+
+if (GetK2Version -ge 5) {
+    StartK2FiveService -server localhost 
+}
+else {
+    StartK2Service -server localhost 
+}
 
 
 $k2constring = GetK2ConnectionString 
 RegisterServiceType -k2ConnectionString $k2constring -ServiceTypeDLL $brokerDLL -guid $guid -systemName $brokerSystemName -displayName $displayName -description $brokerDescription
-
