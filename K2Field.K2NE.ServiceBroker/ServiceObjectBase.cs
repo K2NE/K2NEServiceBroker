@@ -14,15 +14,13 @@ using K2Field.K2NE.ServiceBroker.Helpers;
 using System.Xml;
 using System.Xml.Linq;
 using System.Linq;
+using K2Field.K2NE.ServiceBroker.Properties;
 
 namespace K2Field.K2NE.ServiceBroker
 {
     public abstract class ServiceObjectBase
     {
         #region private variables
-        private ConnectionSetup connectionSetup = null;
-        private SCConnectionStringBuilder baseConnection = null;
-
         private static Dictionary<string, string> environmentFields = new Dictionary<string, string>();
         private static Object envLock = new Object();
         private Mutex envMutex;
@@ -41,8 +39,6 @@ namespace K2Field.K2NE.ServiceBroker
             private set;
         }
 
-
-
         /// <summary>
         /// This is the connectionstring for any baseAPI Connection (management, smartobjects, etc).
         /// </summary>
@@ -50,10 +46,11 @@ namespace K2Field.K2NE.ServiceBroker
         {
             get
             {
-                return GetBaseConnection(WorkflowManagementPort);
+                return this.ServiceBroker.K2Connection.SessionConnectionString;
             }
 
         }
+ 
 
         public string LDAPPaths
         {
@@ -61,7 +58,7 @@ namespace K2Field.K2NE.ServiceBroker
             {
                 if (! ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.LDAPPaths))
                 {
-                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.LDAPPaths));
+                    throw new ApplicationException(string.Format(Resources.ConfigOptionNotFound, Constants.ConfigurationProperties.LDAPPaths));
                 }
 
                 return this.ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.LDAPPaths].ToStringOrEmpty();
@@ -73,7 +70,7 @@ namespace K2Field.K2NE.ServiceBroker
             {
                 if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.ChangeContainsToStartsWith))
                 {
-                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.ChangeContainsToStartsWith));
+                    throw new ApplicationException(string.Format(Resources.ConfigOptionNotFound, Constants.ConfigurationProperties.ChangeContainsToStartsWith));
                 }
                 return bool.Parse(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.ChangeContainsToStartsWith].ToString());
             }
@@ -85,7 +82,7 @@ namespace K2Field.K2NE.ServiceBroker
             {
                 if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.AdMaxResultSize))
                 {
-                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.AdMaxResultSize));
+                    throw new ApplicationException(string.Format(Resources.ConfigOptionNotFound, Constants.ConfigurationProperties.AdMaxResultSize));
                 }
                 return int.Parse(this.ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.AdMaxResultSize].ToString());
 
@@ -164,60 +161,20 @@ namespace K2Field.K2NE.ServiceBroker
             }
         }
 
-        /// <summary>
-        /// This is the k2 client api connectionSetup object that can be used to create a connection.
-        /// </summary>
-        protected ConnectionSetup K2ClientConnectionSetup
-        {
-            get
-            {
-                if (connectionSetup == null)
-                {
-                    connectionSetup = new ConnectionSetup();
-                    connectionSetup.ConnectionString = GetBaseConnection(WorkflowClientPort);
-                }
-                return connectionSetup;
-            }
-        }
-
         protected string EnvironmentToUseConfiguration
         {
             get
             {
                 if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.EnvironmentToUse))
                 {
-                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.EnvironmentToUse));
+                    throw new ApplicationException(string.Format(Resources.ConfigOptionNotFound, Constants.ConfigurationProperties.EnvironmentToUse));
                 }
                 return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.EnvironmentToUse] as string;
             }
         }
 
 
-        protected uint WorkflowClientPort
-        {
-            get
-            {
-                if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.WorkflowClientPort))
-                {
-                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.WorkflowClientPort));
-                }
-                return uint.Parse(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.WorkflowClientPort].ToString());
-            }
-        }
-
-        protected uint WorkflowManagementPort
-        {
-            get
-            {
-                if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.WorkflowManagmentPort))
-                {
-                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.WorkflowManagmentPort));
-                }
-
-                return uint.Parse(ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.WorkflowManagmentPort].ToString());
-            }
-        }
-
+ 
 
         /// <summary>
         /// The default culture to use.
@@ -228,7 +185,7 @@ namespace K2Field.K2NE.ServiceBroker
             {
                 if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.DefaultCulture))
                 {
-                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.DefaultCulture));
+                    throw new ApplicationException(string.Format(Resources.ConfigOptionNotFound, Constants.ConfigurationProperties.DefaultCulture));
                 }
                 return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.DefaultCulture].ToString();
             }
@@ -240,7 +197,7 @@ namespace K2Field.K2NE.ServiceBroker
             {
                 if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.Platform))
                 {
-                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.Platform));
+                    throw new ApplicationException(string.Format(Resources.ConfigOptionNotFound, Constants.ConfigurationProperties.Platform));
                 }
                 return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.Platform].ToStringOrEmpty();
             }
@@ -252,7 +209,7 @@ namespace K2Field.K2NE.ServiceBroker
             {
                 if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.NetbiosNames))
                 {
-                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.NetbiosNames));
+                    throw new ApplicationException(string.Format(Resources.ConfigOptionNotFound, Constants.ConfigurationProperties.NetbiosNames));
                 }
                 return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.NetbiosNames].ToStringOrEmpty();
             }
@@ -327,7 +284,7 @@ namespace K2Field.K2NE.ServiceBroker
             {
                 if (!ServiceBroker.Service.ServiceConfiguration.Contains(Constants.ConfigurationProperties.AllowPowershellScript))
                 {
-                    throw new ApplicationException(string.Format(Constants.ErrorMessages.ConfigOptionNotFound, Constants.ConfigurationProperties.AllowPowershellScript));
+                    throw new ApplicationException(string.Format(Resources.ConfigOptionNotFound, Constants.ConfigurationProperties.AllowPowershellScript));
                 }
 
                 bool allowPowershellScript = false;
@@ -360,12 +317,12 @@ namespace K2Field.K2NE.ServiceBroker
             if (p == null)
             {
                 if (isRequired)
-                    throw new ArgumentException(string.Format(Constants.ErrorMessages.RequiredPropertyNotFound, name));
+                    throw new ArgumentException(string.Format(Resources.RequiredPropertyNotFound, name));
                 return string.Empty;
             }
             string val = p.Value as string;
             if (isRequired && string.IsNullOrEmpty(val))
-                throw new ArgumentException(string.Format("{0} is required but is empty.", name));
+                throw new ArgumentException(string.Format(Resources.RequiredPropertyIsEmpty, name));
 
             return val;
         }
@@ -378,12 +335,12 @@ namespace K2Field.K2NE.ServiceBroker
             if (p == null)
             {
                 if (isRequired)
-                    throw new ArgumentException(string.Format(Constants.ErrorMessages.RequiredParameterNotFound, name));
+                    throw new ArgumentException(string.Format(Resources.RequiredParameterNotFound, name));
                 return string.Empty;
             }
             string val = p.Value as string;
             if (isRequired && string.IsNullOrEmpty(val))
-                throw new ArgumentException(string.Format("{0} is required but is empty.", name));
+                throw new ArgumentException(string.Format(Resources.RequiredParameterIsEmpty, name));
 
             return val;
         }
@@ -406,7 +363,7 @@ namespace K2Field.K2NE.ServiceBroker
             if (p == null)
             {
                 if (isRequred)
-                    throw new ArgumentException(string.Format(Constants.ErrorMessages.RequiredPropertyNotFound, name));
+                    throw new ArgumentException(string.Format(Resources.RequiredPropertyNotFound, name));
                 return 0;
             }
             string val = p.Value as string;
@@ -414,7 +371,7 @@ namespace K2Field.K2NE.ServiceBroker
             if (int.TryParse(val, out ret))
                 return ret;
             if (isRequred)
-                throw new ArgumentException(string.Format("{0} could not be parsed to a Integer", name));
+                throw new ArgumentException(string.Format(Resources.NotParseToInteger, name));
 
             return 0;
         }
@@ -425,7 +382,7 @@ namespace K2Field.K2NE.ServiceBroker
             if (p == null)
             {
                 if (isRequired)
-                    throw new ArgumentException(string.Format(Constants.ErrorMessages.RequiredPropertyNotFound, name));
+                    throw new ArgumentException(string.Format(Resources.RequiredPropertyNotFound, name));
                 return 0;
             }
             string val = p.Value as string;
@@ -433,7 +390,7 @@ namespace K2Field.K2NE.ServiceBroker
             if (short.TryParse(val, out ret))
                 return ret;
             if (isRequired)
-                throw new ArgumentException(string.Format("{0} could not be parsed to a Integer", name));
+                throw new ArgumentException(string.Format(Resources.NotParseToInteger, name));
 
             return 0;
         }
@@ -472,7 +429,7 @@ namespace K2Field.K2NE.ServiceBroker
             if (p == null)
             {
                 if (isRequired)
-                    throw new ArgumentException(string.Format(Constants.ErrorMessages.RequiredPropertyNotFound, name));
+                    throw new ArgumentException(string.Format(Resources.RequiredPropertyNotFound, name));
                 return 0;
             }
             string val = p.Value as string;
@@ -480,7 +437,7 @@ namespace K2Field.K2NE.ServiceBroker
             if (byte.TryParse(val, out ret))
                 return ret;
             if (isRequired)
-                throw new ArgumentException(string.Format("{0} could not be parsed to a Byte.", name));
+                throw new ArgumentException(string.Format(Resources.NotParseToByte, name));
             return 0;
         }
 
@@ -490,7 +447,7 @@ namespace K2Field.K2NE.ServiceBroker
             if (p == null)
             {
                 if (isRequired)
-                    throw new ArgumentException(string.Format(Constants.ErrorMessages.RequiredPropertyNotFound, name));
+                    throw new ArgumentException(string.Format(Resources.RequiredPropertyNotFound, name));
                 return Guid.Empty;
             }
             string val = p.Value as string;
@@ -498,7 +455,7 @@ namespace K2Field.K2NE.ServiceBroker
             if (Guid.TryParse(val, out ret))
                 return ret;
             if (isRequired)
-                throw new ArgumentException(string.Format("{0} could not be parsed to a Guid.", name));
+                throw new ArgumentException(string.Format(Resources.NotParseToGuid, name));
             return Guid.Empty;
         }
 
@@ -508,7 +465,7 @@ namespace K2Field.K2NE.ServiceBroker
             if (p == null)
             {
                 if (isRequired)
-                    throw new ArgumentException(string.Format(Constants.ErrorMessages.RequiredPropertyNotFound, name));
+                    throw new ArgumentException(string.Format(Resources.RequiredPropertyNotFound, name));
                 return new FileProperty();
             }
             FileProperty val = p as FileProperty;
@@ -556,19 +513,6 @@ namespace K2Field.K2NE.ServiceBroker
 
         #region Private helper methods
 
-        private string GetBaseConnection(uint port)
-        {
-            if (this.baseConnection == null)
-            {
-                this.baseConnection = new SCConnectionStringBuilder();
-                this.baseConnection.Authenticate = true;
-                this.baseConnection.Host = "localhost"; //hardcoded, always connect to yourself. Works better on NLB environments.
-                this.baseConnection.Integrated = true;
-                this.baseConnection.IsPrimaryLogin = true;
-                this.baseConnection.Port = port;
-            }
-            return this.baseConnection.ToString();
-        }
 
 
         private string ReplaceEnvironmentFields(string value)

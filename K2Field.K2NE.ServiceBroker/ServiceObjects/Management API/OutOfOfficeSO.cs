@@ -7,7 +7,7 @@ using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using SourceCode.Workflow.Management;
 using System.Data;
-
+using K2Field.K2NE.ServiceBroker.Properties;
 using SourceCode.Workflow.Management.OOF;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects
@@ -72,6 +72,11 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             listShares.ReturnProperties.Add(Constants.SOProperties.OutOfOffice.DestinationUser);
             so.Methods.Add(listShares);
 
+            Method removeAllShares = Helper.CreateMethod(Constants.Methods.OutOfOffice.RemoveAllShares, "Remove All Shares", MethodType.Execute);
+            removeAllShares.InputProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
+            removeAllShares.Validation.RequiredProperties.Add(Constants.SOProperties.OutOfOffice.UserFQN);
+            so.Methods.Add(removeAllShares);
+
             return new List<ServiceObject>() { so };
         }
 
@@ -97,8 +102,13 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 case Constants.Methods.OutOfOffice.ListShares:
                     ListUsers();
                     break;
+                case Constants.Methods.OutOfOffice.RemoveAllShares:
+                    RemoveAllShares();
+                    break;
             }
         }
+
+
 
         private void GetUserStatus()
         {
@@ -108,11 +118,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
 
-            using (mngServer.CreateConnection())
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
                 UserStatuses status = mngServer.GetUserStatus(userFQN);
 
                 DataRow dr = results.NewRow();
@@ -123,24 +132,23 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             }
         }
 
-        private void SetStatus(UserStatuses status)
+        private void SetStatus(UserStatuses status, bool checkCurrentStatus = true)
         {
             string userFQN = base.GetStringProperty(Constants.SOProperties.OutOfOffice.UserFQN);
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
 
-            using (mngServer.CreateConnection())
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
                 // None for userstatus means the users is not configured, throw an exception
-                if (UserStatuses.None == mngServer.GetUserStatus(userFQN))
+                if (checkCurrentStatus && UserStatuses.None == mngServer.GetUserStatus(userFQN))
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
+                    throw new ApplicationException(Resources.OutOfOfficeNotConfiguredForUser);
                 }
                 bool result = mngServer.SetUserStatus(userFQN, status);
                 if (!result)
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.FailedToSetOOF);
+                    throw new ApplicationException(Resources.FailedToSetOOF);
                 }
             }
         }
@@ -156,18 +164,17 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
 
-            using (mngServer.CreateConnection())
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
 
                 WorklistShares wsColl = mngServer.GetCurrentSharingSettings(userFQN, ShareType.OOF);
 
                 //  Throw error if multiple configurations (WorklistShare objects) detected, as this method cannot support that
                 if (wsColl.Count > 1)
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.MultipleOOFConfigurations);
+                    throw new ApplicationException(Resources.MultipleOOFConfigurations);
                 }
 
                 //  If configuration exist already, add to it
@@ -179,12 +186,12 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     bool result = mngServer.ShareWorkList(userFQN, worklistshare);
                     if (!result)
                     {
-                        throw new ApplicationException(Constants.ErrorMessages.FailedToSetOOF);
+                        throw new ApplicationException(Resources.FailedToSetOOF);
                     }
                     DataRow dr = results.NewRow();
                     dr[Constants.SOProperties.OutOfOffice.UserFQN] = userFQN;
                     dr[Constants.SOProperties.OutOfOffice.DestinationUser] = destinationUser;
-    
+
                     results.Rows.Add(dr); ;
 
                 }
@@ -209,12 +216,12 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     bool result = mngServer.ShareWorkList(userFQN, worklistshare);
                     if (!result)
                     {
-                        throw new ApplicationException(Constants.ErrorMessages.FailedToSetOOF);
+                        throw new ApplicationException(Resources.FailedToSetOOF);
                     }
                     result = mngServer.SetUserStatus(userFQN, UserStatuses.Available);
                     if (!result)
                     {
-                        throw new ApplicationException(Constants.ErrorMessages.FailedToSetOOF);
+                        throw new ApplicationException(Resources.FailedToSetOOF);
                     }
 
                     DataRow dr = results.NewRow();
@@ -232,13 +239,12 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
 
-            using (mngServer.CreateConnection())
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
-                SourceCode.Workflow.Management.OOF.Users  users = mngServer.GetUsers(ShareType.OOF);
-          
+                SourceCode.Workflow.Management.OOF.Users users = mngServer.GetUsers(ShareType.OOF);
+
 
                 foreach (SourceCode.Workflow.Management.OOF.User user in users)
                 {
@@ -260,7 +266,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                         }
                     }
                 }
-                
+
             }
         }
 
@@ -272,16 +278,15 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
 
-            using (mngServer.CreateConnection())
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
 
                 // None for userstatus means the users is not configured, throw an exception
                 if (mngServer.GetUserStatus(userFQN) == UserStatuses.None)
                 {
-                    throw new ApplicationException(Constants.ErrorMessages.OutOfOfficeNotConfiguredForUser);
+                    throw new ApplicationException(Resources.OutOfOfficeNotConfiguredForUser);
                 }
                 WorklistShares wsColl = mngServer.GetCurrentSharingSettings(userFQN, ShareType.OOF);
 
@@ -300,6 +305,32 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 }
 
             }
+        }
+
+
+        private void RemoveAllShares()
+        {
+            string userFQN = base.GetStringProperty(Constants.SOProperties.OutOfOffice.UserFQN);
+
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
+
+            using (mngServer.Connection)
+            {
+                if (mngServer.GetUserStatus(userFQN) == UserStatuses.None)
+                {
+                    throw new ApplicationException(Resources.OutOfOfficeNotConfiguredForUser);
+                }
+
+                WorklistShares shares = mngServer.GetCurrentSharingSettings(userFQN, ShareType.OOF);
+
+                if (shares == null || shares.Count > 0)
+                {
+                    mngServer.UnShareAll(userFQN);
+                }
+
+                mngServer.Connection.Close();
+            }
+            SetStatus(UserStatuses.Available,false);
         }
     }
 }

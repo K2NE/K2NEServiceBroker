@@ -6,6 +6,7 @@ using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using System.Data;
 using SourceCode.Workflow.Management;
 using SourceCode.Workflow.Management.Criteria;
+using K2Field.K2NE.ServiceBroker.Properties;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 {
@@ -86,10 +87,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             base.ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
-            using (mngServer.CreateConnection())
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
+
+            using (mngServer.Connection)
             {
-                mngServer.Open(BaseAPIConnectionString);
 
                 ErrorProfile all = mngServer.GetErrorProfiles()[0];
                 ErrorLogCriteriaFilter errorfilter = new ErrorLogCriteriaFilter();
@@ -98,7 +99,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
                 if (errors.Count != 1)
                 {
-                    throw new ApplicationException(string.Format("Could not retrieve process (with id: {0}). Got {1} results.", procInstId, errors.Count));
+                    throw new ApplicationException(string.Format(Resources.NotRetrieveProcess, procInstId, errors.Count));
                 }
 
                 int errorId = errors[0].ID;
@@ -132,13 +133,16 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             base.ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            WorkflowManagementServer mngServer = new WorkflowManagementServer();
-            using (mngServer.CreateConnection())
-            {
-                mngServer.Open(BaseAPIConnectionString);
+            WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
 
-                //TODO: catch exception on this?
+            using (mngServer.Connection)
+            {
                 ErrorProfile prof = mngServer.GetErrorProfile(profile);
+                if (prof == null)
+                {
+                    throw new Exception(string.Format(Resources.ProfileNotFound, profile));
+                }
+
                 ErrorLogs errors = mngServer.GetErrorLogs(prof.ID);
 
                 foreach (ErrorLog e in errors)

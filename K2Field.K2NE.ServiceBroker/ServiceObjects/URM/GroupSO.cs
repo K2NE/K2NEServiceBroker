@@ -97,7 +97,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
             DataTable dtResults = ServiceBroker.ServicePackage.ResultTable;
 
-            ICachedIdentity identityFromName = base.ServiceBroker.IdentityService.GetIdentityFromName(base.ServiceBroker.SecurityManager.GetFullyQualifiedName(fqn), IdentityType.Group, (string)null);
+            ICachedIdentity identityFromName = base.ServiceBroker.IdentityService.GetIdentityFromName(K2NEServiceBroker.SecurityManager.GetFullyQualifiedName(fqn), IdentityType.Group, (string)null);
             if (identityFromName == null)
             {
                 return;
