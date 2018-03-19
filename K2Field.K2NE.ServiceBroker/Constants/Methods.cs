@@ -10,6 +10,13 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string GetErrors = "GetErrors";
             public const string RetryProcess = "RetryProcessInstance";
         }
+        
+        public static class ADOSMOQuery
+        {
+            public const string ExcelFromADOQuery = "ExcelFromADOQuery";
+            public const string ListQueryData = "List";
+            public const string ADOQuery2Excel = "ADOQueryToExcel";
+        }
 
         public static class ManagementWorklist
         {
@@ -98,6 +105,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string AddOutOfOffice = "AddOutOfOffice";
             public const string GetUserStatus = "GetUserStatus";
             public const string ListShares = "ListShares";
+            public const string RemoveAllShares = "RemoveAllShares";
         }
 
         public static class OutOfOfficeClient
@@ -106,8 +114,10 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string SetInOffice = "SetInOffice";
             public const string ListUserShares = "ListUserShares";
             public const string AddOutOfOffice = "AddOutOfOffice";
+            public const string RemoveOutOfOffice = "RemoveOutOfOffice";
             public const string GetUserStatus = "GetUserStatus";
             public const string ListShares = "ListShares";
+            public const string RemoveAllShares = "RemoveAllShares";
         }
 
         public static class Group

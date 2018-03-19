@@ -8,6 +8,7 @@ using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using K2Field.K2NE.ServiceBroker.Helpers;
 using System.Data;
 using System.Management.Automation.Language;
+using K2Field.K2NE.ServiceBroker.Properties;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
 {
@@ -41,7 +42,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
                 }
                 catch (Exception ex)
                 {
-                    base.ServiceBroker.HostServiceLogger.LogError("Failed to retrieve PowerShell files.");
+                    base.ServiceBroker.HostServiceLogger.LogError(Resources.FailedToRetrievePSFiles);
                     base.ServiceBroker.HostServiceLogger.LogException(ex);
                     return serviceObjects;
                 }
@@ -51,7 +52,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
 
                     if (String.Compare(scriptFile.Key, "SimplePowershell", true) == 0 || String.Compare(scriptFile.Key, "PowershellVariables", true) == 0)
                     {
-                        base.ServiceBroker.HostServiceLogger.LogError(string.Format("Not creating service object for PowerShell script '{0}'. This is a system service object already.", scriptFile.Key));
+                        base.ServiceBroker.HostServiceLogger.LogError(string.Format(Resources.NotCreatingSOForPSScript, scriptFile.Key));
                         continue;
                     }
 
@@ -76,7 +77,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
                     {
                         if (string.Compare(internalFunction.Name, "RunScript", true) == 0)
                         {
-                            base.ServiceBroker.HostServiceLogger.LogError(string.Format("Not creating Service Object Method for PowerShell function '{0}' in script '{1}'. This is a system method.", internalFunction.Name, scriptFile.Key));
+                            base.ServiceBroker.HostServiceLogger.LogError(string.Format(Resources.NotCreatingSOMethodForPSFunction, internalFunction.Name, scriptFile.Key));
                             continue;
                         }
 

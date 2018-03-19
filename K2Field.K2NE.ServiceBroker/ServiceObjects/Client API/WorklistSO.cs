@@ -5,6 +5,7 @@ using SourceCode.Workflow.Client;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using System.Data;
 using System;
+using K2Field.K2NE.ServiceBroker.Properties;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
 {
@@ -184,9 +185,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
             string actionName = base.GetStringProperty(Constants.SOProperties.ClientWorklist.ActionName, true);
 
 
-            using (Connection k2Con = new Connection())
+
+            using (Connection k2Con = this.ServiceBroker.K2Connection.GetWorkflowClientConnection())
             {
-                k2Con.Open(base.K2ClientConnectionSetup);
 
                 WorklistCriteria wc = new WorklistCriteria();
                 wc.Platform = base.Platform;
@@ -196,12 +197,12 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
 
                 if (wl.TotalCount == 0)
                 {
-                    throw new ApplicationException("No worklist item found with those criteria.");
+                    throw new ApplicationException(Resources.NoWorklistItemFound);
                 }
 
                 if (wl.TotalCount > 1)
                 {
-                    throw new ApplicationException("More than one worklist item found with those criteria.");
+                    throw new ApplicationException(Resources.MoreThanOneWorklistItemFound);
                 }
 
                 
@@ -216,7 +217,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
                 }
                 k2Con.Close();
 
-                throw new ApplicationException("Failed to find the action specified. Worklist item was found.");
+                throw new ApplicationException(Resources.FailedToFindTheAction);
             }
         }
 
@@ -224,10 +225,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
         {
             string sn = base.GetStringProperty(Constants.SOProperties.ClientWorklist.SerialNumber, true);
             string fqn = base.GetStringProperty(Constants.SOProperties.ClientWorklist.FQN, true);
-
-            using (Connection k2Con = new Connection())
+            using (Connection k2Con = this.ServiceBroker.K2Connection.GetWorkflowClientConnection())
             {
-                k2Con.Open(base.K2ClientConnectionSetup);
 
                 WorklistItem wli = k2Con.OpenWorklistItem(sn);
                 wli.Redirect(fqn);
@@ -244,10 +243,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            using (Connection k2Con = new Connection())
+            using (Connection k2Con = base.ServiceBroker.K2Connection.GetWorkflowClientConnection())
             {
-                k2Con.Open(base.K2ClientConnectionSetup);
-
                 WorklistItem wli = k2Con.OpenWorklistItem(sn);
                 wli.Release();
 
@@ -262,9 +259,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
 
-            using (Connection k2Con = new Connection())
+            using (Connection k2Con = base.ServiceBroker.K2Connection.GetWorkflowClientConnection())
             {
-                k2Con.Open(base.K2ClientConnectionSetup);
                 
                 WorklistCriteria wc = new WorklistCriteria();
                 wc.Platform = base.Platform;

@@ -8,6 +8,7 @@ using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using K2Field.K2NE.ServiceBroker.Helpers;
 using System.Data;
+using K2Field.K2NE.ServiceBroker.Properties;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
 {
@@ -308,7 +309,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             }
             catch (Exception ex)
             {
-                throw new ApplicationException(string.Format("Caught exception at RunUMGetUsers({0},{1})", ldap, net), ex);
+                throw new ApplicationException(string.Format(Resources.CaughtExceptionAtRunUMGetUsers, ldap, net), ex);
             }
         }
     }

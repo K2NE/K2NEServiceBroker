@@ -1,5 +1,8 @@
 == ADO SMO Query
 
+There is now also a simple way of providing a query to an SMO and getting a Excel file back, using the ADO Query To Excel service object!
+
+
 Runs ADO queries against smartobjects. Main features:
 * Supports multiple queries and creates separate service objects for each query
 * Each service object contains properties with name and type returned by query
