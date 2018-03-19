@@ -502,6 +502,22 @@ namespace K2Field.K2NE.ServiceBroker
             return Guid.Empty;
         }
 
+        protected FileProperty GetFileProperty(string name, bool isRequired = false)
+        {
+            Property p = ServiceBroker.Service.ServiceObjects[0].Properties[name];
+            if (p == null)
+            {
+                if (isRequired)
+                    throw new ArgumentException(string.Format(Constants.ErrorMessages.RequiredPropertyNotFound, name));
+                return new FileProperty();
+            }
+            FileProperty val = p as FileProperty;
+            if (isRequired && val == null)
+                throw new ArgumentException(string.Format("{0} is required but is empty.", name));
+
+            return val;
+        }
+
         #endregion Protected helper methods for property value retrieval
 
         /*

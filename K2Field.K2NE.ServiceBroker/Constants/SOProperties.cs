@@ -244,5 +244,17 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string MetaDataScriptPath = "MetaDataScriptPath";
             public const string MetaDataPSFunctionName = "MetaDataPSFunctionName";
         }
+
+        public static class ExcelDocumentServices
+        {
+            public const string ExcelFile = "ExcelFile";
+            public const string WorksheetName = "WorksheetName";
+            public const string CellCoordinates = "CellCoordinates";
+            public const string CellName = "CellName";
+            public const string CellValue = "CellValue";
+            public const string MultipleCellCoordinates = "MultipleCellCoordinates";
+            public const string MultipleCellValues = "MultipleCellValues";
+            public const string UpdatedExcelFile = "UpdatedExcelFile";
+        }
     }
 }

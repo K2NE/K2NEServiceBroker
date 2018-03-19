@@ -27,6 +27,7 @@ using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using SourceCode.Hosting.Server.Interfaces;
 using K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell;
+using K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices;
 
 namespace K2Field.K2NE.ServiceBroker
 {
@@ -81,7 +82,8 @@ namespace K2Field.K2NE.ServiceBroker
                                 new ADOSMOQuerySO(this),
                                 new PowerShellVariablesSO(this),
                                 new SimplePowerShellSO(this),
-                                new DynamicPowerShellSO(this)
+                                new DynamicPowerShellSO(this),
+                                new ExcelDocumentServicesSO(this)
                             };
 
                         }
