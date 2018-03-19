@@ -10,15 +10,15 @@ using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
 {
-    public class ExcelDocumentServicesSO : ServiceObjectBase
+    public class ExcelDocumentServiceSO : ServiceObjectBase
     {
-        public ExcelDocumentServicesSO(K2NEServiceBroker api) : base(api) { }
+        public ExcelDocumentServiceSO(K2NEServiceBroker api) : base(api) { }
 
         public override string ServiceFolder
         {
             get
             {
-                return Constants.ServiceFolders.ExcelServices;
+                return Constants.ServiceFolders.ExcelService;
             }
         }
 
@@ -26,7 +26,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
         {
             List<ServiceObject> soList = new List<ServiceObject>();
 
-            ServiceObject so = Helper.CreateServiceObject("ExcelDocumentServices", "Excel Document Services SMO.");
+            ServiceObject so = Helper.CreateServiceObject("ExcelDocumentService", "Excel Document Service SMO.");
 
             FileProperty excelFile = new FileProperty(Constants.SOProperties.ExcelDocumentServices.ExcelFile, new MetaData(), String.Empty, String.Empty);
             excelFile.MetaData.DisplayName = Constants.SOProperties.ExcelDocumentServices.ExcelFile;
@@ -166,20 +166,13 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
             ServiceObject serviceObject = ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
             DataTable results = ServiceBroker.ServicePackage.ResultTable;
+            
+            string smoCellValue = ExcelServiceHelper.GetCellValueFromFile(excelFile, worksheetName, cellCoordinates);
 
-            try
-            {
-                string smoCellValue = ExcelServicesHelper.GetCellValueFromString(excelFile.Content, worksheetName, cellCoordinates);
+            DataRow dr = results.NewRow();
+            dr[Constants.SOProperties.ExcelDocumentServices.CellValue] = smoCellValue;
 
-                DataRow dr = results.NewRow();
-                dr[Constants.SOProperties.ExcelDocumentServices.CellValue] = smoCellValue;
-
-                results.Rows.Add(dr);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            results.Rows.Add(dr);
         }
 
         private void SaveCellValue()
@@ -193,46 +186,31 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
             ServiceObject serviceObject = ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
             DataTable results = ServiceBroker.ServicePackage.ResultTable;
+            
+            excelFile = ExcelServiceHelper.SaveCellValueToFile(excelFile, worksheetName, cellCoordinates, cellValue);
 
-            try
-            {
-                excelFile.Content = ExcelServicesHelper.SaveCellValueToString(excelFile.Content, worksheetName, cellCoordinates, cellValue);
+            DataRow dr = results.NewRow();
+            dr[Constants.SOProperties.ExcelDocumentServices.UpdatedExcelFile] = excelFile.Value;
 
-                DataRow dr = results.NewRow();
-                dr[Constants.SOProperties.ExcelDocumentServices.UpdatedExcelFile] = excelFile.Value;
-
-                results.Rows.Add(dr);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            results.Rows.Add(dr);
         }
 
         private void GetWorkSheetNames()
         {
             //Get input properties
-            string excelFile = GetStringProperty(Constants.SOProperties.ExcelDocumentServices.ExcelFile, true);
+            FileProperty excelFile = GetFileProperty(Constants.SOProperties.ExcelDocumentServices.ExcelFile, true);
 
             ServiceObject serviceObject = ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
             DataTable results = ServiceBroker.ServicePackage.ResultTable;
+            
+            string[] sheetNames = ExcelServiceHelper.GetSheetNamesFromFile(excelFile);
 
-            try
+            foreach (string sheetName in sheetNames)
             {
-                Sheets smoWorksheets = ExcelServicesHelper.GetSheetNamesFromString(excelFile);
-
-                foreach (Sheet sheet in smoWorksheets)
-                {
-                    DataRow dr = results.NewRow();
-                    dr[Constants.SOProperties.ExcelDocumentServices.WorksheetName] = sheet.Name;
-                    results.Rows.Add(dr);
-                }
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                DataRow dr = results.NewRow();
+                dr[Constants.SOProperties.ExcelDocumentServices.WorksheetName] = sheetName;
+                results.Rows.Add(dr);
             }
         }
 
@@ -246,20 +224,13 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
             ServiceObject serviceObject = ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
             DataTable results = ServiceBroker.ServicePackage.ResultTable;
+            
+            string smoCellValues = ExcelServiceHelper.GetMultipleCellValueFromFile(excelFile, worksheetName, multipleCellCoordinates);
 
-            try
-            {
-                string smoCellValues = ExcelServicesHelper.GetMultipleCellValueFromString(excelFile.Content, worksheetName, multipleCellCoordinates);
+            DataRow dr = results.NewRow();
+            dr[Constants.SOProperties.ExcelDocumentServices.MultipleCellValues] = smoCellValues;
 
-                DataRow dr = results.NewRow();
-                dr[Constants.SOProperties.ExcelDocumentServices.MultipleCellValues] = smoCellValues;
-
-                results.Rows.Add(dr);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            results.Rows.Add(dr);
         }
 
         public void GetMultipleCellValuesList()
@@ -272,29 +243,19 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
             ServiceObject serviceObject = ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
             DataTable results = ServiceBroker.ServicePackage.ResultTable;
+            
+            string smoCellValues = ExcelServiceHelper.GetMultipleCellValueFromFile(excelFile, worksheetName, multipleCellCoordinates);
+            
+            string[] cellNames = multipleCellCoordinates.Split(';');
+            string[] cellValues = smoCellValues.Split(';');
 
-            try
+            for(int i = 0; i< cellNames.Length; i++)
             {
-                string smoCellValues = ExcelServicesHelper.GetMultipleCellValueFromString(excelFile.Content, worksheetName, multipleCellCoordinates);
+                DataRow dr = results.NewRow();
 
-                //DataRow dr = results.NewRow();
-
-                string[] cellNames = multipleCellCoordinates.Split(';');
-                string[] cellValues = smoCellValues.Split(';');
-
-                for(int i = 0; i< cellNames.Length; i++)
-                {
-                    DataRow dr = results.NewRow();
-
-                    dr[Constants.SOProperties.ExcelDocumentServices.CellName] = cellNames[i];
-                    dr[Constants.SOProperties.ExcelDocumentServices.CellValue] = cellValues[i];
-                    results.Rows.Add(dr);
-                }
-                
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                dr[Constants.SOProperties.ExcelDocumentServices.CellName] = cellNames[i];
+                dr[Constants.SOProperties.ExcelDocumentServices.CellValue] = cellValues[i];
+                results.Rows.Add(dr);
             }
         }
 
@@ -309,20 +270,13 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
             ServiceObject serviceObject = ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
             DataTable results = ServiceBroker.ServicePackage.ResultTable;
+            
+            excelFile = ExcelServiceHelper.SaveMultipleCellValuesToFile(excelFile, worksheetName, multipleCellCoordinates, multipleCellValues);
 
-            try
-            {
-                excelFile.Content = ExcelServicesHelper.SaveMultipleCellValuesToString(excelFile.Content, worksheetName, multipleCellCoordinates, multipleCellValues);
+            DataRow dr = results.NewRow();
+            dr[Constants.SOProperties.ExcelDocumentServices.UpdatedExcelFile] = excelFile.Value;
 
-                DataRow dr = results.NewRow();
-                dr[Constants.SOProperties.ExcelDocumentServices.UpdatedExcelFile] = excelFile.Value;
-
-                results.Rows.Add(dr);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            results.Rows.Add(dr);
         }
     }
 }

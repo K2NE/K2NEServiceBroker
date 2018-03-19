@@ -106,7 +106,7 @@
     <Compile Include="Constants\ServiceFolders.cs" />
     <Compile Include="Constants\SOProperties.cs" />
     <Compile Include="Constants\StringFormats.cs" />
-    <Compile Include="Helpers\ExcelServicesHelper.cs" />
+    <Compile Include="Helpers\ExcelServiceHelper.cs" />
     <Compile Include="Helpers\ExportToExcel.cs" />
     <Compile Include="Helpers\FilterItem.cs" />
     <Compile Include="Helpers\LdapHelper.cs" />
@@ -131,7 +131,7 @@
     <Compile Include="ServiceObjects\Client API\ProcessInstanceClientSO.cs" />
     <Compile Include="ServiceObjects\Client API\OutOfOfficeClientSO.cs" />
     <Compile Include="ServiceObjects\Client API\WorklistSO.cs" />
-    <Compile Include="ServiceObjects\ExcelServices\ExcelDocumentServicesSO.cs" />
+    <Compile Include="ServiceObjects\ExcelServices\ExcelDocumentServiceSO.cs" />
     <Compile Include="ServiceObjects\Management API\ErrorLogSO.cs" />
     <Compile Include="ServiceObjects\IdentitySO.cs" />
     <Compile Include="ServiceObjects\Management API\ManagementWorklistSO.cs" />

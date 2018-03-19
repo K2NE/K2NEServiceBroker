@@ -465,12 +465,16 @@ namespace K2Field.K2NE.ServiceBroker
             if (p == null)
             {
                 if (isRequired)
+                {
                     throw new ArgumentException(string.Format(Resources.RequiredPropertyNotFound, name));
+                }
                 return new FileProperty();
             }
             FileProperty val = p as FileProperty;
             if (isRequired && val == null)
+            {
                 throw new ArgumentException(string.Format("{0} is required but is empty.", name));
+            }
 
             return val;
         }
