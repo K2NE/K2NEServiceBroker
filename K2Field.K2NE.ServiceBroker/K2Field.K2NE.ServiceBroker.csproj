@@ -38,7 +38,10 @@
     <AssemblyOriginatorKeyFile>..\Solution Files\key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\Open XML SDK\V2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
     <Reference Include="SourceCode.Data.SmartObjectsClient, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files (x86)\K2 blackpearl\Bin\SourceCode.Data.SmartObjectsClient.dll</HintPath>
@@ -103,6 +106,7 @@
     <Compile Include="Constants\ServiceFolders.cs" />
     <Compile Include="Constants\SOProperties.cs" />
     <Compile Include="Constants\StringFormats.cs" />
+    <Compile Include="Helpers\ExcelServiceHelper.cs" />
     <Compile Include="Helpers\ExportToExcel.cs" />
     <Compile Include="Helpers\FilterItem.cs" />
     <Compile Include="Helpers\LdapHelper.cs" />
@@ -127,6 +131,7 @@
     <Compile Include="ServiceObjects\Client API\ProcessInstanceClientSO.cs" />
     <Compile Include="ServiceObjects\Client API\OutOfOfficeClientSO.cs" />
     <Compile Include="ServiceObjects\Client API\WorklistSO.cs" />
+    <Compile Include="ServiceObjects\ExcelServices\ExcelDocumentServiceSO.cs" />
     <Compile Include="ServiceObjects\Management API\ErrorLogSO.cs" />
     <Compile Include="ServiceObjects\IdentitySO.cs" />
     <Compile Include="ServiceObjects\Management API\ManagementWorklistSO.cs" />

@@ -13,5 +13,6 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         public const string URM = "URM";
         public const string ADONETQuery = "ADO .NET Query";
         public const string PowerShell = "PowerShell";
+        public const string ExcelService = "Excel Service";
     }
 }
