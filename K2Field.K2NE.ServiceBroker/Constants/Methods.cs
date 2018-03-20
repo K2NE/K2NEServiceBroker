@@ -152,5 +152,16 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         {
             public const string RunScript = "RunScript";
         }
+
+        public static class ExcelDocumentServices
+        {
+            public const string GetCellValue = "GetCellValue";
+            public const string SaveCellValue = "SaveCellValue";
+            public const string GetWorkSheetNames = "GetWorkSheetNames";
+            public const string GetMultipleCellValues = "GetMultipleCellValues";
+            public const string GetMultipleCellValuesList = "GetMultipleCellValuesList";
+            public const string SaveMultipleCellValuesList = "SaveMultipleCellValuesList";
+            public const string SaveMultipleCellValues = "SaveMultipleCellValues";
+        }
     }
 }
