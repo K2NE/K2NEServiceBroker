@@ -93,33 +93,40 @@ namespace K2Field.K2NE.ServiceBroker
             }
         }
 
-        /// <summary>
-        /// helper property to get the type of the service object, to be able to initialize a specific instance of it.
-        /// </summary>
-        private Dictionary<string, Type> ServiceObjectToType
+
+        ///<summary>
+        ///helper method to get the type of the service object, to be able to initialize a specific instance of it.
+        ///</summary>
+        private Type GetServiceObjectByType(string serviceObjectName)
         {
-            get
+            string searchKey = string.Concat(this.Service.Guid.ToString(), "_", serviceObjectName);
+            if (!_serviceObjectToType.ContainsKey(searchKey))
             {
                 lock (serviceObjectToTypeLock)
                 {
-                    if (_serviceObjectToType.Count != 0)
-                    {
-                        return _serviceObjectToType;
-                    }
 
-                    _serviceObjectToType = new Dictionary<string, Type>();
                     foreach (ServiceObjectBase soBase in ServiceObjectClasses)
                     {
                         List<ServiceObject> serviceObjs = soBase.DescribeServiceObjects();
                         foreach (ServiceObject so in serviceObjs)
                         {
-                            _serviceObjectToType.Add(so.Name, soBase.GetType());
+                            _serviceObjectToType.Add(string.Concat(this.Service.Guid.ToString(), "_", so.Name), soBase.GetType());
                         }
                     }
                 }
-                return _serviceObjectToType;
+                if (!_serviceObjectToType.ContainsKey(searchKey))
+                {
+                    throw new ApplicationException(string.Format(Resources.IsNotValidSO, serviceObjectName));
+                }
+                return _serviceObjectToType[searchKey];
+            }
+            else
+            {
+                return _serviceObjectToType[searchKey];
             }
         }
+
+
         private ServiceFolder InitializeServiceFolder(string folderName, string description)
         {
             if (string.IsNullOrEmpty(folderName))
@@ -204,11 +211,7 @@ namespace K2Field.K2NE.ServiceBroker
                 {
                     throw new ApplicationException(Resources.SOIsNotSet);
                 }
-                if (!ServiceObjectToType.ContainsKey(so.Name))
-                {
-                    throw new ApplicationException(string.Format(Resources.IsNotValidSO, so.Name));
-                }
-                Type soType = ServiceObjectToType[so.Name];
+                Type soType = GetServiceObjectByType(so.Name);
                 object[] constParams = new object[] { this };
                 ServiceObjectBase soInstance = Activator.CreateInstance(soType, constParams) as ServiceObjectBase;
 
