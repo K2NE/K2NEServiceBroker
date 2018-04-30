@@ -231,4 +231,7 @@
   <data name="ZoneExists" xml:space="preserve">
     <value>Time Zone already exists. Name:</value>
   </data>
+  <data name="WorksheetNotExist" xml:space="preserve">
+    <value>This Worksheet doesn't exist.</value>
+  </data>
 </root>

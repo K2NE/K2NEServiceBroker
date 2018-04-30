@@ -385,6 +385,15 @@ namespace K2Field.K2NE.ServiceBroker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This Worksheet doesn&apos;t exist..
+        /// </summary>
+        internal static string WorksheetNotExist {
+            get {
+                return ResourceManager.GetString("WorksheetNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Time Zone does not exist. Name:.
         /// </summary>
         internal static string ZoneDoesNotExist {
