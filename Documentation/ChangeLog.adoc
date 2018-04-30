@@ -1,4 +1,7 @@
 == ChangeLog
+=== 1.10
+- We found an issue when creating multiple service instances with different ServiceObjects (for example, different ADO.NET queries). This would result in a Service Object not found. The fix in this release solves that but has not significantly been performance tested.
+
 === 1.9
 - We are now version 1.9. Version 1.8 is the last version on the 4.7 release of K2. This 1.9 version will now continue to work on K2 five and the Core 7 VM's.
 

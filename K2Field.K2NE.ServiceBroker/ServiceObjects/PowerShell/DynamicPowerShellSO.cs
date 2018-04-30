@@ -2,13 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using SourceCode.SmartObjects.Services.ServiceSDK.Objects;
 using SourceCode.SmartObjects.Services.ServiceSDK.Types;
 using K2Field.K2NE.ServiceBroker.Helpers;
 using System.Data;
-using System.Management.Automation.Language;
 using K2Field.K2NE.ServiceBroker.Properties;
+using System.Management.Automation.Language;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects.PowerShell
 {
