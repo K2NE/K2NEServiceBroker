@@ -182,6 +182,11 @@ namespace K2Field.K2NE.ServiceBroker
                 foreach (ServiceObject so in serviceObjects)
                 {
                     Service.ServiceObjects.Create(so);
+                    string dictKey = string.Concat(this.Service.Guid.ToString(), "_", so.Name);
+                    if (!_serviceObjectToType.ContainsKey(dictKey))
+                    {
+                        _serviceObjectToType.Add(dictKey, entry.GetType());
+                    }
                     if (requireServiceFolders)
                     {
                         ServiceFolder sf = InitializeServiceFolder(entry.ServiceFolder, entry.ServiceFolder);
