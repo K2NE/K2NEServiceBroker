@@ -21,6 +21,7 @@ To install:
 - Open and/or copy the Release folder in the solution directory to the K2 server.
 - Run install.ps1
 
+
 You will now have a registered service type and can create a new service instance.
 
 ## Disclaimer
@@ -28,5 +29,7 @@ You will now have a registered service type and can create a new service instanc
 The code is provided as is, meaning that it's a true open source project. Use it, be happy. Find issues? Please report them or even better, submit patches/pull requests! Share!
 
 
+
 ## License
 This software is GPL v3. See our [License](Documentation/LICENSE.txt)
+This is great.
