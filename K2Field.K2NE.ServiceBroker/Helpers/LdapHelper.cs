@@ -46,6 +46,10 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                     filter.Prop = Constants.Properties.AdProperties.sAMAccountName;
                     filter.Value = smoValue.Substring(smoValue.IndexOf('\\') + 1);
                     break;
+                case Constants.SOProperties.URM.Email:
+                    filter.Prop = Constants.Properties.AdProperties.Email;
+                    filter.Value = smoValue.Substring(smoValue.IndexOf('\\') + 1);
+                    break;
                 default:
                     filter.Prop = smoProp;
                     filter.Value = smoValue;
