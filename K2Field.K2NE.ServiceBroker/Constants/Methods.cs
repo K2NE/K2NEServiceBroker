@@ -162,5 +162,10 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string SaveMultipleCellValuesList = "SaveMultipleCellValuesList";
             public const string SaveMultipleCellValues = "SaveMultipleCellValues";
         }
+
+        public static class ExcelImportServices
+        {
+            public const string UploadExcelDataToASmartObject = "UploadExcelDataToASmartObject";
+        }
     }
 }

@@ -106,6 +106,33 @@ namespace K2Field.K2NE.ServiceBroker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FQN column Name cannot be contained in the Excel Data..
+        /// </summary>
+        internal static string ExcelImportFQNExist {
+            get {
+                return ResourceManager.GetString("ExcelImportFQNExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A sheet with name &quot;{0}&quot; was not found..
+        /// </summary>
+        internal static string ExcelImportSheetNotExist {
+            get {
+                return ResourceManager.GetString("ExcelImportSheetNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transaction ID column Name cannot be contained in the Excel Data..
+        /// </summary>
+        internal static string ExcelImportTransactionIDNameExist {
+            get {
+                return ResourceManager.GetString("ExcelImportTransactionIDNameExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to find the action specified. Worklist item was found..
         /// </summary>
         internal static string FailedToFindTheAction {

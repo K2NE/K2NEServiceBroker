@@ -264,5 +264,18 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string MultipleCellValues = "MultipleCellValues";
             public const string UpdatedExcelFile = "UpdatedExcelFile";
         }
+
+        public static class ExcelImportServices
+        {
+            public const string ExcelFile = "ExcelFile";
+            public const string CreateMethodName = "CreateMethodName";
+            public const string HeaderRowSpaces = "HeaderRowSpaces";
+            public const string TransactionIDName = "TransactionIDName";
+            public const string TransactionIDValue = "TransactionIDValue";
+            public const string FQN = "FQN";
+            public const string SmartObject = "SmartObject";
+            public const string Results = "Results";
+            public const string SheetName = "SheetName";
+        }
     }
 }
