@@ -48,7 +48,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
             so.Properties.Add(excelFile);
 
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ExcelImportServices.SmartObject, SoType.Text, "SmartObject Name"));
-            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ExcelImportServices.Results, SoType.Text, "Import Results"));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ExcelImportServices.CreateMethodName, SoType.Text, "Create Method Name.  Default is Create if not specified."));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ExcelImportServices.HeaderRowSpaces, SoType.Text, "Action to take (Remove or Replace) when a space character is found in column names in the header row."));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ExcelImportServices.TransactionIDName, SoType.Text, "This allows you to specify an optional ID property name on the SmartObject which identifies the uploaded records."));
@@ -57,8 +56,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
 
             //UploadExcelDataToASmartObject
             Method mUploadExcelDataToASmartObject = Helper.CreateMethod(Constants.Methods.ExcelImportServices.UploadExcelDataToASmartObject, "Upload Excel Data to a SmartObject", MethodType.Read);
-            mUploadExcelDataToASmartObject.ReturnProperties.Add(Constants.SOProperties.ExcelImportServices.Results);
-            
+                        
             mUploadExcelDataToASmartObject.InputProperties.Add(Constants.SOProperties.ExcelImportServices.ExcelFile);
             mUploadExcelDataToASmartObject.Validation.RequiredProperties.Add(Constants.SOProperties.ExcelImportServices.ExcelFile);
             mUploadExcelDataToASmartObject.InputProperties.Add(Constants.SOProperties.ExcelImportServices.SheetName);
@@ -101,25 +99,15 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
             serviceObject.Properties.InitResultTable();
             DataTable results = ServiceBroker.ServicePackage.ResultTable;
             
-            string result = Import(excelFile, sheetName, smartObject, createMethodName, headerRowSpaces, transactionIDName, transactionIDValue);
-
-            DataRow dr = results.NewRow();
-            dr[Constants.SOProperties.ExcelImportServices.Results] = result;
-
-            results.Rows.Add(dr);
+            Import(excelFile, sheetName, smartObject, createMethodName, headerRowSpaces, transactionIDName, transactionIDValue);
         }
 
         /// <summary>
         /// Import data from Excel file into SmartObject
         /// </summary>
-        private string Import(FileProperty excelFile, string sheetName, string smartObject, string createMethodName, string headerRowSpaces, string transactionIDName,
+        private void Import(FileProperty excelFile, string sheetName, string smartObject, string createMethodName, string headerRowSpaces, string transactionIDName,
             string transactionIDValue)
         {
-            string result = string.Empty;
-
-            byte[] bFile = Convert.FromBase64String(excelFile.Content);
-            MemoryStream stream = new MemoryStream(bFile);
-
             // arrays to store the imported column names and also the SmartObject column names
             // this will be used later to get a list of matching columns.
             string[] dsColumnNames = null, soColumnNames = null;
@@ -130,23 +118,17 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
             // Read Data in excel file
             try
             {
-                using (stream)
-                {
-                    dt = ReadExcelFile(stream, sheetName);
-                }
+                dt = ReadExcelFile(excelFile, sheetName);                
 
                 if (dt.Rows.Count == 0)
                 {
-                    result = "0 rows imported";
-                    return result;
+                    throw new ApplicationException(Resources.ExcelImportNoRowsImported);
                 }
                 else
                 {
-                    result = dt.Rows.Count.ToString() + " rows found. ";
                     if (dt.Columns.Count == 0)
                     {
-                        result = "0 columns found.";
-                        return result;
+                        throw new ApplicationException(Resources.ExcelImportNoColumnsFound);
                     }
                     else
                     {
@@ -166,14 +148,12 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
                             col.ColumnName = Regex.Replace(col.ColumnName, @"[\p{P}\p{S}-[-_]]", "");
                             dsColumnNames[col.Ordinal] = col.ColumnName.ToLower();
                         }
-                        result += "Columns found: " + string.Join(",", dsColumnNames);
                     }
                 }
             }
-            catch (IOException ex)
+            catch (Exception ex)
             {
-                result = "Unable to Read from Excel File: " + ex.Message;
-                return result;
+                throw new Exception(Resources.ExcelImportUnabledToReadExcelFile, ex);
             }
 
             // If able to read data from Excel File, continue to bulk insert into SmartObject.
@@ -197,8 +177,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
 
                     if (arrMatchingCols.Count == 0)
                     {
-                        result = "No matching columns found in SmartObject and Excel Data.";
-                        return result;
+                        throw new ApplicationException(Resources.ExcelImportNoMatchingColumnsInSmO);
                     }
 
                     // Bulk Insert into SmartObject
@@ -231,11 +210,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
                             if (arrMatchingCols.Contains(sTransactionIDName))
                             {
                                 throw new ApplicationException(Resources.ExcelImportTransactionIDNameExist); 
-                            }
-
-                            if (arrMatchingCols.Contains("FQN"))
-                            {
-                                throw new ApplicationException(Resources.ExcelImportFQNExist);
                             }
 
                             foreach (DataRow dr in dt.Rows)
@@ -276,50 +250,26 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
                                     // replace spaces with underscores as SmartObject system names do that
                                     newSmartObject.Properties[sTransactionIDName.Replace(" ", "_")].Value = sTransactionIDValue;
                                 }
-                                
-                                if(newSmartObject.Properties.GetIndexbyName(Constants.SOProperties.ExcelImportServices.FQN) != -1)
-                                {
-                                    newSmartObject.Properties[Constants.SOProperties.ExcelImportServices.FQN].Value = CallingFQN;
-                                }
 
                                 inputList.SmartObjectsList.Add(newSmartObject);
                             }
-                            try
-                            {
-                                smoClientServer.ExecuteBulkScalar(soImport, inputList);
-                            }
-                            catch (SOC.SmartObjectException ex)
-                            {
-                                result = ex.Message + ex.StackTrace;
-                                foreach (SOC.SmartObjectExceptionData smOExBrokerData in ex.BrokerData)
-                                {
-                                    result += smOExBrokerData.Message + "  Before failure, " + result;
-                                }
-                                return result;
-                            }
 
-                            // Indicate the Transaction ID name and value in the results field
-                            if (!string.IsNullOrEmpty(sTransactionIDName) && !string.IsNullOrEmpty(sTransactionIDValue))
-                            {
-                                result += ". " + sTransactionIDName + ":" + sTransactionIDValue;
-                            }
+                            smoClientServer.ExecuteBulkScalar(soImport, inputList);
                         }
                         // free objects
                         arrMatchingCols = null;
                         soImport = null;
                     }
-                    catch (ApplicationException ex)
+                    catch (Exception ex)
                     {
-                        result = "Unable to insert data into SmartObject: " + ex.Message;
-                        return result;
+                        throw new Exception(Resources.ExcelImportUnabledToInsertIntoSmO, ex);
                     }
                 }
             }
-            catch (ApplicationException ex)
+            catch (Exception ex)
             {
-                result = "Unable to connect to K2 server: " + ex.Message;
+                throw new Exception(Resources.ExcelImportUnabledToConnectToK2Server, ex);
             }
-            return result;
         }
 
 
@@ -330,84 +280,90 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
         /// </summary>
         /// <param name="stream">The whole source Excel file passed in through memory stream, usually the server will do this.</param>
         /// <returns>Successfully extracted rows.</returns>
-        private DataTable ReadExcelFile(MemoryStream stream, string sheetName)
+        private DataTable ReadExcelFile(FileProperty excelFile, string sheetName)
         {
+
+            byte[] bFile = Convert.FromBase64String(excelFile.Content);
+            MemoryStream stream = new MemoryStream(bFile);
+
             // Initializate an instance of DataTable
             DataTable dt = new DataTable();
-            
-            // Use SpreadSheetDocument class of Open XML SDK to open excel file
-            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(stream, false))
+
+            using (stream)
             {
-                // Get Workbook Part of Spread Sheet Document
-                WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
-
-                // Get all sheets in spread sheet document 
-                IEnumerable<Sheet> sheetcollection = spreadsheetDocument.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
-
-                // Get relationship Id
-                string relationshipId = string.Empty;
-                if (string.IsNullOrEmpty(sheetName))
+                // Use SpreadSheetDocument class of Open XML SDK to open excel file
+                using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(stream, false))
                 {
-                    relationshipId = sheetcollection.First().Id.Value;
-                }
-                else
-                {
-                    Sheet sheet = sheetcollection.Where(sh => string.Compare(sh.Name, sheetName) == 0).FirstOrDefault();
-                    if(sheet != null)
+                    // Get Workbook Part of Spread Sheet Document
+                    WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
+
+                    // Get all sheets in spread sheet document 
+                    IEnumerable<Sheet> sheetcollection = spreadsheetDocument.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
+
+                    // Get relationship Id
+                    string relationshipId = string.Empty;
+                    if (string.IsNullOrEmpty(sheetName))
                     {
-                        relationshipId = sheet.Id.Value;
+                        relationshipId = sheetcollection.First().Id.Value;
                     }
                     else
                     {
-                        throw new ApplicationException(string.Format(Resources.ExcelImportSheetNotExist, sheetName));
+                        Sheet sheet = sheetcollection.Where(sh => string.Compare(sh.Name, sheetName) == 0).FirstOrDefault();
+                        if (sheet != null)
+                        {
+                            relationshipId = sheet.Id.Value;
+                        }
+                        else
+                        {
+                            throw new ApplicationException(string.Format(Resources.ExcelImportSheetNotExist, sheetName));
+                        }
                     }
-                }
 
-                // Get sheet1 Part of Spread Sheet Document
-                WorksheetPart worksheetPart = (WorksheetPart)spreadsheetDocument.WorkbookPart.GetPartById(relationshipId);
+                    // Get sheet1 Part of Spread Sheet Document
+                    WorksheetPart worksheetPart = (WorksheetPart)spreadsheetDocument.WorkbookPart.GetPartById(relationshipId);
 
-                // Get Data in Excel file
-                SheetData sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
-                IEnumerable<Row> rowcollection = sheetData.Descendants<Row>();
+                    // Get Data in Excel file
+                    SheetData sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
+                    IEnumerable<Row> rowcollection = sheetData.Descendants<Row>();
 
-                if (rowcollection.Count() == 0)
-                {
-                    return dt;
-                }
-
-                // Add columns (identified by a conventional header row)
-                foreach (Cell cell in rowcollection.ElementAt(0))
-                {
-                    dt.Columns.Add(GetValueOfCell(spreadsheetDocument, cell));
-                }
-
-                // Add rows into DataTable
-                foreach (Row row in rowcollection)
-                {
-                    DataRow temprow = dt.NewRow();
-                    int currentColumnIndex = 0;
-                    for (int i = 0; i < row.Descendants<Cell>().Count(); i++)
+                    if (rowcollection.Count() == 0)
                     {
-                        //Excel does not create an element for empty cells. This can lead to apparently "offset" data in the row. See http://stackoverflow.com/questions/3837981/reading-excel-open-xml-is-ignoring-blank-cells
-                        //Overcome this with some refe
-                        int cellColumnIndex = (int)GetColumnIndexFromRefName(GetColumnRefName(row.Descendants<Cell>().ElementAt(i).CellReference));
-                        while (currentColumnIndex < cellColumnIndex)
-                        {   //then we need to recreate the blank that was skipped over by Excel's efficient non-storage of empties
-                            temprow[currentColumnIndex] = string.Empty;
+                        return dt;
+                    }
+
+                    // Add columns (identified by a conventional header row)
+                    foreach (Cell cell in rowcollection.ElementAt(0))
+                    {
+                        dt.Columns.Add(GetValueOfCell(spreadsheetDocument, cell));
+                    }
+
+                    // Add rows into DataTable
+                    foreach (Row row in rowcollection)
+                    {
+                        DataRow temprow = dt.NewRow();
+                        int currentColumnIndex = 0;
+                        for (int i = 0; i < row.Descendants<Cell>().Count(); i++)
+                        {
+                            //Excel does not create an element for empty cells. This can lead to apparently "offset" data in the row. See http://stackoverflow.com/questions/3837981/reading-excel-open-xml-is-ignoring-blank-cells
+                            //Overcome this with some refe
+                            int cellColumnIndex = (int)GetColumnIndexFromRefName(GetColumnRefName(row.Descendants<Cell>().ElementAt(i).CellReference));
+                            while (currentColumnIndex < cellColumnIndex)
+                            {   //then we need to recreate the blank that was skipped over by Excel's efficient non-storage of empties
+                                temprow[currentColumnIndex] = string.Empty;
+                                currentColumnIndex++;
+                            }
+
+                            temprow[currentColumnIndex] = GetValueOfCell(spreadsheetDocument, row.Descendants<Cell>().ElementAt(i));
                             currentColumnIndex++;
                         }
 
-                        temprow[currentColumnIndex] = GetValueOfCell(spreadsheetDocument, row.Descendants<Cell>().ElementAt(i));
-                        currentColumnIndex++;
+                        // Add the row to DataTable
+                        // note the rows include header row
+                        if (!AreAllColumnsEmpty(temprow))
+                            dt.Rows.Add(temprow);
                     }
-
-                    // Add the row to DataTable
-                    // note the rows include header row
-                    if (!AreAllColumnsEmpty(temprow))
-                        dt.Rows.Add(temprow);
                 }
             }
-
             // Here remove header row
             dt.Rows.RemoveAt(0);
             return dt;
@@ -492,6 +448,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
 
                     index++;
                 }
+            }
+            else
+            {
+                throw new ApplicationException(Resources.ExcelImportCellLettersIssue);
             }
 
             return columnIndex;

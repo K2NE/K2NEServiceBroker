@@ -272,9 +272,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string HeaderRowSpaces = "HeaderRowSpaces";
             public const string TransactionIDName = "TransactionIDName";
             public const string TransactionIDValue = "TransactionIDValue";
-            public const string FQN = "FQN";
             public const string SmartObject = "SmartObject";
-            public const string Results = "Results";
             public const string SheetName = "SheetName";
         }
     }

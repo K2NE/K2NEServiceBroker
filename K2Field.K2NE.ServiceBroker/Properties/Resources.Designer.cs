@@ -106,11 +106,38 @@ namespace K2Field.K2NE.ServiceBroker.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to FQN column Name cannot be contained in the Excel Data..
+        ///   Looks up a localized string similar to A method can work only with 1 or 2 letter cells..
         /// </summary>
-        internal static string ExcelImportFQNExist {
+        internal static string ExcelImportCellLettersIssue {
             get {
-                return ResourceManager.GetString("ExcelImportFQNExist", resourceCulture);
+                return ResourceManager.GetString("ExcelImportCellLettersIssue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 0 columns found..
+        /// </summary>
+        internal static string ExcelImportNoColumnsFound {
+            get {
+                return ResourceManager.GetString("ExcelImportNoColumnsFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No matching columns found in SmartObject and Excel Data..
+        /// </summary>
+        internal static string ExcelImportNoMatchingColumnsInSmO {
+            get {
+                return ResourceManager.GetString("ExcelImportNoMatchingColumnsInSmO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 0 rows imported..
+        /// </summary>
+        internal static string ExcelImportNoRowsImported {
+            get {
+                return ResourceManager.GetString("ExcelImportNoRowsImported", resourceCulture);
             }
         }
         
@@ -129,6 +156,33 @@ namespace K2Field.K2NE.ServiceBroker.Properties {
         internal static string ExcelImportTransactionIDNameExist {
             get {
                 return ResourceManager.GetString("ExcelImportTransactionIDNameExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to connect to K2 server..
+        /// </summary>
+        internal static string ExcelImportUnabledToConnectToK2Server {
+            get {
+                return ResourceManager.GetString("ExcelImportUnabledToConnectToK2Server", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to insert data into SmartObject..
+        /// </summary>
+        internal static string ExcelImportUnabledToInsertIntoSmO {
+            get {
+                return ResourceManager.GetString("ExcelImportUnabledToInsertIntoSmO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to Read from Excel File..
+        /// </summary>
+        internal static string ExcelImportUnabledToReadExcelFile {
+            get {
+                return ResourceManager.GetString("ExcelImportUnabledToReadExcelFile", resourceCulture);
             }
         }
         
