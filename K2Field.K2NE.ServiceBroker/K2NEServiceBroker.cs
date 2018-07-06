@@ -85,7 +85,8 @@ namespace K2Field.K2NE.ServiceBroker
                                 new PowerShellVariablesSO(this),
                                 new SimplePowerShellSO(this),
                                 new DynamicPowerShellSO(this),
-                                new ExcelDocumentServiceSO(this)
+                                new ExcelDocumentServiceSO(this),
+                                new ExcelImportServiceSO(this)
                             };
 
                         }

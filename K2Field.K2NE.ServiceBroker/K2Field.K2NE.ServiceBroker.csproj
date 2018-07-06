@@ -66,6 +66,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\K2 blackpearl\Bin\SourceCode.Security.UserRoleManager.Management.dll</HintPath>
     </Reference>
+    <Reference Include="SourceCode.SmartObjects.Client, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\K2 blackpearl\Bin\SourceCode.SmartObjects.Client.dll</HintPath>
+    </Reference>
     <Reference Include="SourceCode.SmartObjects.Services.ServiceSDK, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\K2 blackpearl\Bin\SourceCode.SmartObjects.Services.ServiceSDK.dll</HintPath>
@@ -134,6 +138,7 @@
     <Compile Include="ServiceObjects\Client API\OutOfOfficeClientSO.cs" />
     <Compile Include="ServiceObjects\Client API\WorklistSO.cs" />
     <Compile Include="ServiceObjects\ExcelServices\ExcelDocumentServiceSO.cs" />
+    <Compile Include="ServiceObjects\ExcelServices\ExcelImportServiceSO.cs" />
     <Compile Include="ServiceObjects\Management API\ErrorLogSO.cs" />
     <Compile Include="ServiceObjects\IdentitySO.cs" />
     <Compile Include="ServiceObjects\Management API\ManagementWorklistSO.cs" />
