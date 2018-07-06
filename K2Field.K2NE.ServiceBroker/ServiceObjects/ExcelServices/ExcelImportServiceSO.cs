@@ -21,7 +21,7 @@ using K2Field.K2NE.ServiceBroker.Properties;
 
 namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
 {
-    public class ExcelImportServiceSO: ServiceObjectBase
+    public class ExcelImportServiceSO : ServiceObjectBase
     {
         public ExcelImportServiceSO(K2NEServiceBroker api) : base(api) { }
 
@@ -56,19 +56,19 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
 
             //UploadExcelDataToASmartObject
             Method mUploadExcelDataToASmartObject = Helper.CreateMethod(Constants.Methods.ExcelImportServices.UploadExcelDataToASmartObject, "Upload Excel Data to a SmartObject", MethodType.Read);
-                        
+
             mUploadExcelDataToASmartObject.InputProperties.Add(Constants.SOProperties.ExcelImportServices.ExcelFile);
             mUploadExcelDataToASmartObject.Validation.RequiredProperties.Add(Constants.SOProperties.ExcelImportServices.ExcelFile);
             mUploadExcelDataToASmartObject.InputProperties.Add(Constants.SOProperties.ExcelImportServices.SheetName);
             mUploadExcelDataToASmartObject.InputProperties.Add(Constants.SOProperties.ExcelImportServices.SmartObject);
             mUploadExcelDataToASmartObject.Validation.RequiredProperties.Add(Constants.SOProperties.ExcelImportServices.SmartObject);
-            mUploadExcelDataToASmartObject.InputProperties.Add(Constants.SOProperties.ExcelImportServices.CreateMethodName);            
+            mUploadExcelDataToASmartObject.InputProperties.Add(Constants.SOProperties.ExcelImportServices.CreateMethodName);
             mUploadExcelDataToASmartObject.InputProperties.Add(Constants.SOProperties.ExcelImportServices.HeaderRowSpaces);
             mUploadExcelDataToASmartObject.InputProperties.Add(Constants.SOProperties.ExcelImportServices.TransactionIDName);
             mUploadExcelDataToASmartObject.InputProperties.Add(Constants.SOProperties.ExcelImportServices.TransactionIDValue);
-            
+
             so.Methods.Add(mUploadExcelDataToASmartObject);
-            
+
             soList.Add(so);
 
             return soList;
@@ -98,7 +98,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
             ServiceObject serviceObject = ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
             DataTable results = ServiceBroker.ServicePackage.ResultTable;
-            
+
             Import(excelFile, sheetName, smartObject, createMethodName, headerRowSpaces, transactionIDName, transactionIDValue);
         }
 
@@ -118,37 +118,32 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
             // Read Data in excel file
             try
             {
-                dt = ReadExcelFile(excelFile, sheetName);                
+                dt = ReadExcelFile(excelFile, sheetName);
 
                 if (dt.Rows.Count == 0)
                 {
                     throw new ApplicationException(Resources.ExcelImportNoRowsImported);
                 }
-                else
+                if (dt.Columns.Count == 0)
                 {
-                    if (dt.Columns.Count == 0)
+                    throw new ApplicationException(Resources.ExcelImportNoColumnsFound);
+                }
+
+                // populate an array of column names
+                dsColumnNames = new string[dt.Columns.Count];
+                foreach (DataColumn col in dt.Columns)
+                {
+                    if (!string.IsNullOrWhiteSpace(headerRowSpaces) && string.Compare(headerRowSpaces.Trim(), "remove", true) == 0)
                     {
-                        throw new ApplicationException(Resources.ExcelImportNoColumnsFound);
+                        col.ColumnName = col.ColumnName.Replace(" ", "");
                     }
-                    else
+                    else  // by default replace spaces with underscores as SmartObject system names do that
                     {
-                        // populate an array of column names
-                        dsColumnNames = new string[dt.Columns.Count];
-                        foreach (DataColumn col in dt.Columns)
-                        {
-                            if (headerRowSpaces != null && headerRowSpaces.Trim().ToLower() == "remove")
-                            {
-                                col.ColumnName = col.ColumnName.Replace(" ", "");
-                            }
-                            else  // by default replace spaces with underscores as SmartObject system names do that
-                            {
-                                col.ColumnName = col.ColumnName.Replace(" ", "_");
-                            }
-                            // just get rid of other (non-underscore or hyphen) punctuation which is also invalid
-                            col.ColumnName = Regex.Replace(col.ColumnName, @"[\p{P}\p{S}-[-_]]", "");
-                            dsColumnNames[col.Ordinal] = col.ColumnName.ToLower();
-                        }
+                        col.ColumnName = col.ColumnName.Replace(" ", "_");
                     }
+                    // just get rid of other (non-underscore or hyphen) punctuation which is also invalid
+                    col.ColumnName = Regex.Replace(col.ColumnName, @"[\p{P}\p{S}-[-_]]", "");
+                    dsColumnNames[col.Ordinal] = col.ColumnName.ToLower();
                 }
             }
             catch (Exception ex)
@@ -209,7 +204,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
 
                             if (arrMatchingCols.Contains(sTransactionIDName))
                             {
-                                throw new ApplicationException(Resources.ExcelImportTransactionIDNameExist); 
+                                throw new ApplicationException(Resources.ExcelImportTransactionIDNameExist);
                             }
 
                             foreach (DataRow dr in dt.Rows)
@@ -284,12 +279,12 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
         {
 
             byte[] bFile = Convert.FromBase64String(excelFile.Content);
-            MemoryStream stream = new MemoryStream(bFile);
+            
 
             // Initializate an instance of DataTable
             DataTable dt = new DataTable();
 
-            using (stream)
+            using (MemoryStream stream = new MemoryStream(bFile))
             {
                 // Use SpreadSheetDocument class of Open XML SDK to open excel file
                 using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(stream, false))
@@ -422,7 +417,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.ExcelServices
         public static int? GetColumnIndexFromRefName(string columnName)
         {
             int? columnIndex = null;
-            
+
             char[] colLetters = columnName.ToCharArray();
 
             if (colLetters.Count() <= 2)
