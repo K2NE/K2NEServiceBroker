@@ -192,7 +192,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
                 WorklistCriteria wc = new WorklistCriteria();
                 wc.Platform = base.Platform;
                 wc.AddFilterField(WCField.ProcessID, WCCompare.Equal, processInstanceId);
-                wc.AddFilterField(WCLogical.And, WCField.ActivityName, WCCompare.Equal, activityName);
+                wc.AddFilterField(WCLogical.And, WCField.ActivityDisplayName, WCCompare.Equal, activityName);
                 Worklist wl = k2Con.OpenWorklist(wc);
 
                 if (wl.TotalCount == 0)
@@ -312,7 +312,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
             dr[Constants.SOProperties.ClientWorklist.ProcessGuid] = wli.ProcessInstance.Guid;
             dr[Constants.SOProperties.ClientWorklist.ProcessId] = wli.ProcessInstance.ID;
             dr[Constants.SOProperties.ClientWorklist.ActivityId] = wli.ActivityInstanceDestination.ID;
-            dr[Constants.SOProperties.ClientWorklist.ActivityName] = wli.ActivityInstanceDestination.Name;
+            dr[Constants.SOProperties.ClientWorklist.ActivityName] = wli.ActivityInstanceDestination.DisplayName;
             dr[Constants.SOProperties.ClientWorklist.ActivityPriority] = wli.ActivityInstanceDestination.Priority;
             dr[Constants.SOProperties.ClientWorklist.ActivityDescription] = wli.ActivityInstanceDestination.Description;
             dr[Constants.SOProperties.ClientWorklist.ActivityMetadata] = wli.ActivityInstanceDestination.MetaData;
@@ -346,7 +346,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.Client_API
                 {WCField.ProcessStartDate, Constants.SOProperties.ClientWorklist.ProcessStartdate},
                 {WCField.ProcessExpectedDuration, Constants.SOProperties.ClientWorklist.ProcessExpectedDuration},
                 {WCField.ProcessID, Constants.SOProperties.ClientWorklist.ProcessId},
-                {WCField.ActivityName, Constants.SOProperties.ClientWorklist.ActivityName},
+                {WCField.ActivityDisplayName, Constants.SOProperties.ClientWorklist.ActivityName},
                 {WCField.ActivityPriority, Constants.SOProperties.ClientWorklist.ActivityPriority},
                 {WCField.ActivityDescription, Constants.SOProperties.ClientWorklist.ActivityDescription},
                 {WCField.ActivityMetaData, Constants.SOProperties.ClientWorklist.ActivityMetadata},
