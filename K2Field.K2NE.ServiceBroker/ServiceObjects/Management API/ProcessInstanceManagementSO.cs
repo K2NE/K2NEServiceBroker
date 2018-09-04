@@ -128,7 +128,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                         continue;
                     DataRow row = results.NewRow();
                     row[Constants.SOProperties.ProcessInstanceManagement.ActivityID] = actvt.ID;
-                    row[Constants.SOProperties.ProcessInstanceManagement.ActivityName] = actvt.Name;
+                    row[Constants.SOProperties.ProcessInstanceManagement.ActivityName] = actvt.DisplayName;
                     row[Constants.SOProperties.ProcessInstanceManagement.ActivityDescription] = actvt.Description;
                     row[Constants.SOProperties.ProcessInstanceManagement.ActivityExpectedDuration] = actvt.ExpectedDuration;
                     row[Constants.SOProperties.ProcessInstanceManagement.IsStartActivity] = actvt.IsStart;
