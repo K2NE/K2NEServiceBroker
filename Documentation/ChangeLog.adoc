@@ -1,4 +1,8 @@
 == ChangeLog
+=== v1.12
+- As the K2 five workflow designer only allows you to change the displayname of an acitivy, we've moved to do the same in the broker. We might need to add a new field for the systemname of the activity, but currently we believe that is not needed.
+
+
 === v1.11
 - Added support for excel import functionality.
 
