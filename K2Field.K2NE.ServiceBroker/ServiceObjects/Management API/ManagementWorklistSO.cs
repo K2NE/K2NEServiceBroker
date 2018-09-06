@@ -35,7 +35,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 case Constants.Methods.ManagementWorklist.RedirectWorklistItem:
                     RedirectWorklistItem();
                     break;
-
                 case Constants.Methods.ManagementWorklist.ReleaseWorklistItem:
                     ReleaseWorklistItem();
                     break;
@@ -136,7 +135,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             r[Constants.SOProperties.ManagementWorklist.ActivityId] = wlItem.ActID;
             r[Constants.SOProperties.ManagementWorklist.ActivityInstanceDestinationId] = wlItem.ActInstDestID;
             r[Constants.SOProperties.ManagementWorklist.ActivityInstanceId] = wlItem.ActInstID;
-            r[Constants.SOProperties.ManagementWorklist.ActivityName] = wlItem.ActivityName;
+            r[Constants.SOProperties.ManagementWorklist.ActivityName] = wlItem.ActivityDisplayName;
             r[Constants.SOProperties.ManagementWorklist.Destination] = wlItem.Destination;
             //TODO: r[CoProperties.ManagementWorklistProperty.DestinationType] = wlItem.;
             r[Constants.SOProperties.ManagementWorklist.EventId] = wlItem.EventID;
