@@ -84,6 +84,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         {
             int processInstanceId = base.GetIntProperty(Constants.SOProperties.ProcessInstanceManagement.ProcessInstanceId);
             string activityName = base.GetStringProperty(Constants.SOProperties.ProcessInstanceManagement.ActivityName);
+            string activitySystemName = String.Empty;
 
             WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
 
@@ -97,7 +98,24 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 {
                     throw new ApplicationException(String.Format(Resources.ProcessInstanceNotFound, processInstanceId));
                 }
-                mngServer.GotoActivity(procInsts[0].ID, activityName);
+                
+                int procId = procInsts[0].ProcID;
+                Activities procActivities = mngServer.GetProcActivities(procId);
+
+                foreach (Activity act in procActivities)
+                {
+                    if(act.DisplayName == activityName || act.Name == activityName)
+                    {
+                        activitySystemName = act.Name;
+                    }
+                }
+
+                if (string.IsNullOrEmpty(activitySystemName))
+                {
+                    throw new ApplicationException(String.Format(Resources.RequiredPropertyNotFound, activityName));
+                }
+                
+                mngServer.GotoActivity(procInsts[0].ID, activitySystemName);
             }
         }
         private void ListActivities()
