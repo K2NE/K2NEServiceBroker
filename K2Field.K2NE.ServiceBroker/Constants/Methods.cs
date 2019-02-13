@@ -124,10 +124,12 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string GetGroupDetails = "UMRGetGroupDetails";
             public const string GetGroups = "UMRGetGroups";
             public const string FindUserGroups = "UMRFindUserGroups";
+            public const string GetGroupsFQNDelimited = "URMGetGroupsFQNDelimited";
         }
         public static class User
         {
             public const string GetUsers = "UMRGetUsers";
+            public const string GetUsersFQNDelimited = "URMGetUsersFQNDelimited";
         }
 
         public static class PowershellVariables
