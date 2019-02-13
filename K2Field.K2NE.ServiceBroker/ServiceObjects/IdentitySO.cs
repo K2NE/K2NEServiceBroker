@@ -51,6 +51,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.UserCultureName, SoType.Text, "User Culture Name."));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.UserCultureNumberFormat, SoType.Text, "User Culture Number format."));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.K2ImpersonateUser, SoType.Text, "User to impersonate with K2 API."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.Identity.DelimitedFQNs, SoType.Memo, "Delimited list of user Containers."));
 
 
 
@@ -117,6 +118,13 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             mResolveRole.Validation.RequiredProperties.Add(Constants.SOProperties.Identity.FQN);
             so.Methods.Add(mResolveRole);
 
+            Method getIdentityAndContainers = Helper.CreateMethod(Constants.Methods.Identity.GetIdentityAndContainersDelimited, "Get Delimited list of Identity and Containers FQN", MethodType.Read);
+            getIdentityAndContainers.ReturnProperties.Add(Constants.SOProperties.Identity.DelimitedFQNs);
+            getIdentityAndContainers.InputProperties.Add(Constants.SOProperties.Identity.FQN);
+            getIdentityAndContainers.Validation.RequiredProperties.Add(Constants.SOProperties.Identity.FQN);
+            getIdentityAndContainers.MethodParameters.Create(Helper.CreateParameter(Constants.SOProperties.Identity.Delimiter, SoType.Text, true, "Delimiter"));
+            so.Methods.Add(getIdentityAndContainers);
+
             return new List<ServiceObject> { so };
         }
 
@@ -146,6 +154,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     break;
                 case Constants.Methods.Identity.GetIdentities:
                     GetIdentities();
+                    break;
+                case Constants.Methods.Identity.GetIdentityAndContainersDelimited:
+                    GetDelimitedIdentityAndContainers();
                     break;
             }
 
@@ -304,6 +315,47 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             }
 
 
+        }
+
+        private void GetDelimitedIdentityAndContainers()
+        {
+            string[] ldaps = LDAPPaths.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] netbioses = NetBiosNames.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            string fqn = GetStringProperty(Constants.SOProperties.Identity.FQN, true);
+            string delimiter = GetStringParameter(Constants.SOProperties.Identity.Delimiter, true);
+            ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
+
+            DataTable dtResults = ServiceBroker.ServicePackage.ResultTable;
+
+            FQName fqnName = new FQName(fqn);
+
+            ICachedIdentity userIdentity = ServiceBroker.IdentityService.GetIdentityFromName(fqnName, IdentityType.User, null);
+            
+            ICollection<ICachedIdentity> groupIdentities = ServiceBroker.IdentityService.GetIdentityContainers(userIdentity, IdentitySearchOptions.Groups);
+            ICollection<ICachedIdentity> roleIdentities = ServiceBroker.IdentityService.GetIdentityContainers(userIdentity, IdentitySearchOptions.Roles);
+            if (groupIdentities == null && roleIdentities == null)
+            {
+                return;
+            }
+            string delimitedFQNs = fqnName.FQN;
+            foreach (ICachedIdentity groupIdentity in groupIdentities)
+            {
+                if (groupIdentity.Type == IdentityType.Group)
+                {
+                    delimitedFQNs += delimiter + groupIdentity.FullyQualifiedName.FQN;
+                }
+            }
+            foreach (ICachedIdentity roleIdentity in roleIdentities)
+            {
+                if (roleIdentity.Type == IdentityType.Role)
+                {
+                    delimitedFQNs += delimiter + roleIdentity.FullyQualifiedName.FQN;
+                }
+            }
+
+            DataRow dRow = dtResults.NewRow();
+            dRow[Constants.SOProperties.Identity.DelimitedFQNs] = delimitedFQNs;
+            dtResults.Rows.Add(dRow);
         }
     }
 }

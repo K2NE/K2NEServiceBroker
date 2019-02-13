@@ -73,14 +73,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             }
             soGroup.Methods.Add(getGroups);
 
-            Method findUserGroupsDelimited = Helper.CreateMethod(Constants.Methods.Group.FindUserGroupsFQNDelimited, "Get delimited groups FQN", MethodType.Read);
-            findUserGroupsDelimited.ReturnProperties.Add(Constants.SOProperties.URM.FQN);
-            findUserGroupsDelimited.MethodParameters.Create(Helper.CreateParameter(Constants.SOProperties.URM.Label, SoType.Text, true, "Label"));
-            findUserGroupsDelimited.MethodParameters.Create(Helper.CreateParameter(Constants.SOProperties.URM.UserName, SoType.Text, true, "UserName"));
-            findUserGroupsDelimited.MethodParameters.Create(Helper.CreateParameter(Constants.SOProperties.URM.Delimiter, SoType.Text, true, "Delimiter"));
-            soGroup.Methods.Add(findUserGroupsDelimited);
-
-
             return new List<ServiceObject>() { soGroup };
         }
 
@@ -93,9 +85,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                     break;
                 case Constants.Methods.Group.GetGroups:
                     GetGroups();
-                    break;
-                case Constants.Methods.Group.FindUserGroupsFQNDelimited:
-                    FindUserGroupsDelimited();
                     break;
             }
         }
@@ -225,40 +214,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             }
         }
 
-        private void FindUserGroupsDelimited()
-        {
-            string[] ldaps = LDAPPaths.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            string[] netbioses = NetBiosNames.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            string securityLabel = GetStringParameter(Constants.SOProperties.URM.Label, true);
-            string userName = GetStringParameter(Constants.SOProperties.URM.UserName, true);
-            string delimiter = GetStringParameter(Constants.SOProperties.URM.Delimiter, true);
-            ServiceBroker.Service.ServiceObjects[0].Properties.InitResultTable();
-            DataTable dtResults = ServiceBroker.ServicePackage.ResultTable;
-
-            FQName fqn = new FQName(securityLabel, userName);
-
-            ICachedIdentity userIdentity = ServiceBroker.IdentityService.GetIdentityFromName(fqn, IdentityType.User, null);
-            ICollection<ICachedIdentity> groupIdentities = ServiceBroker.IdentityService.GetIdentityContainers(userIdentity, IdentitySearchOptions.Groups);
-            if (groupIdentities == null)
-            {
-                return;
-            }
-            string delimitedFQNs = "";
-            foreach (ICachedIdentity groupIdentity in groupIdentities)
-            {
-                if (groupIdentity.Type == IdentityType.Group)
-                {
-                    delimitedFQNs += groupIdentity.FullyQualifiedName.FQN + delimiter;
-                }
-            }
-
-            string trimmedString = delimitedFQNs.Remove(delimitedFQNs.LastIndexOf(delimiter));
-            DataRow dRow = dtResults.NewRow();
-            dRow[Constants.SOProperties.URM.FQN] = trimmedString;
-            dtResults.Rows.Add(dRow);
-        }
-
-
         private void RunUMGetGroups(string ldap, string net)
         {
             Dictionary<string, string> inputProperties = new Dictionary<string, string>()
@@ -318,7 +273,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                 }
             }
         }
-
         
     }
 }
