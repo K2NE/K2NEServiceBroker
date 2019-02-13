@@ -227,6 +227,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string DisplayName = "DisplayName";
             public const string SipAccount = "SipAccount";
             public const string ObjectSid = "ObjectSID";
+            public const string Delimiter = "Delimiter";
         }
 
         public static class PowershellVariables
