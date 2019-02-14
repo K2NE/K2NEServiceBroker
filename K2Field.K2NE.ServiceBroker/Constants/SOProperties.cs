@@ -108,6 +108,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string CurrentPrincipalName = "CurrentPrincipalName";
             public const string CurrentPrincipalIdentityType = "CurrentPrincipalIdentityType";
             public const string FQN = "FQN";
+            public const string DelimitedFQNs = "DelimitedValues";
             public const string ResolveContainers = "ResolveContainers";
             public const string ResolveMembers = "ResolveMembers";
             public const string IdentityDescription = "UserDescription";
@@ -133,6 +134,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string UserCultureNumberFormat = "UserCultureNumberFormat";
             public const string K2ImpersonateUser = "K2ImpersonateUser";
             public const string UseCache = "UseCache";
+            public const string Delimiter = "Delimiter";
         }
 
         public static class ProcessInstanceManagement

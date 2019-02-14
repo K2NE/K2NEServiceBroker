@@ -73,7 +73,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
             }
             soGroup.Methods.Add(getGroups);
 
-
             return new List<ServiceObject>() { soGroup };
         }
 
@@ -274,5 +273,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects.URM
                 }
             }
         }
+        
     }
 }

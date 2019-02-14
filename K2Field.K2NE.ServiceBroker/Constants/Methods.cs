@@ -42,6 +42,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string ResolveGroupIdentity = "ResolveGroupIdentity";
             public const string ResolveRoleIdentity = "ResolveRoleIdentity";
             public const string GetIdentities = "GetEmailFromIdentity";
+            public const string GetIdentityAndContainersDelimited = "GetIdentityAndContainersDelimited";
         }
 
         public static class ProcessInstanceManagement
@@ -124,10 +125,11 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string GetGroupDetails = "UMRGetGroupDetails";
             public const string GetGroups = "UMRGetGroups";
             public const string FindUserGroups = "UMRFindUserGroups";
+            public const string FindUserGroupsFQNDelimited = "URMFindUserGroupsFQNDelimited";
         }
         public static class User
         {
-            public const string GetUsers = "UMRGetUsers";
+            public const string GetUsers = "UMRGetUsers";            
         }
 
         public static class PowershellVariables
