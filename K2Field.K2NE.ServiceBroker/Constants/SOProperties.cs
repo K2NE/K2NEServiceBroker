@@ -8,6 +8,14 @@ namespace K2Field.K2NE.ServiceBroker.Constants
 {
     public static partial class SOProperties
     {
+
+        public static class ADOHelper
+        {
+            public const string ADOQuery = "ADOQuery";
+            public const string Delimiter = "Delimiter";
+            public const string Result = "Result";
+        }
+
         public static class ErrorLog
         {
             public const string Profile = "Profile";

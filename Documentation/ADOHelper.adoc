@@ -1,0 +1,9 @@
+== ADO Helper
+
+This Service Object will contain all helper functions, which can be used for data conversion/transformation, that is returned from ADO.NET query.
+
+
+=== Join method - main features:
+* You can provide a delimiter, which should be used to delimit the functions
+* ADO.NET query is a preferred way of extracting the data from SMO, because simply specifying SMO and Method name, a user cannot set custom filtering and sorting options
+* The query always joins the first returned property/column of the DataTable, received from the ADO.NET query.  

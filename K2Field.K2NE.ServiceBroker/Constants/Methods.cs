@@ -5,18 +5,23 @@ namespace K2Field.K2NE.ServiceBroker.Constants
 
     public static class Methods
     {
-        public static class ErrorLog
-        {
-            public const string GetErrors = "GetErrors";
-            public const string RetryProcess = "RetryProcessInstance";
-        }
-        
         public static class ADOSMOQuery
         {
             public const string ExcelFromADOQuery = "ExcelFromADOQuery";
             public const string ListQueryData = "List";
             public const string ADOQuery2Excel = "ADOQueryToExcel";
         }
+        public static class ADOHelper
+        {
+            public const string Join = "Join";
+        }
+
+        public static class ErrorLog
+        {
+            public const string GetErrors = "GetErrors";
+            public const string RetryProcess = "RetryProcessInstance";
+        }      
+        
 
         public static class ManagementWorklist
         {
