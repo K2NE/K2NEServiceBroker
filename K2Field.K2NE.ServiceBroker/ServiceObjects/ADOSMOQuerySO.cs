@@ -97,8 +97,21 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             mADOQuery2Excel.Validation.RequiredProperties.Add(Constants.SOProperties.ExportToExcel.ADOQuery);
             mADOQuery2Excel.Validation.RequiredProperties.Add(Constants.SOProperties.ExportToExcel.FileName);
             soAdo2Excel.Methods.Add(mADOQuery2Excel);
-
             sos.Add(soAdo2Excel);
+
+            ServiceObject soHelper = Helper.CreateServiceObject("ADOHelper", "Different Helper functions with ADO.NET quest SMO.");
+            soHelper.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ADOHelper.ADOQuery, SoType.Text, "The ADO query to get the data from"));
+            soHelper.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ADOHelper.Delimiter, SoType.Text, "Delimiter for joining the items"));
+            soHelper.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ADOHelper.Result, SoType.Memo, "Output of the called method."));
+
+            Method join = Helper.CreateMethod(Constants.Methods.ADOHelper.Join, "Join the values of 1 string into a delimited one.", MethodType.Read);
+            join.ReturnProperties.Add(Constants.SOProperties.ADOHelper.Result);
+            join.InputProperties.Add(Constants.SOProperties.ADOHelper.ADOQuery);
+            join.InputProperties.Add(Constants.SOProperties.ADOHelper.Delimiter);
+            join.Validation.RequiredProperties.Add(Constants.SOProperties.ADOHelper.ADOQuery);
+            join.Validation.RequiredProperties.Add(Constants.SOProperties.ADOHelper.Delimiter);
+            soHelper.Methods.Add(join);
+            sos.Add(soHelper);
 
             return sos;
         }
@@ -118,14 +131,14 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 case Constants.Methods.ADOSMOQuery.ADOQuery2Excel:
                     ADOQuery2Excel();
                     break;
+                case Constants.Methods.ADOHelper.Join:
+                    Join();
+                    break;
 
             }
         }
 
  
-
-
-
         private void ListQuery()
         {
 
@@ -156,7 +169,6 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 connection.Close();
             }
         }
-
 
         private void ExportToExcel()
         {
@@ -209,13 +221,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             results.Rows.Add(dr);
 
         }
-
-
-
-
-
-
-
+        
         private DataTable GetSchema(string query, Dictionary<string, string> props)
         {
             DataTable results = new DataTable();
@@ -242,6 +248,35 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 connection.Close();
             }
             return results;
+        }
+
+        private void Join()
+        {
+            string query = GetStringProperty(Constants.SOProperties.ADOHelper.ADOQuery, true);
+            string delimiter = GetStringProperty(Constants.SOProperties.ADOHelper.Delimiter, true);
+            ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
+            serviceObject.Properties.InitResultTable();
+            DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
+
+            DataTable adoResults = new DataTable();
+            using (SOConnection connection = new SOConnection(base.BaseAPIConnectionString))
+            using (SOCommand command = new SOCommand(query, connection))
+            using (SODataAdapter adapter = new SODataAdapter(command))
+            {
+                connection.DirectExecution = true;
+                connection.Open();
+                adapter.Fill(adoResults);
+            }
+            string result = "";
+            foreach (DataRow dRow in adoResults.Rows)
+            {
+                result += dRow[0].ToString() + delimiter;
+            }
+            result = result.Remove(result.LastIndexOf(delimiter));
+
+            DataRow resultsRow = results.NewRow();
+            resultsRow[Constants.SOProperties.ADOHelper.Result] = result;
+            results.Rows.Add(resultsRow);
         }
     }
 }
