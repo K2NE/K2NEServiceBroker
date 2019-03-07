@@ -15,7 +15,7 @@ Function GetK2Version([string]$machine = $env:computername) {
     $reg = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $machine)
     $regKey= $reg.OpenSubKey($registryKeyLocation)
     $installVer = $regKey.GetValue($registryKeyName)
-    return [Version]$installVer.Major
+    return ([Version]$installVer).Major
 }
 
 Function StartK2Service() {
