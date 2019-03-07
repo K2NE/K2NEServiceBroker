@@ -19,6 +19,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
     public class CreateExcel
     {
         private UInt32Value _dateStyleId;
+        private UInt32Value _NumbStyleId;
         public CreateExcel()
         {
         }
@@ -185,6 +186,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             styleSheet.Append(CellStyles);
 
             _dateStyleId = CreateCellFormat(styleSheet, null, null, UInt32Value.FromUInt32(22));
+            _NumbStyleId = CreateCellFormat(styleSheet,null,null, UInt32Value.FromUInt32(1));
 
             // Set the style of workbook
             workbookStylesPart.Stylesheet = styleSheet;
@@ -317,7 +319,11 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                         cell.CellValue.Text = Convert.ToDateTime(table.Rows[rIndex][cIndex].ToString()).ToOADate().ToString();
                         cell.StyleIndex = _dateStyleId;
                     }
-
+                    else if (table.Rows[rIndex][cIndex].GetType().ToString() == "System.Int64" || table.Rows[rIndex][cIndex].GetType().ToString() == "System.Int32")
+                    {
+                        cell.CellValue.Text = table.Rows[rIndex][cIndex].ToString();
+                        cell.StyleIndex = _NumbStyleId;
+                    }
                     else
                     {
                         cell.CellValue.Text = table.Rows[rIndex][cIndex].ToString();
