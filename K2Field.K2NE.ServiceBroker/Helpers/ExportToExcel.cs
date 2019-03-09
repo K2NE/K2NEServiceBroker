@@ -186,7 +186,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             styleSheet.Append(CellStyles);
 
             _dateStyleId = CreateCellFormat(styleSheet, null, null, UInt32Value.FromUInt32(22));
-            _NumbStyleId = CreateCellFormat(styleSheet,null,null, UInt32Value.FromUInt32(1));
+            _NumbStyleId = CreateCellFormat(styleSheet, null, null, UInt32Value.FromUInt32(1));
 
             // Set the style of workbook
             workbookStylesPart.Stylesheet = styleSheet;
@@ -311,15 +311,15 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                 {
                     Cell cell = new Cell();
                     cell.CellReference = GetCellReference(cIndex, (Convert.ToInt32((UInt32)rowIndex) - 2), cellHeaders);
-                    cell.DataType = GetCellType(table.Rows[rIndex][cIndex].GetType().ToString());
+                    cell.DataType = GetCellType(table.Rows[rIndex][cIndex].GetType());
                     cell.CellValue = new CellValue();
 
-                    if (table.Rows[rIndex][cIndex].GetType().ToString() == "System.DateTime")
+                    if (table.Rows[rIndex][cIndex].GetType() == typeof(System.DateTime))
                     {
                         cell.CellValue.Text = Convert.ToDateTime(table.Rows[rIndex][cIndex].ToString()).ToOADate().ToString();
                         cell.StyleIndex = _dateStyleId;
                     }
-                    else if (table.Rows[rIndex][cIndex].GetType().ToString() == "System.Int64" || table.Rows[rIndex][cIndex].GetType().ToString() == "System.Int32")
+                    else if (table.Rows[rIndex][cIndex].GetType() == typeof(System.Int64) || table.Rows[rIndex][cIndex].GetType() == typeof(System.Int32))
                     {
                         cell.CellValue.Text = table.Rows[rIndex][cIndex].ToString();
                         cell.StyleIndex = _NumbStyleId;
