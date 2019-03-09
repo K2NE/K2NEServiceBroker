@@ -19,6 +19,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
     public class CreateExcel
     {
         private UInt32Value _dateStyleId;
+        private UInt32Value _NumbStyleId;
         public CreateExcel()
         {
         }
@@ -185,6 +186,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
             styleSheet.Append(CellStyles);
 
             _dateStyleId = CreateCellFormat(styleSheet, null, null, UInt32Value.FromUInt32(22));
+            _NumbStyleId = CreateCellFormat(styleSheet, null, null, UInt32Value.FromUInt32(1));
 
             // Set the style of workbook
             workbookStylesPart.Stylesheet = styleSheet;
@@ -280,7 +282,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                 Cell cell = new Cell()
                 {
                     CellReference = GetCellReference(columnindex, (Convert.ToInt32((UInt32)rowIndex) - 2), cellHeaders),
-                    DataType = GetCellType(table.Columns[columnindex].ColumnName.GetType().ToString())
+                    DataType = GetCellType(table.Columns[columnindex].ColumnName.GetType())
                 };
 
                 // Get Value of DataTable and append the value to cell of spreadsheet document
@@ -309,15 +311,19 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                 {
                     Cell cell = new Cell();
                     cell.CellReference = GetCellReference(cIndex, (Convert.ToInt32((UInt32)rowIndex) - 2), cellHeaders);
-                    cell.DataType = GetCellType(table.Rows[rIndex][cIndex].GetType().ToString());
+                    cell.DataType = GetCellType(table.Rows[rIndex][cIndex].GetType());
                     cell.CellValue = new CellValue();
 
-                    if (table.Rows[rIndex][cIndex].GetType().ToString() == "System.DateTime")
+                    if (table.Rows[rIndex][cIndex].GetType() == typeof(System.DateTime))
                     {
                         cell.CellValue.Text = Convert.ToDateTime(table.Rows[rIndex][cIndex].ToString()).ToOADate().ToString();
                         cell.StyleIndex = _dateStyleId;
                     }
-
+                    else if (table.Rows[rIndex][cIndex].GetType() == typeof(System.Int64) || table.Rows[rIndex][cIndex].GetType() == typeof(System.Int32))
+                    {
+                        cell.CellValue.Text = table.Rows[rIndex][cIndex].ToString();
+                        cell.StyleIndex = _NumbStyleId;
+                    }
                     else
                     {
                         cell.CellValue.Text = table.Rows[rIndex][cIndex].ToString();
@@ -340,23 +346,27 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         }
 
         //Method to assign cell proper datatype as per the data.
-        private CellValues GetCellType(string col)
+        private CellValues GetCellType(Type col)
         {
-            switch (col)
+            // You can't do a Switch statement on a Type, so we need to use these clumsy if statements or convert to string.
+            if (col == typeof(System.DateTime))
             {
-                case "System.DateTime":
-                    return DocumentFormat.OpenXml.Spreadsheet.CellValues.Number;
-                case "System.Decimal":
-                case "System.Double":
-                case "System.Int64":
-                case "System.Int32":
-                    return DocumentFormat.OpenXml.Spreadsheet.CellValues.Number;
-                default:
-                    return DocumentFormat.OpenXml.Spreadsheet.CellValues.String;
+                return DocumentFormat.OpenXml.Spreadsheet.CellValues.Number;
+            }
+            else if (
+              col == typeof(System.Decimal) ||
+              col == typeof(System.Double) ||
+              col == typeof(System.Int32) ||
+              col == typeof(System.Int64))
+            {
+                return DocumentFormat.OpenXml.Spreadsheet.CellValues.Number;
+            }
+            else
+            {
+                return DocumentFormat.OpenXml.Spreadsheet.CellValues.String;
             }
 
         }
-
 
 
 
