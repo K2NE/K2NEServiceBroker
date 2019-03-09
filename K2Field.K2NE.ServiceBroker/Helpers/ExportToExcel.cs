@@ -282,7 +282,7 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
                 Cell cell = new Cell()
                 {
                     CellReference = GetCellReference(columnindex, (Convert.ToInt32((UInt32)rowIndex) - 2), cellHeaders),
-                    DataType = GetCellType(table.Columns[columnindex].ColumnName.GetType().ToString())
+                    DataType = GetCellType(table.Columns[columnindex].ColumnName.GetType())
                 };
 
                 // Get Value of DataTable and append the value to cell of spreadsheet document
@@ -346,23 +346,27 @@ namespace K2Field.K2NE.ServiceBroker.Helpers
         }
 
         //Method to assign cell proper datatype as per the data.
-        private CellValues GetCellType(string col)
+        private CellValues GetCellType(Type col)
         {
-            switch (col)
+            // You can't do a Switch statement on a Type, so we need to use these clumsy if statements or convert to string.
+            if (col == typeof(System.DateTime))
             {
-                case "System.DateTime":
-                    return DocumentFormat.OpenXml.Spreadsheet.CellValues.Number;
-                case "System.Decimal":
-                case "System.Double":
-                case "System.Int64":
-                case "System.Int32":
-                    return DocumentFormat.OpenXml.Spreadsheet.CellValues.Number;
-                default:
-                    return DocumentFormat.OpenXml.Spreadsheet.CellValues.String;
+                return DocumentFormat.OpenXml.Spreadsheet.CellValues.Number;
+            }
+            else if (
+              col == typeof(System.Decimal) ||
+              col == typeof(System.Double) ||
+              col == typeof(System.Int32) ||
+              col == typeof(System.Int64))
+            {
+                return DocumentFormat.OpenXml.Spreadsheet.CellValues.Number;
+            }
+            else
+            {
+                return DocumentFormat.OpenXml.Spreadsheet.CellValues.String;
             }
 
         }
-
 
 
 
