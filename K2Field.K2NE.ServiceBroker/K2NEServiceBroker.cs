@@ -102,7 +102,7 @@ namespace K2Field.K2NE.ServiceBroker
         ///</summary>
         private Type GetServiceObjectByType(string serviceObjectName)
         {
-            string searchKey = string.Concat(this.Service.Guid.ToString(), "_", serviceObjectName);
+            string searchKey = string.Concat(this.ServiceInstanceGuid.ToString(), "_", serviceObjectName);
             if (!_serviceObjectToType.ContainsKey(searchKey))
             {
                 lock (serviceObjectToTypeLock)
@@ -113,7 +113,7 @@ namespace K2Field.K2NE.ServiceBroker
                         List<ServiceObject> serviceObjs = soBase.DescribeServiceObjects();
                         foreach (ServiceObject so in serviceObjs)
                         {
-                            _serviceObjectToType.Add(string.Concat(this.Service.Guid.ToString(), "_", so.Name), soBase.GetType());
+                            _serviceObjectToType.Add(string.Concat(this.ServiceInstanceGuid.ToString(), "_", so.Name), soBase.GetType());
                         }
                     }
                 }
@@ -183,7 +183,7 @@ namespace K2Field.K2NE.ServiceBroker
                 foreach (ServiceObject so in serviceObjects)
                 {
                     Service.ServiceObjects.Create(so);
-                    string dictKey = string.Concat(this.Service.Guid.ToString(), "_", so.Name);
+                    string dictKey = string.Concat(this.ServiceInstanceGuid.ToString(), "_", so.Name);
                     if (!_serviceObjectToType.ContainsKey(dictKey))
                     {
                         _serviceObjectToType.Add(dictKey, entry.GetType());
