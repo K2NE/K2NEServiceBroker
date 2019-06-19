@@ -86,7 +86,8 @@ namespace K2Field.K2NE.ServiceBroker
                                 new SimplePowerShellSO(this),
                                 new DynamicPowerShellSO(this),
                                 new ExcelDocumentServiceSO(this),
-                                new ExcelImportServiceSO(this)
+                                new ExcelImportServiceSO(this),
+                                new SQLCheck(this)
                             };
 
                         }
@@ -287,6 +288,9 @@ namespace K2Field.K2NE.ServiceBroker
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.ADOSMOQueriesFile, false, ""); //checked
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.AllowPowershellScript, true, "true"); //checked
             Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.PowerShellSubdirectories, false, "PowerShellScripts"); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.SQLServer, false, "localhost"); //checked
+            Service.ServiceConfiguration.Add(Constants.ConfigurationProperties.DataBase, false, "DataBase"); //checked
+
             return base.GetConfigSection();
         }
         public void Init(IServiceMarshalling serviceMarshalling, IServerMarshaling serverMarshaling)

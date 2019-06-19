@@ -174,6 +174,24 @@ namespace K2Field.K2NE.ServiceBroker
         }
 
 
+                protected string SQLServer
+        {
+            get
+            {
+                return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.SQLServer].ToString();
+            }
+        }
+
+        /// <summary>
+        /// Name of the database that we're using.
+        /// </summary>
+        protected string DataBase
+        {
+            get
+            {
+                return ServiceBroker.Service.ServiceConfiguration[Constants.ConfigurationProperties.DataBase].ToString();
+            }
+        }
  
 
         /// <summary>
@@ -481,18 +499,18 @@ namespace K2Field.K2NE.ServiceBroker
 
         #endregion Protected helper methods for property value retrieval
 
-        /*
+        
         /// <summary>
         /// Method creates a SqlExecute object which only needs a SqlQuery and Parameters to be set.
         /// </summary>
         /// <returns></returns>
         protected SqlExecute CreateDirectSqlExecute()
         {
-            //SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();//BuildConnectionString();
+            SqlConnectionStringBuilder builder = BuildConnectionString();
             ServiceBroker.IsSqlExecute = true;
             ServiceBroker.SqlQueryExecute = new SqlExecute();
-            ServiceBroker.SqlQueryExecute.ServerName = string.Empty; //"DLX";
-            ServiceBroker.SqlQueryExecute.Provider = string.Empty; //"SQLOLEDB";
+            ServiceBroker.SqlQueryExecute.ServerName = SQLServer;
+            ServiceBroker.SqlQueryExecute.Provider = "SQLOLEDB";
             ServiceBroker.SqlQueryExecute.UserID = string.Empty;
             ServiceBroker.SqlQueryExecute.Password = string.Empty;
 
@@ -511,12 +529,38 @@ namespace K2Field.K2NE.ServiceBroker
 
             return ServiceBroker.SqlQueryExecute;
         }
-        */
+        
+
+
 
         #endregion Protected Methods and properties that are useful for the child class
 
         #region Private helper methods
 
+        
+        public SqlConnectionStringBuilder BuildConnectionString()
+        {
+            string securityProvider = this.ServiceBroker.Service.ServiceConfiguration.ServiceAuthentication.SecurityProvider;
+            bool impersonate = this.ServiceBroker.Service.ServiceConfiguration.ServiceAuthentication.Impersonate;
+
+            SqlConnectionStringBuilder sqlConnectionStringBuilder = new SqlConnectionStringBuilder();
+            sqlConnectionStringBuilder.DataSource = SQLServer;
+            sqlConnectionStringBuilder.InitialCatalog = DataBase;
+            
+            switch (this.ServiceBroker.Service.ServiceConfiguration.ServiceAuthentication.AuthenticationMode)
+            {
+                case AuthenticationMode.ServiceAccount:
+                case AuthenticationMode.Impersonate:
+                    sqlConnectionStringBuilder.IntegratedSecurity = true;
+                    break;
+                case AuthenticationMode.SSO:
+                case AuthenticationMode.Static:
+                    sqlConnectionStringBuilder.UserID = this.ServiceBroker.Service.ServiceConfiguration.ServiceAuthentication.UserName;
+                    sqlConnectionStringBuilder.Password = this.ServiceBroker.Service.ServiceConfiguration.ServiceAuthentication.Password;
+                    break;
+            }
+            return sqlConnectionStringBuilder;
+        }
 
 
         private string ReplaceEnvironmentFields(string value)

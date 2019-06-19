@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>K2Field.K2NE.ServiceBroker</RootNamespace>
     <AssemblyName>K2Field.K2NE.ServiceBroker</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -44,6 +44,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\Open XML SDK\V2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
+    <Reference Include="SourceCode.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files (x86)\K2 blackpearl\Host Server\Bin\SourceCode.Data.dll</HintPath>
+    </Reference>
     <Reference Include="SourceCode.Data.SmartObjectsClient, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Program Files (x86)\K2 blackpearl\Bin\SourceCode.Data.SmartObjectsClient.dll</HintPath>
@@ -69,6 +73,10 @@
     <Reference Include="SourceCode.SmartObjects.Client, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\K2 blackpearl\Bin\SourceCode.SmartObjects.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="SourceCode.SmartObjects.Interfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files (x86)\K2 blackpearl\Host Server\Bin\SourceCode.SmartObjects.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="SourceCode.SmartObjects.Services.ServiceSDK, Version=4.0.0.0, Culture=neutral, PublicKeyToken=16a2c5aaaa1b130d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -148,6 +156,7 @@
     <Compile Include="ServiceObjects\PowerShell\DynamicPowerShellSO.cs" />
     <Compile Include="ServiceObjects\PowerShell\PowershellVariablesSO.cs" />
     <Compile Include="ServiceObjects\PowerShell\SimplePowerShellSO.cs" />
+    <Compile Include="ServiceObjects\SQLCheck.cs" />
     <Compile Include="ServiceObjects\URM\GroupSO.cs" />
     <Compile Include="ServiceObjects\URM\URMFilter.cs" />
     <Compile Include="ServiceObjects\URM\UserSO.cs" />
@@ -172,7 +181,7 @@
     <PostBuildEvent>if "Debug"=="$(ConfigurationName)" (
  xcopy /R /Y "$(TargetPath)" "c:\Program Files (x86)\K2 blackpearl\ServiceBroker\"
 )
-
+ xcopy /R /Y "$(TargetPath)" "c:\Program Files (x86)\K2 blackpearl\ServiceBroker\"
 xcopy /y /r "$(SolutionDir)\Installer\Install.ps1" "$(SolutionDir)\Release\"
 xcopy /y /r "$(SolutionDir)\Documentation\*.adoc" "$(SolutionDir)\Release\"
 xcopy /y /r "$(SolutionDir)\Documentation\*.txt" "$(SolutionDir)\Release\"

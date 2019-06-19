@@ -19,6 +19,8 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         public const string ADOSMOQueriesFile = "SMO data queries file path";
         public const string AllowPowershellScript = "Allow Simple PowerShell Scripts";
         public const string PowerShellSubdirectories = "PowerShell Subdirectories";
+        public const string SQLServer = "SQL Server for Stored Proc";
+        public const string DataBase = "DataBase where stored proc is located";
     }
 
 }

@@ -158,3 +158,4 @@ $RECYCLE.BIN/
 
 # Chocopackage
 chocoPackage/tools/*.dll
+/.vs

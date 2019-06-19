@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "K2Field.K2NE.ServiceBroker", "K2Field.K2NE.ServiceBroker\K2Field.K2NE.ServiceBroker.csproj", "{5D45A104-69BD-4B55-A255-9BCC629D62DF}"
 EndProject
@@ -44,5 +44,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {89CD9559-6DB6-4FD4-8ADF-C64B1034687B}
 	EndGlobalSection
 EndGlobal
