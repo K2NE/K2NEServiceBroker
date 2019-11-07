@@ -35,11 +35,11 @@ namespace K2Field.K2NE.ServiceBroker
     public class K2NEServiceBroker : ServiceAssemblyBase, IHostableType
     {
         #region Private Properties
-        private static readonly object serviceObjectToTypeLock = new object();
         private static readonly object serviceObjectLock = new object();
-        private static Dictionary<string, Type> _serviceObjectToType = new Dictionary<string, Type>();
+        private static System.Collections.Concurrent.ConcurrentDictionary<string, Type> _serviceObjectToType = new System.Collections.Concurrent.ConcurrentDictionary<string, Type>();
         private List<ServiceObjectBase> _serviceObjects;
         private object syncobject = new object();
+        private object describeSchemaLock = new object();
         #endregion Private Properties
 
 
@@ -103,30 +103,26 @@ namespace K2Field.K2NE.ServiceBroker
         private Type GetServiceObjectByType(string serviceObjectName)
         {
             string searchKey = string.Concat(this.ServiceInstanceGuid.ToString(), "_", serviceObjectName);
-            if (!_serviceObjectToType.ContainsKey(searchKey))
-            {
-                lock (serviceObjectToTypeLock)
-                {
+            Type ret = null;
 
-                    foreach (ServiceObjectBase soBase in ServiceObjectClasses)
-                    {
-                        List<ServiceObject> serviceObjs = soBase.DescribeServiceObjects();
-                        foreach (ServiceObject so in serviceObjs)
-                        {
-                            _serviceObjectToType.Add(string.Concat(this.ServiceInstanceGuid.ToString(), "_", so.Name), soBase.GetType());
-                        }
-                    }
-                }
-                if (!_serviceObjectToType.ContainsKey(searchKey))
-                {
-                    throw new ApplicationException(string.Format(Resources.IsNotValidSO, serviceObjectName));
-                }
-                return _serviceObjectToType[searchKey];
+            if (_serviceObjectToType.TryGetValue(searchKey, out ret))
+            {
+                return ret;
             }
-            else
+            foreach (ServiceObjectBase soBase in ServiceObjectClasses)
+            {
+                List<ServiceObject> serviceObjs = soBase.DescribeServiceObjects();
+                foreach (ServiceObject so in serviceObjs)
+                {
+                    string addKey = string.Concat(this.ServiceInstanceGuid.ToString(), "_", so.Name);
+                    _serviceObjectToType.TryAdd(addKey, soBase.GetType());
+                }
+            }
+            if (_serviceObjectToType.ContainsKey(searchKey))
             {
                 return _serviceObjectToType[searchKey];
             }
+            return null;
         }
 
 
@@ -167,35 +163,39 @@ namespace K2Field.K2NE.ServiceBroker
             Service.Name = "K2NEServiceBroker";
             Service.MetaData.DisplayName = "K2NE's General Purpose Service Broker";
             Service.MetaData.Description = "A Service Broker that provides various functional service objects that aid the implementation of a K2 project.";
-
-            bool requireServiceFolders = false;
-            foreach (ServiceObjectBase entry in ServiceObjectClasses)
+            lock (describeSchemaLock)
             {
-                if (!string.IsNullOrEmpty(entry.ServiceFolder))
-                {
-                    requireServiceFolders = true;
-                }
-            }
+                _serviceObjectToType.Clear();
 
-            foreach (ServiceObjectBase entry in ServiceObjectClasses)
-            {
-                List<ServiceObject> serviceObjects = entry.DescribeServiceObjects();
-                foreach (ServiceObject so in serviceObjects)
+                bool requireServiceFolders = false;
+                foreach (ServiceObjectBase entry in ServiceObjectClasses)
                 {
-                    Service.ServiceObjects.Create(so);
-                    string dictKey = string.Concat(this.ServiceInstanceGuid.ToString(), "_", so.Name);
-                    if (!_serviceObjectToType.ContainsKey(dictKey))
+                    if (!string.IsNullOrEmpty(entry.ServiceFolder))
                     {
-                        _serviceObjectToType.Add(dictKey, entry.GetType());
-                    }
-                    if (requireServiceFolders)
-                    {
-                        ServiceFolder sf = InitializeServiceFolder(entry.ServiceFolder, entry.ServiceFolder);
-                        sf.Add(so);
+                        requireServiceFolders = true;
                     }
                 }
-            }
 
+
+                foreach (ServiceObjectBase entry in ServiceObjectClasses)
+                {
+                    List<ServiceObject> serviceObjects = entry.DescribeServiceObjects();
+                    foreach (ServiceObject so in serviceObjects)
+                    {
+                        Service.ServiceObjects.Create(so);
+                        string dictKey = string.Concat(this.ServiceInstanceGuid.ToString(), "_", so.Name);
+                        if (!_serviceObjectToType.TryAdd(dictKey, entry.GetType()))
+                        {
+                            throw new ApplicationException("Failed to add Service Object - Please change the service object name.");
+                        }
+                        if (requireServiceFolders)
+                        {
+                            ServiceFolder sf = InitializeServiceFolder(entry.ServiceFolder, entry.ServiceFolder);
+                            sf.Add(so);
+                        }
+                    }
+                }
+            }
             return base.DescribeSchema();
         }
         public override void Execute()
@@ -220,6 +220,10 @@ namespace K2Field.K2NE.ServiceBroker
                     throw new ApplicationException(Resources.SOIsNotSet);
                 }
                 Type soType = GetServiceObjectByType(so.Name);
+                if (soType == null)
+                {
+                    throw new ApplicationException("Could not get Type based on Service Object name");
+                }
                 object[] constParams = new object[] { this };
                 ServiceObjectBase soInstance = Activator.CreateInstance(soType, constParams) as ServiceObjectBase;
 
