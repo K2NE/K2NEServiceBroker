@@ -16,7 +16,7 @@ The code will be 'work in progress' for quite a while, but the functionality in 
 ## Installation
 At the moment, there is no installer.
 To install:
-- Download and open in Visual Studio (2013)
+- Download and open in Visual Studio (2013/2017)
 - Build
 - Open and/or copy the Release folder in the solution directory to the K2 server.
 - Run install.ps1
