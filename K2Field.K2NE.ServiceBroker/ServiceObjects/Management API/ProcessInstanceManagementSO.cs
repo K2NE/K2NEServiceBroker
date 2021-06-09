@@ -24,6 +24,9 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 case Constants.Methods.ProcessInstanceManagement.GotoActivity:
                     GotoActivity();
                     break;
+                case Constants.Methods.ProcessInstanceManagement.GotoActivity2:
+                    GotoActivity2();
+                    break;
                 case Constants.Methods.ProcessInstanceManagement.ListActivities:
                     ListActivities();
                     break;
@@ -43,7 +46,10 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             ServiceObject so = Helper.CreateServiceObject("ProcessInstanceManagement", "Exposes functionality to manage a process instances.");
 
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ProcessInstanceManagement.ActivityName, SoType.Text, "The name of the activity."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ProcessInstanceManagement.ActivitySystemName, SoType.Text, "The system name of the activity."));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ProcessInstanceManagement.ProcessInstanceId, SoType.Number, "The process instance ID."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ProcessInstanceManagement.IgnoreProcessInstanceNotExists, SoType.YesNo, "When 'Yes' suppress an error if a process instance doesn't exists."));
+            so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ProcessInstanceManagement.GoToActivityResult, SoType.YesNo, "Result of the Goto Activity operation"));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ProcessInstanceManagement.IncludeStartActivity, SoType.YesNo, "Include the Start activity."));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ProcessInstanceManagement.ActivityDescription, SoType.Text, "The description of the activity"));
             so.Properties.Add(Helper.CreateProperty(Constants.SOProperties.ProcessInstanceManagement.ActivityExpectedDuration, SoType.Number, "The expected duration of the activity."));
@@ -55,9 +61,23 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
             Method gotoActivity = Helper.CreateMethod(Constants.Methods.ProcessInstanceManagement.GotoActivity, "Move a process instance to a given activity.", MethodType.Execute);
             gotoActivity.InputProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ActivityName);
             gotoActivity.InputProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ProcessInstanceId);
+            gotoActivity.InputProperties.Add(Constants.SOProperties.ProcessInstanceManagement.IgnoreProcessInstanceNotExists);
             gotoActivity.Validation.RequiredProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ProcessInstanceId);
             gotoActivity.Validation.RequiredProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ActivityName);
+
             so.Methods.Add(gotoActivity);
+
+            Method gotoActivity2 = Helper.CreateMethod(Constants.Methods.ProcessInstanceManagement.GotoActivity2, "Move a process instance to a given activity and return results.", MethodType.Read);
+            gotoActivity2.InputProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ActivityName);
+            gotoActivity2.InputProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ProcessInstanceId);
+            gotoActivity2.InputProperties.Add(Constants.SOProperties.ProcessInstanceManagement.IgnoreProcessInstanceNotExists);
+            gotoActivity2.Validation.RequiredProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ProcessInstanceId);
+            gotoActivity2.Validation.RequiredProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ActivityName);
+            gotoActivity2.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ActivityName);
+            gotoActivity2.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ProcessInstanceId);
+            gotoActivity2.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceManagement.GoToActivityResult);
+
+            so.Methods.Add(gotoActivity2);
 
             Method listActivities = Helper.CreateMethod(Constants.Methods.ProcessInstanceManagement.ListActivities, "List all activities for a process instance.", MethodType.List);
             listActivities.InputProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ProcessInstanceId);
@@ -67,6 +87,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
             listActivities.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ActivityID);
             listActivities.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ActivityName);
+            listActivities.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ActivitySystemName);
             listActivities.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ActivityDescription);
             listActivities.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ActivityExpectedDuration);
             listActivities.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ActivityMetaData);
@@ -79,12 +100,25 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
         }
 
 
-
         private void GotoActivity()
         {
+            _gotoActivity();
+        }
+        private void GotoActivity2()
+        {
+            ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
+            serviceObject.Properties.InitResultTable();
+            DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
+            _gotoActivity(results);
+        }
+
+        private void _gotoActivity(DataTable results = null)
+        {
             int processInstanceId = base.GetIntProperty(Constants.SOProperties.ProcessInstanceManagement.ProcessInstanceId);
+            bool ignoreProcessInstanceNotExists = base.GetBoolProperty(Constants.SOProperties.ProcessInstanceManagement.IgnoreProcessInstanceNotExists);
             string activityName = base.GetStringProperty(Constants.SOProperties.ProcessInstanceManagement.ActivityName);
             string activitySystemName = String.Empty;
+            bool gotoActivityResult = false;
 
             WorkflowManagementServer mngServer = this.ServiceBroker.K2Connection.GetConnection<WorkflowManagementServer>();
 
@@ -94,28 +128,41 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 ProcessInstanceCriteriaFilter filter = new ProcessInstanceCriteriaFilter();
                 filter.AddRegularFilter(ProcessInstanceFields.ProcInstID, Comparison.Equals, processInstanceId);
                 ProcessInstances procInsts = mngServer.GetProcessInstancesAll(filter);
-                if (procInsts.Count == 0)
+                if (!ignoreProcessInstanceNotExists & procInsts.Count == 0)
                 {
                     throw new ApplicationException(String.Format(Resources.ProcessInstanceNotFound, processInstanceId));
                 }
-                
-                int procId = procInsts[0].ProcID;
-                Activities procActivities = mngServer.GetProcActivities(procId);
 
-                foreach (Activity act in procActivities)
+                if (procInsts.Count > 0)
                 {
-                    if(act.DisplayName == activityName || act.Name == activityName)
+                    int procId = procInsts[0].ProcID;
+                    processInstanceId = procInsts[0].ID;
+
+                    Activities procActivities = mngServer.GetProcActivities(procId);
+
+                    foreach (Activity act in procActivities)
                     {
-                        activitySystemName = act.Name;
+                        if (act.DisplayName == activityName || act.Name == activityName)
+                        {
+                            activitySystemName = act.Name;
+                        }
                     }
-                }
 
-                if (string.IsNullOrEmpty(activitySystemName))
-                {
-                    throw new ApplicationException(String.Format(Resources.RequiredPropertyNotFound, activityName));
+                    if (string.IsNullOrEmpty(activitySystemName))
+                    {
+                        throw new ApplicationException(String.Format(Resources.RequiredPropertyNotFound, activityName));
+                    }
+
+                    gotoActivityResult = mngServer.GotoActivity(processInstanceId, activitySystemName);
                 }
-                
-                mngServer.GotoActivity(procInsts[0].ID, activitySystemName);
+            }
+            if (results != null)
+            {
+                DataRow row = results.NewRow();
+                row[Constants.SOProperties.ProcessInstanceManagement.ActivityName] = activityName + " (" + activitySystemName + ")";
+                row[Constants.SOProperties.ProcessInstanceManagement.ProcessInstanceId] = processInstanceId;
+                row[Constants.SOProperties.ProcessInstanceManagement.GoToActivityResult] = gotoActivityResult;
+                results.Rows.Add(row);
             }
         }
         private void ListActivities()
@@ -147,6 +194,7 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                     DataRow row = results.NewRow();
                     row[Constants.SOProperties.ProcessInstanceManagement.ActivityID] = actvt.ID;
                     row[Constants.SOProperties.ProcessInstanceManagement.ActivityName] = actvt.DisplayName;
+                    row[Constants.SOProperties.ProcessInstanceManagement.ActivitySystemName] = actvt.Name;
                     row[Constants.SOProperties.ProcessInstanceManagement.ActivityDescription] = actvt.Description;
                     row[Constants.SOProperties.ProcessInstanceManagement.ActivityExpectedDuration] = actvt.ExpectedDuration;
                     row[Constants.SOProperties.ProcessInstanceManagement.IsStartActivity] = actvt.IsStart;
