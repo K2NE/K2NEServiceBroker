@@ -53,7 +53,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         public static class ProcessInstanceManagement
         {
             public const string GotoActivity = "GotoActivity";
-            public const string GotoActivity2 = "GotoActivity2";
+            public const string GotoActivityRead = "GotoActivityRead";
             public const string ListActivities = "ListActivities";
         }
 

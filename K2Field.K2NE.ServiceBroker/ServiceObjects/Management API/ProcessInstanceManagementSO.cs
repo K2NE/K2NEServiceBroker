@@ -24,8 +24,8 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
                 case Constants.Methods.ProcessInstanceManagement.GotoActivity:
                     GotoActivity();
                     break;
-                case Constants.Methods.ProcessInstanceManagement.GotoActivity2:
-                    GotoActivity2();
+                case Constants.Methods.ProcessInstanceManagement.GotoActivityRead:
+                    GotoActivityRead();
                     break;
                 case Constants.Methods.ProcessInstanceManagement.ListActivities:
                     ListActivities();
@@ -67,17 +67,17 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
             so.Methods.Add(gotoActivity);
 
-            Method gotoActivity2 = Helper.CreateMethod(Constants.Methods.ProcessInstanceManagement.GotoActivity2, "Move a process instance to a given activity and return results.", MethodType.Read);
-            gotoActivity2.InputProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ActivityName);
-            gotoActivity2.InputProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ProcessInstanceId);
-            gotoActivity2.InputProperties.Add(Constants.SOProperties.ProcessInstanceManagement.IgnoreProcessInstanceNotExists);
-            gotoActivity2.Validation.RequiredProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ProcessInstanceId);
-            gotoActivity2.Validation.RequiredProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ActivityName);
-            gotoActivity2.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ActivityName);
-            gotoActivity2.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ProcessInstanceId);
-            gotoActivity2.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceManagement.GoToActivityResult);
+            Method gotoActivityRead = Helper.CreateMethod(Constants.Methods.ProcessInstanceManagement.GotoActivityRead, "Move a process instance to a given activity and return results.", MethodType.Read);
+            gotoActivityRead.InputProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ActivityName);
+            gotoActivityRead.InputProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ProcessInstanceId);
+            gotoActivityRead.InputProperties.Add(Constants.SOProperties.ProcessInstanceManagement.IgnoreProcessInstanceNotExists);
+            gotoActivityRead.Validation.RequiredProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ProcessInstanceId);
+            gotoActivityRead.Validation.RequiredProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ActivityName);
+            gotoActivityRead.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ActivityName);
+            gotoActivityRead.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ProcessInstanceId);
+            gotoActivityRead.ReturnProperties.Add(Constants.SOProperties.ProcessInstanceManagement.GoToActivityResult);
 
-            so.Methods.Add(gotoActivity2);
+            so.Methods.Add(gotoActivityRead);
 
             Method listActivities = Helper.CreateMethod(Constants.Methods.ProcessInstanceManagement.ListActivities, "List all activities for a process instance.", MethodType.List);
             listActivities.InputProperties.Add(Constants.SOProperties.ProcessInstanceManagement.ProcessInstanceId);
@@ -102,17 +102,17 @@ namespace K2Field.K2NE.ServiceBroker.ServiceObjects
 
         private void GotoActivity()
         {
-            _gotoActivity();
+            RunGotoActivity();
         }
-        private void GotoActivity2()
+        private void GotoActivityRead()
         {
             ServiceObject serviceObject = base.ServiceBroker.Service.ServiceObjects[0];
             serviceObject.Properties.InitResultTable();
             DataTable results = base.ServiceBroker.ServicePackage.ResultTable;
-            _gotoActivity(results);
+            RunGotoActivity(results);
         }
 
-        private void _gotoActivity(DataTable results = null)
+        private void RunGotoActivity(DataTable results = null)
         {
             int processInstanceId = base.GetIntProperty(Constants.SOProperties.ProcessInstanceManagement.ProcessInstanceId);
             bool ignoreProcessInstanceNotExists = base.GetBoolProperty(Constants.SOProperties.ProcessInstanceManagement.IgnoreProcessInstanceNotExists);
