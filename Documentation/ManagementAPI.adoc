@@ -23,3 +23,7 @@ RoleItems are users or groups (or SmartObjects, but those are not supported at t
 * Remove Role Item: Remove a role item from a Role.
 * List Role Items: List all the role items in a Role.
 
+=== Process Instance Management
+* Goto Activity: Executes a go to activity method. There is an input property 'Ignore process Instance Not Exists' which suppresses an error message if the specified process instance doesnt exist.
+* Goto Activity2: Executes a go to activity method and returns a result of the operation (true = successful, false = failed). There is an input property 'Ignore process Instance Not Exists' which suppresses an error message if the specified process instance doesnt exist.
+* List Activities: Returns a list of activities and their properties for the specified process instance
