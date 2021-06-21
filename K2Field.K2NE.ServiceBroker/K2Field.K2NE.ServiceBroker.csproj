@@ -87,6 +87,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\WindowsPowerShell\3.0\System.Management.Automation.dll</HintPath>
@@ -137,6 +138,7 @@
     <Compile Include="ServiceObjects\Client API\ProcessInstanceClientSO.cs" />
     <Compile Include="ServiceObjects\Client API\OutOfOfficeClientSO.cs" />
     <Compile Include="ServiceObjects\Client API\WorklistSO.cs" />
+    <Compile Include="ServiceObjects\CompressToZip\FilesToZip.cs" />
     <Compile Include="ServiceObjects\ExcelServices\ExcelDocumentServiceSO.cs" />
     <Compile Include="ServiceObjects\ExcelServices\ExcelImportServiceSO.cs" />
     <Compile Include="ServiceObjects\Management API\ErrorLogSO.cs" />
@@ -157,6 +159,7 @@
     <None Include="..\Solution Files\key.snk">
       <Link>key.snk</Link>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="LICENSE.txt" />

@@ -277,7 +277,7 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string MultipleCellValues = "MultipleCellValues";
             public const string UpdatedExcelFile = "UpdatedExcelFile";
         }
-
+        
         public static class ExcelImportServices
         {
             public const string ExcelFile = "ExcelFile";
@@ -287,6 +287,14 @@ namespace K2Field.K2NE.ServiceBroker.Constants
             public const string TransactionIDValue = "TransactionIDValue";
             public const string SmartObject = "SmartObject";
             public const string SheetName = "SheetName";
+        }
+
+        
+        public static class FilesToZip
+        {
+            public const string ZipFile = "ZipFile";
+            public const string FileName = "FileName";
+            public const string ADOSMOQuery = "ADOSMOQuery";
         }
     }
 }
