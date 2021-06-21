@@ -148,7 +148,10 @@ namespace K2Field.K2NE.ServiceBroker.Constants
         public static class ProcessInstanceManagement
         {
             public const string ActivityName = "ActivityName";
+            public const string ActivitySystemName = "ActivitySystemName";
             public const string ProcessInstanceId = "ProcessInstanceId";
+            public const string IgnoreProcessInstanceNotExists = "IgnoreProcessInstanceNotExists";
+            public const string GoToActivityResult = "GoToActivityResult";
             public const string IncludeStartActivity = "IncludeStartActivity";
             public const string ActivityDescription = "ActivityDescription";
             public const string ActivityExpectedDuration = "ActivityExpectedDuration";
